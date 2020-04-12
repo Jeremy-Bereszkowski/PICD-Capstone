@@ -18,7 +18,9 @@ import {useAsync} from './utils/use-async'
 import './unAuthApp.css'
 
 function LoginForm({onSubmit, submitButton}) {
+
   const {isLoading, isError, error, run} = useAsync()
+  
   function handleSubmit(event) {
     event.preventDefault()
     const {username, password} = event.target.elements
@@ -32,19 +34,7 @@ function LoginForm({onSubmit, submitButton}) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        '> div': {
-          margin: '10px auto',
-          width: '100%',
-          maxWidth: '300px',
-        },
-      }}
-    >
+    <form onSubmit={handleSubmit} class='form_css'>
       <FormGroup>
         <label htmlFor="username">Username</label>
         <Input id="username" />
@@ -81,18 +71,7 @@ const circleDismissButton = (
 
 function UnauthenticatedApp({login, register}) {
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        height: '100vh',
-      }}
-    >
-      {/* <Logo width="80" height="80" /> */}
-      
+    <div class='centre-cell'>
       <img src={Logo} class='img_logo'/>
       <h1>PICD - Capstone 2020</h1>
       <div>
@@ -101,7 +80,7 @@ function UnauthenticatedApp({login, register}) {
           button={<Button variant="primary">Login</Button>}
         >
           {circleDismissButton}
-          <h3 css={{textAlign: 'center', fontSize: '2em'}}>Login</h3>
+          <h3 class='centre_heading'>Login</h3>
           <LoginForm
             onSubmit={login}
             submitButton={<Button variant="primary">Login</Button>}
