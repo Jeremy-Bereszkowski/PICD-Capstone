@@ -1,0 +1,20 @@
+environment:
+  matrix:
+    - node_version: 'stable'
+
+branches:
+  only:
+    - master
+
+install:
+  - ps: Install-Product node $env:node_version
+
+test_script:
+  - npm run setup
+
+cache:
+  # cache NPM packages and Cypress binary
+  - '%AppData%\npm'
+  - '%USERPROFILE%\AppData\Local\Cypress\Cache'
+
+build: off
