@@ -15,6 +15,7 @@ function useSafeDispatch(dispatch) {
 const initialState = {status: 'idle', data: null, error: null}
 
 function useAsync() {
+  
   const [{status, data, error}, setState] = React.useReducer(
     (s, a) => ({...s, ...a}),
     initialState,

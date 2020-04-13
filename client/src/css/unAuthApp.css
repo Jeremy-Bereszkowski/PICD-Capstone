@@ -32,3 +32,8 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.loginButton {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

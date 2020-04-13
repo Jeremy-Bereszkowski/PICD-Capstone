@@ -19,11 +19,38 @@ import {useAsync} from './utils/use-async'
 import './css/unAuthApp.css'
 
 function LoginForm({onSubmit, submitButton}) {
+
   const {isLoading, isError, error, run} = useAsync()
   
   function handleSubmit(event) {
+
     event.preventDefault()
     const {username, password} = event.target.elements
+
+    debugger;
+
+    /* run(
+      fetch('http://localhost:9000/sql/login', {
+        method: 'post',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          uname: username.value,
+          pword: password.value
+        })
+      }).then((response) => {
+        if (response.status !== 200) {
+          console.log(response.status);
+          console.log(response.body);
+        }
+        else {
+          console.log(response.body);
+        }
+      })
+    ) */
+    
+    
     run(
       onSubmit({
         username: username.value,
@@ -42,7 +69,7 @@ function LoginForm({onSubmit, submitButton}) {
         <label htmlFor="password">Password</label>
         <Input id="password" type="password" />
       </FormGroup>
-      <div>
+      <div class='loginButton'>
         {React.cloneElement(
           submitButton,
           {type: 'submit'},
