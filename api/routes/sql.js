@@ -10,13 +10,12 @@ var router = express.Router();
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(bodyParser.json());
 
-// [START cloud_sql_mysql_mysql_create]
 let pool;
 const createPool = async () => {
   pool = await mysql.createPool({
     user: "root",
     password: "hello",
-    database: "test",
+    database: "picd_capstone_test",
     
     // If connecting via unix domain socket, specify the path
     //socketPath: '/cloudsql/paybuddy-jeremy:australia-southeast1:paybuddy-mysql-db',//${process.env.CLOUD_SQL_CONNECTION_NAME}',
@@ -35,31 +34,27 @@ const createPool = async () => {
 createPool();
 
 router.post('/login', async (req, res) => {
-  
-  const enteredID = req.body.cust_id;
-  const enteredPass = req.body.pass;
 
   try {
      
     //Create new deposit record
-    const getUserDetails = `select pass, clearance from users where user_id=${enteredID}`;
+    const getUserDetails = 'select password, clearance from users where email="' + req.body.uname + '";';
 
     //Run query - fetch response
     var userDetails = await pool.query(getUserDetails);
 
-    res.status(200).send(userDetails).end();
-    
-    
+    if (userDetails.length < 1) {
+      res.status(403).send({message: 'Unkown E-Mail'}).end();
+    }
+    else if (userDetails[0].password === req.body.pword) {
+      res.status(200).send(userDetails[0].clearance).end();
+    }
+    else {
+      res.status(403).send({message: 'Incorrect Password'}).end();
+    }
   } catch (err) {
-    // If something goes wrong, handle the error in this section. This might
-    // involve retrying or adjusting parameters depending on the situation.
-    // [START_EXCLUDE]
-    res.status(500).send('Unable to successfully insert transaction!').end();
-    // [END_EXCLUDE]
+    res.status(500).send('Connection error!').end();
   }
-  // [END cloud_sql_mysql_mysql_connection]
-
-  res.status(200).send(`Succesfull insertion!`).end();
 });
 
 module.exports = router;
