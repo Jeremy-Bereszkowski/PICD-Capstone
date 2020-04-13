@@ -1,0 +1,34 @@
+.content_pane {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.logo-image {
+    width: 80px;
+    height: 80px;
+}
+
+.heading {
+    font-size: 2em;
+}
+
+.form_css {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.form_css.div {
+    margin: 10px auto;
+    width: 100%;
+    max-width: 300px;
+}
+
+.circleDismiss {
+    display: flex;
+    justify-content: flex-end;
+}

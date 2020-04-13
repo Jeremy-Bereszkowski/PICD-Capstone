@@ -1,6 +1,50 @@
-export * from './api-client.final'
+import {queryCache} from 'react-query'
+const localStorageKey = '__bookshelf_token__'
 
-// export * from './api-client.exercise'
+async function client(endpoint, {body, ...customConfig} = {}) {
+  // Ignore this... It's the *only* thing we need to do thanks to the way we
+  // handle fetch requests with the service worker. In your apps you shouldn't
+  // need to have something like this.
+  await window.__bookshelf_serverReady
 
-// 💯 automatically logout on 401
-// export * from './api-client.extra-3'
+  const token = window.localStorage.getItem(localStorageKey)
+  const headers = {'content-type': 'application/json'}
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+  const config = {
+    method: body ? 'POST' : 'GET',
+    ...customConfig,
+    headers: {
+      ...headers,
+      ...customConfig.headers,
+    },
+  }
+  if (body) {
+    config.body = JSON.stringify(body)
+  }
+
+  return window
+    .fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, config)
+    .then(async r => {
+      if (r.status === 401) {
+        logout()
+        // refresh the page for them
+        window.location.assign(window.location)
+        return
+      }
+      const data = await r.json()
+      if (r.ok) {
+        return data
+      } else {
+        return Promise.reject(data)
+      }
+    })
+}
+
+function logout() {
+  queryCache.clear()
+  window.localStorage.removeItem(localStorageKey)
+}
+
+export {client, localStorageKey, logout}

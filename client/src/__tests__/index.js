@@ -1,36 +1,18 @@
-import {screen, waitForElementToBeRemoved, userEvent} from 'test/app-test-utils'
-import {buildUser} from 'test/generate'
+import {within, waitForElementToBeRemoved} from '@testing-library/react'
+import ReactDOM from 'react-dom'
 
-beforeAll(() => {
-  const root = document.createElement('div')
-  root.id = 'root'
-  document.body.append(root)
-  document.body.focus()
-})
+test('booting up the app from the index file does not break anything', async () => {
+  // setup
+  const div = document.createElement('div')
+  div.setAttribute('id', 'root')
+  document.body.appendChild(div)
 
-test('can login and use the book search', async () => {
-  require('../index')
+  // run the file and wait for things to settle.
+  require('..')
+  const {getByLabelText} = within(document.body)
+  await waitForElementToBeRemoved(() => getByLabelText(/loading/i))
 
-  const user = buildUser()
-
-  userEvent.click(screen.getByRole('button', {name: /register/i}))
-  await userEvent.type(screen.getByLabelText(/username/i), user.username)
-  await userEvent.type(screen.getByLabelText(/password/i), user.password)
-
-  userEvent.click(screen.getByRole('button', {name: /register/i}))
-
-  await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
-
-  const searchInput = screen.getByPlaceholderText(/search/i)
-  userEvent.type(searchInput, 'voice of war')
-
-  const searchIcon = screen.getByLabelText(/search/i)
-  searchIcon.closest('button').focus()
-  userEvent.click(searchIcon)
-  await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
-  expect(screen.getByText(/voice of war/i)).toBeInTheDocument()
-
-  userEvent.click(screen.getByRole('button', {name: /logout/i}))
-
-  expect(searchInput).not.toBeInTheDocument()
+  // cleanup
+  ReactDOM.unmountComponentAtNode(div)
+  document.body.removeChild(div)
 })

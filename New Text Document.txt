@@ -16,7 +16,7 @@ import Logo from './imgs/icon.png'
 import {Input} from './components/lib'
 import {useAuth} from './context/auth-context'
 import {useAsync} from './utils/use-async'
-import './unAuthApp.css'
+import './css/unAuthApp.css'
 
 function LoginForm({onSubmit, submitButton}) {
   const {isLoading, isError, error, run} = useAsync()
@@ -62,7 +62,7 @@ const circleDismissButton = (
     <ModalDismissButton>
       <CircleButton>
         <VisuallyHidden>Close</VisuallyHidden>
-        <span aria-hidden>×</span>
+        <span aria-hidden>ï¿½</span>
       </CircleButton>
     </ModalDismissButton>
   </div>

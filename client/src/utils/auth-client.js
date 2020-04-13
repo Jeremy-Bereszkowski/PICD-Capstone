@@ -1,9 +1,35 @@
-export * from './auth-client.final'
+import {client, localStorageKey} from './api-client'
 
-// export * from './auth-client.exercise'
+function handleUserResponse({user: {token, ...user}}) {
+  window.localStorage.setItem(localStorageKey, token)
+  return user
+}
 
-// 💯 Load the user's data on page load
-// export * from './auth-client.extra-1'
+function getUser() {
+  const token = getToken()
+  if (!token) {
+    return Promise.resolve(null)
+  }
+  return client('me').then(data => data.user)
+}
 
-// 💯 automatically logout on 401
-// export * from './auth-client.extra-3'
+function login({username, password}) {
+  return client('login', {body: {username, password}}).then(handleUserResponse)
+}
+
+function register({username, password}) {
+  return client('register', {body: {username, password}}).then(
+    handleUserResponse,
+  )
+}
+
+function getToken() {
+  return window.localStorage.getItem(localStorageKey)
+}
+
+function isLoggedIn() {
+  return Boolean(getToken())
+}
+
+export {login, register, getToken, getUser, isLoggedIn}
+export {logout} from './api-client'

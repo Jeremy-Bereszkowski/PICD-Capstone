@@ -12,19 +12,18 @@ import {
   ErrorMessage,
 } from './components/lib'
 import {Modal, ModalDismissButton} from './components/modal'
-import Logo from './img/icon.png'
+import Logo from './imgs/photon_icon.png'
 import {Input} from './components/lib'
+import {useAuth} from './context/auth-context'
 import {useAsync} from './utils/use-async'
-import './unAuthApp.css'
+import './css/unAuthApp.css'
 
 function LoginForm({onSubmit, submitButton}) {
-
   const {isLoading, isError, error, run} = useAsync()
   
   function handleSubmit(event) {
     event.preventDefault()
     const {username, password} = event.target.elements
-
     run(
       onSubmit({
         username: username.value,
@@ -36,7 +35,7 @@ function LoginForm({onSubmit, submitButton}) {
   return (
     <form onSubmit={handleSubmit} class='form_css'>
       <FormGroup>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">E-Mail</label>
         <Input id="username" />
       </FormGroup>
       <FormGroup>
@@ -59,7 +58,7 @@ function LoginForm({onSubmit, submitButton}) {
 }
 
 const circleDismissButton = (
-  <div css={{display: 'flex', justifyContent: 'flex-end'}}>
+  <div class='circleDismiss'>
     <ModalDismissButton>
       <CircleButton>
         <VisuallyHidden>Close</VisuallyHidden>
@@ -69,10 +68,12 @@ const circleDismissButton = (
   </div>
 )
 
-function UnauthenticatedApp({login, register}) {
+function UnauthenticatedApp() {
+  const {login} = useAuth()
+
   return (
-    <div class='centre-cell'>
-      <img src={Logo} class='img_logo'/>
+    <div class='content_pane'>
+      <img class="logo-image" src={Logo} alt="paybuddy-logo"/>
       <h1>PICD - Capstone 2020</h1>
       <div>
         <Modal
@@ -80,7 +81,7 @@ function UnauthenticatedApp({login, register}) {
           button={<Button variant="primary">Login</Button>}
         >
           {circleDismissButton}
-          <h3 class='centre_heading'>Login</h3>
+          <h3 class='heading'>Login</h3>
           <LoginForm
             onSubmit={login}
             submitButton={<Button variant="primary">Login</Button>}
@@ -91,4 +92,4 @@ function UnauthenticatedApp({login, register}) {
   )
 }
 
-export {UnauthenticatedApp}
+export default UnauthenticatedApp
