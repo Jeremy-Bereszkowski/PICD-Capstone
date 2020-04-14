@@ -1,97 +1,41 @@
 {
-  "name": "bookshelf",
+  "name": "client2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://the-react-bookshelf.netlify.app/",
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6"
-  },
   "dependencies": {
     "@emotion/core": "^10.0.28",
-    "@emotion/styled": "^10.0.27",
+    "@emotion/style": "^0.8.0",
     "@reach/dialog": "^0.10.0",
-    "@reach/menu-button": "^0.10.0",
-    "@reach/tooltip": "^0.10.0",
-    "@reach/visually-hidden": "^0.10.0",
-    "@testing-library/jest-dom": "^5.5.0",
-    "@testing-library/react": "^10.0.2",
-    "@testing-library/user-event": "^10.0.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "auth0-js": "^9.13.2",
     "bootstrap": "^4.4.1",
-    "debounce-fn": "^4.0.0",
-    "faker": "^4.1.0",
-    "history": "^5.0.0-beta.5",
-    "match-sorter": "^4.1.0",
-    "msw": "^0.12.0",
-    "node-match-path": "^0.3.1",
-    "prop-types": "^15.7.2",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-error-boundary": "^1.2.5",
-    "react-icons": "^3.9.0",
-    "react-query": "^1.2.1",
-    "react-query-devtools": "^1.1.0",
-    "react-router": "^6.0.0-alpha.3",
-    "react-router-dom": "^6.0.0-alpha.3",
-    "react-scripts": "^3.4.1",
-    "stop-runaway-react-effects": "^2.0.0"
-  },
-  "devDependencies": {
-    "@testing-library/cypress": "^6.0.0",
-    "cross-env": "^7.0.2",
-    "cypress": "^4.3.0",
-    "cypress-hmr-restarter": "^1.0.2",
-    "eslint-plugin-cypress": "^2.10.3",
-    "is-ci-cli": "^2.0.0",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.0.4",
-    "serve": "^11.3.0",
-    "start-server-and-test": "^1.10.11",
-    "test-data-bot": "^0.8.0"
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.0",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "test:coverage": "npm run test -- --watchAll false --coverage",
-    "test:debug": "node --inspect-brk ./node_modules/react-scripts/scripts/test.js --env=jest-environment-jsdom-sixteen --watch --runInBand",
-    "cy:install": "cypress install",
-    "cy:run": "cypress run",
-    "cy:open": "cypress open",
-    "test:e2e": "is-ci \"test:e2e:run\" \"test:e2e:dev\"",
-    "pretest:e2e:run": "npm-run-all --parallel build cy:install",
-    "test:e2e:run": "start-server-and-test serve http://localhost:8811 cy:run",
-    "test:e2e:dev": "cross-env BROWSER=none start-server-and-test start http://localhost:3000 cy:open",
-    "serve": "serve --no-clipboard --single --listen 8811 build",
-    "lint": "eslint . --cache-location node_modules/.cache/eslint",
-    "format": "prettier --write \"**/*.+(js|json|css|md|mdx|html)\"",
-    "setup": "node ./scripts/setup",
-    "validate-exercises": "node ./scripts/validate-exercises",
-    "validate": "npm-run-all --parallel lint test:coverage test:e2e:run validate-exercises"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!<rootDir>/node_modules/**/*",
-      "!<rootDir>/src/test/**/*",
-      "!<rootDir>/src/dev-tools/**/*"
-    ]
-  },
   "browserslist": {
-    "development": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
-    ],
     "production": [
-      ">1%",
-      "last 4 versions",
-      "Firefox ESR",
-      "not ie < 11"
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }
