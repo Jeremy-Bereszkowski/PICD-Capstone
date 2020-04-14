@@ -17,7 +17,7 @@ function Modal({button, ...props}) {
       {React.cloneElement(button, {
         onClick: callAll(() => setIsOpen(true), button.props.onClick),
       })}
-      <Dialog isOpen={isOpen} onDismiss={() => setIsOpen(false)} {...props} />
+      <dialog isOpen={isOpen} onDismiss={() => setIsOpen(false)} {...props} />
     </ModalContext.Provider>
   )
 }

@@ -37,3 +37,27 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.circle-button {
+    border-radius: 30px;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: black;
+    border: 1px solid gray;
+    cursor: pointer;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    border-radius: 3px;
+}
