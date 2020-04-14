@@ -2,7 +2,7 @@ import history from './history';
 
 export default class Auth {
   
-  login = () => {
+  /* login = (user, pass) => {
     debugger;
     fetch('http://localhost:9000/sql/login', {
       method: 'post',
@@ -10,24 +10,20 @@ export default class Auth {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        uname: 's3539822@student.rmit.edu.au',//username.value,
-        pword: 'hello'//password.value
+        uname: user,
+        pword: pass
       })
     })
       .then((response) => {
         debugger;
         this.handleAuthentication(response);
+        return response.status;
       })
-  }
+  } */
 
   handleAuthentication = (response) => {
     debugger;
-    if (response.status !== 200) {
-      history.replace('/home');
-      console.log(response.status);
-      console.log(response.body);
-    }
-    else {
+    if (response.status === 200) {
       console.log(response.body);
       this.setSession(response.body);
       history.replace('/home');
