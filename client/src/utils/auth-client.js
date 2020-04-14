@@ -14,13 +14,12 @@ function getUser() {
 }
 
 function login({username, password}) {
+  debugger;
   return client('login', {body: {username, password}}).then(handleUserResponse)
 }
 
 function register({username, password}) {
-  return client('register', {body: {username, password}}).then(
-    handleUserResponse,
-  )
+  return client('register', {body: {username, password}}).then(handleUserResponse)
 }
 
 function getToken() {

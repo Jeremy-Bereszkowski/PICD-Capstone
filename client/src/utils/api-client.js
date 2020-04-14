@@ -23,8 +23,33 @@ async function client(endpoint, {body, ...customConfig} = {}) {
   if (body) {
     config.body = JSON.stringify(body)
   }
+  debugger;
+  
+  return window.fetch('http://localhost:9000/sql/login', {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      uname: body.username,
+      pword: body.password
+    })
+  }).then(async r => {
+    if (r.status === 401) {
+      logout()
+      // refresh the page for them
+      window.location.assign(window.location)
+      return
+    }
+    const data = await r.json()
+    if (r.ok) {
+      return data
+    } else {
+      return Promise.reject(data)
+    }
+  })
 
-  return window
+  /* return window
     .fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, config)
     .then(async r => {
       if (r.status === 401) {
@@ -39,7 +64,7 @@ async function client(endpoint, {body, ...customConfig} = {}) {
       } else {
         return Promise.reject(data)
       }
-    })
+    }) */
 }
 
 function logout() {
