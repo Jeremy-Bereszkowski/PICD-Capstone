@@ -36,7 +36,6 @@ createPool();
 router.post('/login', async (req, res) => {
 
   try {
-     
     //Create new deposit record
     const getUserDetails = 'select password, clearance from users where email="' + req.body.uname + '";';
 

@@ -17,12 +17,9 @@ class Home extends Component {
           <div className="container column">
             <h5>
               You are logged in!{' '}
-              <a
-                style={{ cursor: 'pointer' }}
-                onClick={this.logout}
-              >
+              <a style={{ cursor: 'pointer' }} onClick={this.logout}>
                 Log Out
-              </a>.
+              </a>
             </h5>
             <App />
           </div>

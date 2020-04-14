@@ -15,14 +15,10 @@ function UnauthenticatedApp(props) {
     setShow(false);
     setErr(false);
   }
-  
 
   function handleSubmit(event) {
     event.preventDefault();
     const {username, password} = event.target.elements;
-
-    console.log(username.value);
-    console.log(password.value);
 
     fetch('http://localhost:9000/sql/login', {
       method: 'post',
@@ -35,7 +31,6 @@ function UnauthenticatedApp(props) {
       })
     })
     .then((response) => {
-      debugger;
 
       if (response.status === 200) {
         props.auth.handleAuthentication(response);
