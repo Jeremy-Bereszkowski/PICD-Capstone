@@ -15,10 +15,12 @@ const createPool = async () => {
   pool = await mysql.createPool({
     user: "root",
     password: "hello",
+
     database: "picd_capstone_test",
     
     // If connecting via unix domain socket, specify the path
     //socketPath: '/cloudsql/paybuddy-jeremy:australia-southeast1:paybuddy-mysql-db',
+
     
     // If connecting via TCP, enter the IP and port instead
     host: '127.0.0.1',
@@ -30,7 +32,8 @@ const createPool = async () => {
     waitForConnections: true,
     queueLimit: 0,
   });
-};LMAOO
+
+};
 createPool();
 
 router.post('/login', async (req, res) => {

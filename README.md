@@ -10,7 +10,8 @@ API - Node.JS Express Project
     Start Project:
 
         1. Naviagte to \PICD-Capstone\api
-        2. Type: 'npm start'
+        2. Type: 'npm install'
+        3. Type: 'npm start'
 
 Client - React Project
 
@@ -19,6 +20,7 @@ Client - React Project
     Start Project:
 
         1. Naviagte to \PICD-Capstone\client
-        2. Type: 'npm start'
+        2. Type: 'npm install'
+        3. Type: 'npm start'
 
 
