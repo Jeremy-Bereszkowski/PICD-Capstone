@@ -13,18 +13,18 @@ router.use(bodyParser.json());
 let pool;
 const createPool = async () => {
   pool = await mysql.createPool({
-    user: "root",
-    password: "hello",
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
 
-    database: "picd_capstone_test",
+    database: process.env.DB_NAME,
     
     // If connecting via unix domain socket, specify the path
     //socketPath: '/cloudsql/paybuddy-jeremy:australia-southeast1:paybuddy-mysql-db',
 
     
     // If connecting via TCP, enter the IP and port instead
-    host: '127.0.0.1',
-    port: 1433,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
 
     connectionLimit: 5,
     connectTimeout: 10000,
