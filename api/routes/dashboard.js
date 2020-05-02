@@ -36,38 +36,55 @@ const createPool = async () => {
 };
 createPool();
 
-router.get('/:user_id', async (req, res) => {
-    var userID = req.params.user_id;
-  
-    try {
-      //Get current acct_value of customer
-      const getProjectsQuery = 'select title, date_stamp from projects;';
+router.get('/', async (req, res) => {
+  try {
+    //Get current acct_value of customer
+    const getProjectsQuery = 'select * from projects;';
 
-      //Run query - fetch response
-      var projectList = await pool.query(getProjectsQuery);
-  
-      function compare(a, b) {
-        const bandA = a.date_stamp;
-        const bandB = b.date_stamp;
+    //Run query - fetch response
+    var projectList = await pool.query(getProjectsQuery);
 
-        let comparison = 0;
-        if (bandA > bandB) {
-        comparison = 1;
-        } else if (bandA < bandB) {
-        comparison = -1;
-        }
-        return comparison * -1;
+    function compare(a, b) {
+      const bandA = a.date_stamp;
+      const bandB = b.date_stamp;
+
+      let comparison = 0;
+      if (bandA > bandB) {
+      comparison = 1;
+      } else if (bandA < bandB) {
+      comparison = -1;
       }
-      
-      projectList.sort(compare);
-
-      console.log(projectList);
-  
-      res.end(JSON.stringify({projectList: projectList}));
-    } catch (err) {
-        console.log(err);
-        res.status(500).end('Unable to retrieve projecs!');
+      return comparison * -1;
     }
+    
+    projectList.sort(compare);
+
+    //console.log(projectList);
+
+    res.end(JSON.stringify({projectList: projectList}));
+  } catch (err) {
+      console.log(err);
+      res.status(500).end('Unable to retrieve projecs!');
+  }
+});
+
+router.get('/delete/:projectID', async (req, res) => {
+  const projectID = req.params.projectID;
+
+  try {
+    //Get current acct_value of customer
+    const getProjectsQuery = 'delete from projects where project_id=(?);';
+
+    //Run query - fetch response
+    await pool.query(getProjectsQuery, [projectID]);
+
+    //console.log(projectList);
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+  } catch (err) {
+      console.log(err);
+      res.status(500).end('Unable to retrieve projecs!');
+  }
 });
 
 module.exports = router;
