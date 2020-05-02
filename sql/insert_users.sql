@@ -13,3 +13,16 @@ values ('brenton', 'holloway', 'admin', 'brenton.holloway@gmail.com', 'testpass'
 |       1 | jeremy  | beresh   | admin     | s3539822@student.rmit.edu.au | hello    |
 |       2 | brenton | holloway | admin     | brenton.holloway@gmail.com   | testpass |
 +---------+---------+----------+-----------+------------------------------+----------+
+
+
+insert into projects (title, date_stamp) values ('test');
+insert into projects (title, date_stamp) values ('test1');
+insert into projects (title, date_stamp) values ('test2');
+
++------------+-------+---------------------+
+| project_id | title | date_stamp          |
++------------+-------+---------------------+
+|          1 | test  | 2020-05-02 03:35:15 |
+|          2 | test1 | 2020-05-02 03:35:41 |
+|          3 | test2 | 2020-05-02 03:35:45 |
++------------+-------+---------------------+

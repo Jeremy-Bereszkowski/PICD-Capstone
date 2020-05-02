@@ -20,7 +20,7 @@ function UnauthenticatedApp(props) {
     event.preventDefault();
     const {username, password} = event.target.elements;
 
-    fetch('http://localhost:9000/sql/login', {
+    fetch('http://localhost:9000/auth/login', {
       method: 'post',
       headers: {
         'content-type': 'application/json'
