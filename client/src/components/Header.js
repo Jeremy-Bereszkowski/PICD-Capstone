@@ -4,14 +4,17 @@ class Header extends Component {
 
     render() {
         return (
-            <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-                <a href="#" className="navbar-brand col-sm-3 col md 2 mr-0">PICD</a>
+
+            <div className="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow">
+                <a href="/dashboard" className="navbar-brand col-sm-3 col md 2 mr-0">{this.props.title}</a>
                 <ul className="navbar-nav px-3">
-                    <li className="nav-item text-nowrap">
-                        <a className="nav-link" onClick={this.props.logoutHandler}>
-                            Log Out
-                        </a>
-                    </li>
+                    {this.props.items.map((item, index) => (
+                        <li className="nav-item text-nowrap" id={index}>
+                            <a href={item.link} className="nav-link" onClick={item.onClick}>
+                                {item.title}
+                            </a>
+                        </li>
+                    ))}
                 </ul>
             </nav>
         )
