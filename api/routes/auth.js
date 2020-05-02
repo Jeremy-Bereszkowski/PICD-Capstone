@@ -19,7 +19,7 @@ const createPool = async () => {
     database: process.env.DB_NAME,
     
     // If connecting via unix domain socket, specify the path
-    //socketPath: '/cloudsql/paybuddy-jeremy:australia-southeast1:paybuddy-mysql-db',
+    //socketPath: process.env.DB_CONNECTION,
 
     
     // If connecting via TCP, enter the IP and port instead
@@ -39,6 +39,7 @@ createPool();
 router.post('/login', async (req, res) => {
 
   try {
+    console.log(process.env.DB_HOST);
     //Create new deposit record
     const getUserDetails = 'select password, clearance from users where email="' + req.body.uname + '";';
 
