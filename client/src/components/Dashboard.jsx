@@ -55,7 +55,9 @@ class Dashboard extends Component {
                 <tr key={key}>
                     <td>{date}</td>
                     <td>{title}</td>
+                    <td></td>
                     <td>{projectID}</td>
+                    <td></td>
                     <td>
                         <p class='conrol-column'>
                             <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} class="btn btn-xs btn-danger">Delete</button>
@@ -78,9 +80,11 @@ class Dashboard extends Component {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>DATE</th>
+                                <th>CREATION DATE</th>
                                 <th>TITLE</th>
+                                <th>DESCRIPTION</th>
                                 <th>ID</th>
+                                <th>REVISION</th>
                                 <th></th>
                             </tr>
                         </thead>
