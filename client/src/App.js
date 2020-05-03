@@ -31,7 +31,7 @@ function App(props) {
           </Route>
           {/* <Route path="/project" component={Project}/> */}
         </main>
-        <Footer messageLeft={'\u00A9 PICD - 2020 RMIT Capstone Project'} messageRight={"Brenton Holloway, Jeremy Bereszkowski"} />
+        <Footer />
       </Router>
     </div>
   );
