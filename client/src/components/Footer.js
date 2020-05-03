@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import '../css/Footer.module.css'
+import '../css/Footer.css'
 
 export class Footer extends Component {
     render() {
         return (
-            <footer className="bg-dark">
-                <div className="row justify-content-center">
-                    <span className="text-muted text-md-left col-6">{this.props.messageLeft}</span>
-                    <span className="text-muted text-md-right col-6">{this.props.messageRight}</span>
+            <footer class="footer">
+                <div class="container">
+                    <span className="text-muted left">&copy; PICD - 2020 RMIT Capstone Project</span>
+                    <span className="text-muted right">Brenton Holloway, Jeremy Bereszkowski</span>
                 </div>
             </footer>
         )

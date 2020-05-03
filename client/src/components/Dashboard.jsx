@@ -27,12 +27,9 @@ class Dashboard extends Component {
     }
 
     deleteProject(projectID, e) {
-        //alert(id);
-
         fetch('http://localhost:9000/dashboard/delete/'+projectID)
         .then((response) => {
-            if (response.status === 200)
-            {
+            if (response.status === 200) {
                 return response.json(); 
             }
         })
@@ -47,13 +44,19 @@ class Dashboard extends Component {
             var data = this.state.projectList[key].date_stamp.substring(5, 10).split('-');
             var date = data[1] + '-' + data[0];
 
+            console.log( this.state.projectList[key].date_stamp);
+
+            var time = this.state.projectList[key].date_stamp.substring(11, 16);
+
+            var dateTime = date + ' ' + time;
+
             var title = this.state.projectList[key].title;
 
             var projectID = this.state.projectList[key].project_id;
 
             return (
                 <tr key={key}>
-                    <td>{date}</td>
+                    <td>{dateTime}</td>
                     <td>{title}</td>
                     <td></td>
                     <td>{projectID}</td>
@@ -80,7 +83,7 @@ class Dashboard extends Component {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>CREATION DATE</th>
+                                <th>CREATED</th>
                                 <th>TITLE</th>
                                 <th>DESCRIPTION</th>
                                 <th>ID</th>
