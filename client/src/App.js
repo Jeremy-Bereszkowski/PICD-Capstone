@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import Header from './components/Header'
 import Dashboard from './components/Dashboard'
 import Sidebar from './components/Sidebar';
@@ -15,16 +21,20 @@ function App(props) {
     {title: 'Logout', onClick: props.logoutHandler},
   ];
 
-  /* render() { */
-    return (
-      <body className="App">
+  return (
+    <div className="App">
+      <Router>
         <Header items={headerItems}/>
-          {/* <Sidebar items={sidebarItems}/> */}
-          <Dashboard />
-        <Footer messageLeft={process.env.REACT_APP_NAME} messageRight="Hello"/>
-      </body>
-    );
-  /* } */
+        <main>
+          <Route exact path="/">
+            <Dashboard/>
+          </Route>
+          {/* <Route path="/project" component={Project}/> */}
+        </main>
+        <Footer messageLeft={'\u00A9 PICD - 2020 RMIT Capstone Project'} messageRight={"Brenton Holloway, Jeremy Bereszkowski"} />
+      </Router>
+    </div>
+  );
 }
 
 export default App; 
