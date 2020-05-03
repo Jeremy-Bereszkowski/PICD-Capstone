@@ -4,13 +4,7 @@ import Dashboard from './components/Dashboard'
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      logoutHandler: props.logoutHandler
-    }
-  }
+function App(props) {
   
   const sidebarItems = [
     {title: 'item 1', link: '/'},
@@ -21,18 +15,16 @@ class App extends React.Component {
     {title: 'Logout', onClick: props.logoutHandler},
   ];
 
-  render() {
+  /* render() { */
     return (
       <body className="App">
-        <Header title={process.env.REACT_APP_NAME} items={headerItems}/>
-        <main>
-          <Sidebar items={sidebarItems}/>
+        <Header items={headerItems}/>
+          {/* <Sidebar items={sidebarItems}/> */}
           <Dashboard />
-        </main>
         <Footer messageLeft={process.env.REACT_APP_NAME} messageRight="Hello"/>
       </body>
     );
-  }
+  /* } */
 }
 
 export default App; 
