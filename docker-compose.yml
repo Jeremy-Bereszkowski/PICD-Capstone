@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+
+##################################
+# Setup Node API Container       #
+##################################
+  picd-server:
+    container_name: picd-server
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      SERVER_HOST: ${SERVER_HOST}
+      APP_SERVER_PORT: ${APP_SERVER_PORT}
+    ports:
+      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+    volumes:
+      - ./api:/picd-server
+      - /picd-server/node_modules
+    command: npm start
+
+##################################
+# Setup REACT Client Container   #
+##################################
+  picd-client:
+    container_name: picd-app
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - ./client:/picd-app
+      - /picd-app/node_modules
+    depends_on:
+      - picd-server
+    command: npm start
