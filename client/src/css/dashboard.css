@@ -1,0 +1,12 @@
+.header {
+    margin-top: 40px;
+}
+
+.conrol-column {
+    float: right;
+}
+
+.scroll-table {
+    overflow-y: auto;
+    max-height: 600px;
+}

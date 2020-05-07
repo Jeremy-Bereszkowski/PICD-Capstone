@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS users
 	PRIMARY KEY (user_id)
 );
 
-
 +-----------+----------------------------------+------+-----+---------+----------------+
 | Field     | Type                             | Null | Key | Default | Extra          |
 +-----------+----------------------------------+------+-----+---------+----------------+
@@ -23,3 +22,21 @@ CREATE TABLE IF NOT EXISTS users
 | email     | varchar(50)                      | NO   |     | NULL    |                |
 | password  | varchar(25)                      | NO   |     | NULL    |                |
 +-----------+----------------------------------+------+-----+---------+----------------+
+
+
+CREATE TABLE IF NOT EXISTS projects
+(
+	project_id int not null AUTO_INCREMENT,
+	title varchar(25) NOT NULL,
+	date_stamp TIMESTAMP not null,
+
+	PRIMARY KEY (project_id)
+);
+
++------------+-------------+------+-----+-------------------+-----------------------------+
+| Field      | Type        | Null | Key | Default           | Extra                       |
++------------+-------------+------+-----+-------------------+-----------------------------+
+| project_id | int(11)     | NO   | PRI | NULL              | auto_increment              |
+| title      | varchar(25) | NO   |     | NULL              |                             |
+| date_stamp | timestamp   | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
++------------+-------------+------+-----+-------------------+-----------------------------+

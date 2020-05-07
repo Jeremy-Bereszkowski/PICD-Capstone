@@ -10,7 +10,6 @@ const Routes = () => (
   <Router history={history} component={Home}>
     <div>
       <Route exact path="/" render={(props) => <Home auth={auth} {...props} />} />
-      <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
     </div>
   </Router>
 );
