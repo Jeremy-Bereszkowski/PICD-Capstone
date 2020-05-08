@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import '../css/dashboard.css';
 
@@ -63,9 +64,9 @@ class Dashboard extends Component {
                     <td></td>
                     <td>
                         <p class='conrol-column'>
+                            <Link>
                             <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} class="btn btn-xs btn-danger">Delete</button>
-                            <button type="button" class="btn btn-xs btn-primary">Edit</button>
-                            <button type="button" class="btn btn-xs btn-success">View</button>
+                            </Link>
                         </p>
                     </td>
                 </tr>

@@ -4,6 +4,7 @@ import Router from './authRoutes'
 import Footer from './components/Footer'
 /* import Sidebar from './components/Sidebar'; */
 
+
 function App(props) {
   
   /* const sidebarItems = [

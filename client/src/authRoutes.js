@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard.jsx';
+import Dashboard from './views/Dashboard.jsx';
 
 const authRoutes = () => (
     <div>
