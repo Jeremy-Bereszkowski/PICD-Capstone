@@ -8,13 +8,12 @@ class Sidebar extends Component {
                 <div className="sidebar-sticky">
                     <ul className="nav flex-column">
                         {this.props.items.map((item, index) => (
-                            <li className="nav-item" id={index}>
+                            <li className="nav-item" key={index}>
                                 <a href={item.link} className="nav-link">
                                     {item.title}
                                 </a>
                             </li>
                         ))}
-                        {console.log(this.props.items)}
                     </ul>
                 </div>
             </div>

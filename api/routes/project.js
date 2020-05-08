@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const mysql = require('promise-mysql');
 const bodyParser = require('body-parser');
@@ -33,3 +35,34 @@ const createPool = async () => {
 
 };
 createPool();
+
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const getProjectQuery = 'select * from projects where project_id=(?);';
+
+    var project = await pool.query(getProjectQuery, [id]);
+    // console.log(project);
+
+    res.status(200).end(JSON.stringify({project: project}));
+  } catch (err) {
+    console.log(err);
+    res.status(500).end('Unable to retrieve Project')
+  }
+});
+
+router.post('/:id/update', async (req, res) => {
+  try {
+    const updateProjectQuery = 'UPDATE projects SET title=(?) WHERE project_id=(?)';
+
+    await pool.query(updateProjectQuery, [req.body.title, req.params.id]);
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+  } catch (err) {
+    res.status(500).send('Connection error!').end();
+  }
+});
+
+
+module.exports = router;

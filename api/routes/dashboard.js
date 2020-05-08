@@ -59,8 +59,6 @@ router.get('/', async (req, res) => {
     
     projectList.sort(compare);
 
-    //console.log(projectList);
-
     res.end(JSON.stringify({projectList: projectList}));
   } catch (err) {
       console.log(err);
@@ -84,21 +82,6 @@ router.get('/delete/:projectID', async (req, res) => {
   } catch (err) {
       console.log(err);
       res.status(500).end('Unable to retrieve projecs!');
-  }
-});
-
-router.get('/project/:projectID', async (req, res) => {
-  const projectID = req.params.projectID;
-
-  try {
-    const getProjectQuery = 'select project from projects where project_id=(?)';
-
-    var project = await pool.query(getProjectQuery, [projectID]);
-
-    res.status(200).end(JSON.stringify({project: project}));
-  } catch (err) {
-    console.log(err);
-    res.status(500).end('Unable to retrieve Project')
   }
 });
 

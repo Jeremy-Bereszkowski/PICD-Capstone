@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Modal from 'react-bootstrap/Modal'
 import '../css/dashboard.css';
 
 class Dashboard extends Component {
@@ -56,16 +55,19 @@ class Dashboard extends Component {
             var projectID = this.state.projectList[key].project_id;
 
             return (
+                
                 <tr key={key}>
+                    
                     <td>{dateTime}</td>
                     <td>{title}</td>
                     <td></td>
                     <td>{projectID}</td>
                     <td></td>
                     <td>
-                        <p class='conrol-column'>
-                            <Link>
-                            <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} class="btn btn-xs btn-danger">Delete</button>
+                        <p className='control-column'>
+                            <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button>
+                            <Link to={`/project/${projectID}/`}>
+                                <button className="btn btn-success">View</button>
                             </Link>
                         </p>
                     </td>
@@ -76,12 +78,12 @@ class Dashboard extends Component {
       
     render() {
         return (
-            <div class='container header'>
-                <div class="page-header">
+            <div className='container header'>
+                <div className="page-header">
                     <h1>Projects</h1>
                 </div>
-                <div class='container'>
-                    <table class="table">
+                <div className='container'>
+                    <table className="table">
                         <thead>
                             <tr>
                                 <th>CREATED</th>
