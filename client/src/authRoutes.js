@@ -1,12 +1,10 @@
 import React from 'react';
-import { Route, Router } from 'react-router-dom';
-import Auth from './auth';
+import { Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard.jsx';
-import history from './history';
 
 const authRoutes = () => (
     <div>
-      <Route path="/" component={Dashboard}/>
+      <Route path="/" render={(props) => <Dashboard {...props} />} />
     </div>
 );
 
