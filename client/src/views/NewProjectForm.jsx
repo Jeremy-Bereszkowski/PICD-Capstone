@@ -3,18 +3,14 @@ import React, { Component } from 'react'
 class Project extends Component {
     constructor(props) {
         super(props)
-    
-        this.state = {
-            project_id: ""
-        }
     }
 
     handleSubmit = (event) => {
-        var title = event.target.title.value !== '' ? event.target.title.value : this.state.title
-        var description = event.target.description.value !== '' ? event.target.description.value : this.state.description
-        var revision = event.target.revision.value !== '' ? event.target.revision.value : this.state.revision
+        var title = event.target.title.value /* !== '' ? event.target.title.value : this.state.title */
+        var description = event.target.description.value /* !== '' ? event.target.description.value : this.state.description */
+        var revision = event.target.revision.value /* !== '' ? event.target.revision.value : this.state.revision */
 
-        fetch('http://localhost:9000/project/'+this.state.project_id+'/new', {
+        fetch('http://localhost:9000/project/new', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'
@@ -35,7 +31,7 @@ class Project extends Component {
             <div className="container px-4 py-2">
                 <div className="row">
                     <h3>
-                        {this.state.title}
+                        Create New Project
                     </h3>
                 </div>
                 <div className="row">
@@ -66,8 +62,8 @@ class Project extends Component {
 
                         <div className="form-group row mb-0">
                             <div className="col-md-8 offset-md-4">
-                                <button type="submit" className="btn btn-primary">
-                                    Update
+                                <button type="submit" className="btn btn-success">
+                                    Create
                                 </button>
                             </div>
                         </div>

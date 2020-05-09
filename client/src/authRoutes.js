@@ -9,7 +9,7 @@ const authRoutes = () => (
       <Switch>
         <Route exact path="/" component={(props) => <Dashboard {...props} />} />
         <Route path="/project/:id" component={(props) => <Project {...props}/>} />
-        <Route path="/newProject/:id" component={(props) => <NewProject {...props}/>} />
+        <Route path="/newProject/" component={(props) => <NewProject {...props}/>} />
       </Switch>
     </Router>
 );
