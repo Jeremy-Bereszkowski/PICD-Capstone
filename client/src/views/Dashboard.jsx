@@ -43,19 +43,12 @@ class Dashboard extends Component {
         return Object.keys(this.state.projectList).map((key) => {
             var data = this.state.projectList[key].date_stamp.substring(5, 10).split('-');
             var date = data[1] + '-' + data[0];
-
-            /* console.log( this.state.projectList[key].date_stamp); */
-
             var time = this.state.projectList[key].date_stamp.substring(11, 16);
-
             var dateTime = date + ' ' + time;
 
             var title = this.state.projectList[key].title;
-
             var projectID = this.state.projectList[key].project_id;
-
             var description = this.state.projectList[key].description;
-
             var revision = this.state.projectList[key].revision;
 
             return (
@@ -70,9 +63,6 @@ class Dashboard extends Component {
                     <td>
                         <p className='control-column'>
                             <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button>
-                            {/* <Link to={`/projectDetails/${projectID}/`}>
-                                <button className="btn btn-info">Edit</button>
-                            </Link> */}
                             <Link to={`/project/${projectID}/`}>
                                 <button className="btn btn-success">View</button>
                             </Link>
@@ -93,7 +83,7 @@ class Dashboard extends Component {
                         </span>
                         <span className="col text-right">
                             <Link to={`/newProject/`}>
-                                <button className="btn btn-success">View</button>
+                                <button className="btn btn-success">New Project</button>
                             </Link>
                         </span>
                     </div>

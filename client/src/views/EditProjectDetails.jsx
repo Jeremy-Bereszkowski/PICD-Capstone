@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import Sidebar from '../components/Sidebar'
 
-class Project extends Component {
+class EditProjectDetails extends Component {
     constructor(props) {
         super(props)
     
@@ -100,9 +101,15 @@ class Project extends Component {
     }
 
     render() {
+        const sidebarItems = [
+            {title: 'Code Sample', link: '/'},
+            {title: 'File Storage', link: '/'},
+            {title: 'Edit Project', link: `/projectEdit/${this.props.match.params.id}/`}
+        ]
 
         return (
             <div className="row">
+                <Sidebar items={sidebarItems}/>
                 <div className="col-md-8 p-2">
                     {this.renderProject()}
                 </div>
@@ -111,4 +118,4 @@ class Project extends Component {
     }
 }
 
-export default Project
+export default EditProjectDetails
