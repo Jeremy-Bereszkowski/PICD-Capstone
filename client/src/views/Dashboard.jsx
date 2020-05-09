@@ -70,10 +70,10 @@ class Dashboard extends Component {
                     <td>
                         <p className='control-column'>
                             <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button>
-                            <Link to={`/projectDetails/${projectID}/`}>
+                            {/* <Link to={`/projectDetails/${projectID}/`}>
                                 <button className="btn btn-info">Edit</button>
-                            </Link>
-                            <Link to={`/projectDashboard/${projectID}/`}>
+                            </Link> */}
+                            <Link to={`/project/${projectID}/`}>
                                 <button className="btn btn-success">View</button>
                             </Link>
                         </p>
