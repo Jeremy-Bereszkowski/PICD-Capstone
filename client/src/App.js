@@ -4,24 +4,20 @@ import Router from './authRoutes'
 import Footer from './components/Footer'
 /* import Sidebar from './components/Sidebar'; */
 
+
 function App(props) {
-  
-  /* const sidebarItems = [
-    {title: 'item 1', link: '/'},
-    {title: 'item 2', link: '/'}
-  ];
- */
+
   const headerItems = [
     {title: 'Logout', onClick: props.logoutHandler},
   ];
 
   return (
     <div className="App">
+      <Header items={headerItems} />
       <main>
-        <Header items={headerItems} />
         <Router />
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }
