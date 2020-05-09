@@ -64,5 +64,17 @@ router.post('/:id/update', async (req, res) => {
   }
 });
 
+router.post('/new', async (req, res) => {
+  try {
+    const updateProjectQuery = 'insert into projects (title, description, revision) values (?, ?, ?)';
+
+    await pool.query(updateProjectQuery, [req.body.title, req.body.description, req.body.revision]);
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+  } catch (err) {
+    res.status(500).send('Connection error!').end();
+  }
+});
+
 
 module.exports = router;
