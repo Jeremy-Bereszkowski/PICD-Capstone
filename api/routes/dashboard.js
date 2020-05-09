@@ -59,8 +59,6 @@ router.get('/', async (req, res) => {
     
     projectList.sort(compare);
 
-    //console.log(projectList);
-
     res.end(JSON.stringify({projectList: projectList}));
   } catch (err) {
       console.log(err);
