@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 class Project extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class Project extends Component {
             <div className="container px-4 py-2">
                 <div className="row">
                     <h3>
-                        Create New Project
+                        New Project
                     </h3>
                 </div>
                 <div className="row">
@@ -40,7 +41,7 @@ class Project extends Component {
                             <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
                             
                             <div className="col-md-6">
-                                <input type="text" className="form-control" id="title" />
+                                <input type="text" className="form-control" id="title" required/>
                             </div>
                         </div>
 
@@ -62,6 +63,9 @@ class Project extends Component {
 
                         <div className="form-group row mb-0">
                             <div className="col-md-8 offset-md-4">
+                                <Link to={`/`}>
+                                    <button className="btn btn-danger">Cancel</button>
+                                </Link>
                                 <button type="submit" className="btn btn-success">
                                     Create
                                 </button>
