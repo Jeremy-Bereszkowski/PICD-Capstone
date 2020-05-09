@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import Dashboard from './views/Dashboard.jsx';
 import Project from './views/Project';
 import NewProject from './views/NewProjectForm';
+import ProjectEdit from './views/ProjectDetails';
 
 const authRoutes = () => (
     <Router>
@@ -10,6 +11,8 @@ const authRoutes = () => (
         <Route exact path="/" component={(props) => <Dashboard {...props} />} />
         <Route path="/project/:id" component={(props) => <Project {...props}/>} />
         <Route path="/newProject/" component={(props) => <NewProject {...props}/>} />
+
+        <Route path="/projectEdit/:id" component={(props) => <ProjectEdit {...props}/>} />
       </Switch>
     </Router>
 );

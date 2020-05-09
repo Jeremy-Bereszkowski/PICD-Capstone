@@ -34,7 +34,7 @@ class Dashboard extends Component {
             }
         })
         .then((data) => {
-            console.log(data);
+            /* console.log(data); */
             window.location.reload(false);
         });
     }
@@ -44,7 +44,7 @@ class Dashboard extends Component {
             var data = this.state.projectList[key].date_stamp.substring(5, 10).split('-');
             var date = data[1] + '-' + data[0];
 
-            console.log( this.state.projectList[key].date_stamp);
+            /* console.log( this.state.projectList[key].date_stamp); */
 
             var time = this.state.projectList[key].date_stamp.substring(11, 16);
 
@@ -54,18 +54,25 @@ class Dashboard extends Component {
 
             var projectID = this.state.projectList[key].project_id;
 
+            var description = this.state.projectList[key].description;
+
+            var revision = this.state.projectList[key].revision;
+
             return (
                 
                 <tr key={key}>
                     
                     <td>{dateTime}</td>
                     <td>{title}</td>
-                    <td></td>
+                    <td>{description}</td>
                     <td>{projectID}</td>
-                    <td></td>
+                    <td>{revision}</td>
                     <td>
                         <p className='control-column'>
                             <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button>
+                            {/* <Link to={`/projectDetails/${projectID}/`}>
+                                <button className="btn btn-info">Edit</button>
+                            </Link> */}
                             <Link to={`/project/${projectID}/`}>
                                 <button className="btn btn-success">View</button>
                             </Link>

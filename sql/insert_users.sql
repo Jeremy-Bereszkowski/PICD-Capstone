@@ -15,9 +15,9 @@ values ('brenton', 'holloway', 'admin', 'brenton.holloway@gmail.com', 'testpass'
 +---------+---------+----------+-----------+------------------------------+----------+
 
 
-insert into projects (title) values ('test');
-insert into projects (title) values ('test1');
-insert into projects (title) values ('test2');
+insert into projects (title, description, revision) values ('test1', 'test project 1', '0.0.1');
+insert into projects (title, description, revision) values ('test2', 'test project 2', '0.0.2');
+insert into projects (title, description, revision) values ('test3', 'test project 3', '0.0.3');
 
 +------------+-------+---------------------+
 | project_id | title | date_stamp          |
