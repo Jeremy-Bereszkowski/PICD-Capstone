@@ -54,9 +54,9 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id/update', async (req, res) => {
   try {
-    const updateProjectQuery = 'UPDATE projects SET title=(?) WHERE project_id=(?)';
+    const updateProjectQuery = 'UPDATE projects SET title=(?),  description=(?),  revision=(?) WHERE project_id=(?)';
 
-    await pool.query(updateProjectQuery, [req.body.title, req.params.id]);
+    await pool.query(updateProjectQuery, [req.body.title, req.body.description, req.body.revision, req.params.id]);
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {
