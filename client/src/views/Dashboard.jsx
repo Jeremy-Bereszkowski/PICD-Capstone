@@ -80,13 +80,15 @@ class Dashboard extends Component {
         return (
             <div className='container header'>
                 <div className="page-header">
-                    <div>
-                        <h1 className='left'>Projects</h1>
-                    </div>
-                    <div className='left'>
-                        <Link to={`/newProject/`}>
-                            <button className="btn btn-success">View</button>
-                        </Link>
+                    <div className="row justify-content-center">
+                        <span className="col text-left">
+                            <h1 className='left'>Projects</h1>
+                        </span>
+                        <span className="col text-right">
+                            <Link to={`/newProject/`}>
+                                <button className="btn btn-success">View</button>
+                            </Link>
+                        </span>
                     </div>
                 </div>
                 <div className='container'>
