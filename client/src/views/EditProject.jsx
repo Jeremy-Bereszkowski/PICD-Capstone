@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Sidebar from '../components/Sidebar'
+import { Link } from 'react-router-dom'
 
-class EditProjectDetails extends Component {
+class EditProject extends Component {
     constructor(props) {
         super(props)
     
@@ -89,6 +90,9 @@ class EditProjectDetails extends Component {
 
                         <div className="form-group row mb-0">
                             <div className="col-md-8 offset-md-4">
+                                <Link to={`/project/${this.props.match.params.id}`}>
+                                    <button className="btn btn-danger">Cancel</button>
+                                </Link>
                                 <button type="submit" className="btn btn-primary">
                                     Update
                                 </button>
@@ -101,15 +105,9 @@ class EditProjectDetails extends Component {
     }
 
     render() {
-        const sidebarItems = [
-            {title: 'Code Sample', link: '/'},
-            {title: 'File Storage', link: '/'},
-            {title: 'Edit Project', link: `/projectEdit/${this.props.match.params.id}/`}
-        ]
-
         return (
             <div className="row">
-                <Sidebar items={sidebarItems}/>
+                <Sidebar id={this.props.match.params.id}/>
                 <div className="col-md-8 p-2">
                     {this.renderProject()}
                 </div>
@@ -118,4 +116,4 @@ class EditProjectDetails extends Component {
     }
 }
 
-export default EditProjectDetails
+export default EditProject

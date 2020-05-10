@@ -9,7 +9,7 @@ class Dashboard extends Component {
           projectList: ""
         }
 
-        this.deleteProject = this.deleteProject.bind(this);
+        /* this.deleteProject = this.deleteProject.bind(this); */
     }
     
     callAPI() {
@@ -24,7 +24,7 @@ class Dashboard extends Component {
     
     componentWillMount() {
         this.callAPI();
-    }
+    }/* 
 
     deleteProject(projectID, e) {
         fetch('http://localhost:9000/dashboard/delete/'+projectID)
@@ -34,10 +34,10 @@ class Dashboard extends Component {
             }
         })
         .then((data) => {
-            /* console.log(data); */
+            console.log(data);
             window.location.reload(false);
         });
-    }
+    } */
 
     renderTableData() {
         return Object.keys(this.state.projectList).map((key) => {
@@ -62,9 +62,9 @@ class Dashboard extends Component {
                     <td>{revision}</td>
                     <td>
                         <p className='control-column'>
-                            <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button>
+                            {/* <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button> */}
                             <Link to={`/project/${projectID}/`}>
-                                <button className="btn btn-success">View</button>
+                                <button className="btn btn-primary">View</button>
                             </Link>
                         </p>
                     </td>
