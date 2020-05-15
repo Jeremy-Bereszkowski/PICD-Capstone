@@ -6,14 +6,11 @@ class Project extends Component {
         super(props)
     
         this.state = {
-             
             project_id: "",
             title: "",
             date_stamp: ""
         }
     }
-
-    getProjectData() {
 
     getProjectData(projectID) {
         fetch("http://localhost:9000/project/"+projectID)
@@ -28,10 +25,8 @@ class Project extends Component {
     }
 
     componentWillMount() {
-        this.getProjectData();
         this.getProjectData(this.props.match.params.id);
     }
-    
 
     handleFormChange = (event) => {
         this.setState({
@@ -63,43 +58,24 @@ class Project extends Component {
                     </h3>
                 </div>
                 <div className="row">
-                    <form className="col" method="post" onSubmit={this.handleSubmit}>
-                        <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Name: </label>
-                            
-                            <div className="col-md-6">
-                                <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleFormChange}/>
-                            </div>
-                        </div>
-
-                        <div className="form-group row mb-0">
-                            <div className="col-md-8 offset-md-4">
-                                <button type="submit" className="btn btn-primary">
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    
+                        
+                    
                 </div>
             </div>
         )
     }
 
     render() {
-        const sidebarItems = [
-            {title: 'Code Sample', link: '/'},
-            {title: 'File Storage', link: '/'},
-            {title: 'Project Details', link: `/projectDetails/${projectID}/`}
-        ];
-
-        return (
-            <div className="container">
-                
+        return (                
             <div className="row">
-                <Sidebar items={sidebarItems}/>
+                <Sidebar id={this.props.match.params.id}/>
                 <div className="col-md-8 p-2">
                     {this.renderProject()}
                 </div>
             </div>
         )
     }
+}
+
+export default Project

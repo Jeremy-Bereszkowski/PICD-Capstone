@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-class Project extends Component {
-    constructor(props) {
-        super(props)
-    }
-
+class NewProjectForm extends Component {
     handleSubmit = (event) => {
         var title = event.target.title.value /* !== '' ? event.target.title.value : this.state.title */
         var description = event.target.description.value /* !== '' ? event.target.description.value : this.state.description */
@@ -24,6 +20,7 @@ class Project extends Component {
         }).then((res) => {
             window.location.href = "/";
         })
+        
         event.preventDefault()
     }
 
@@ -78,7 +75,6 @@ class Project extends Component {
     }
 
     render() {
-
         return (
             <div className="row">
                 <div className="col-md-8 p-2">
@@ -89,4 +85,4 @@ class Project extends Component {
     }
 }
 
-export default Project
+export default NewProjectForm
