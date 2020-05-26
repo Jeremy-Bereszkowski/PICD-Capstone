@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 class DeleteProject extends Component {
     deleteProject(projectID, e) {
-        fetch('http://localhost:9000/dashboard/delete/'+projectID)
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/delete/'+projectID)
         .then((response) => {
             if (response.status === 200) {
                 return response.json(); 

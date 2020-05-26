@@ -41,22 +41,30 @@ router.post('/login', async (req, res) => {
   try {
     console.log(process.env.DB_HOST);
     //Create new deposit record
-    const getUserDetails = 'select password, clearance from users where email="' + req.body.uname + '";';
+    const getUserDetails = 'SELECT * FROM users WHERE email="' + req.body.uname + '";';
 
     //Run query - fetch response
     var userDetails = await pool.query(getUserDetails);
 
     if (userDetails.length < 1) {
-      res.status(403).send({message: 'Unkown E-Mail'}).end();
+      res.status(403).send({message: 'Unkown E-Mail'});
     }
     else if (userDetails[0].password === req.body.pword) {
-      res.status(200).send(userDetails[0].clearance).end();
+      res.status(200).send({
+        user: {
+          id: userDetails[0].id,
+          fname: userDetails[0].first_name,
+          lname: userDetails[0].last_name,
+          email: userDetails[0].email,
+          clearance: userDetails[0].clearance,
+        }
+      });
     }
     else {
-      res.status(403).send({message: 'Incorrect Password'}).end();
+      res.status(403).send({message: 'Incorrect Password'});
     }
   } catch (err) {
-    res.status(500).send('Connection error!').end();
+    res.status(500).send('Connection error!');
   }
 });
 

@@ -13,18 +13,18 @@ class Project extends Component {
     }
 
     getProjectData(projectID) {
-        fetch("http://localhost:9000/project/"+projectID)
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectID)
         .then(res => res.json())
         .then(res => {
             this.setState({
-                project_id: res.project[0].project_id,
-                title: res.project[0].title,
-                date_stamp: res.project[0].date_stamp
+                project_id: res.project.project_id,
+                title: res.project.title,
+                date_stamp: res.project.date_stamp
             })
         });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getProjectData(this.props.match.params.id);
     }
 
@@ -35,7 +35,7 @@ class Project extends Component {
     }
 
     handleSubmit = (event) => {
-        fetch('http://localhost:9000/project/'+this.state.project_id+'/update', {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+this.state.project_id+'/update', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'
@@ -49,29 +49,18 @@ class Project extends Component {
         event.preventDefault()
     }
 
-    renderProject() {
-        return (
-            <div className="container px-4 py-2">
-                <div className="row">
-                    <h3>
-                        {this.state.title}
-                    </h3>
-                </div>
-                <div className="row">
-                    
-                        
-                    
-                </div>
-            </div>
-        )
-    }
-
     render() {
         return (                
-            <div className="row">
-                <Sidebar id={this.props.match.params.id}/>
-                <div className="col-md-8 p-2">
-                    {this.renderProject()}
+            <div className="col">
+                <div className="row justify-content-left">
+                    <Sidebar id={this.props.match.params.id}/>
+                    <div className="col">
+                        <div className="container-fluid">
+                            <h3>
+                                {this.state.title}
+                            </h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

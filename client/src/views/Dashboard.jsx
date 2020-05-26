@@ -6,105 +6,77 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          projectList: ""
+          projects: [],
+          isLoading: true
         }
 
         /* this.deleteProject = this.deleteProject.bind(this); */
     }
     
     callAPI() {
-        fetch('http://localhost:9000/dashboard/')
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/')
         .then((response) => { return response.json(); })
         .then((data) => {
-          this.setState({
-            projectList: data.projectList
-          })
+            this.setState({
+                projects: data,
+                isLoading: false
+            })
         });
     }
     
-    componentWillMount() {
+    componentDidMount() {
         this.callAPI();
-    }/* 
+    }
+    
+    datetime = (datetime) => {
+        var date = datetime.substring(0, 10).split('-');
+        var time = datetime.substring(11, 16);
+        return date[2] + "/" + date[1] + "/" + date[0] + ", " + time
+    }
 
-    deleteProject(projectID, e) {
-        fetch('http://localhost:9000/dashboard/delete/'+projectID)
-        .then((response) => {
-            if (response.status === 200) {
-                return response.json(); 
-            }
-        })
-        .then((data) => {
-            console.log(data);
-            window.location.reload(false);
-        });
-    } */
-
-    renderTableData() {
-        return Object.keys(this.state.projectList).map((key) => {
-            var data = this.state.projectList[key].date_stamp.substring(5, 10).split('-');
-            var date = data[1] + '-' + data[0];
-            var time = this.state.projectList[key].date_stamp.substring(11, 16);
-            var dateTime = date + ' ' + time;
-
-            var title = this.state.projectList[key].title;
-            var projectID = this.state.projectList[key].project_id;
-            var description = this.state.projectList[key].description;
-            var revision = this.state.projectList[key].revision;
-
-            return (
-                
-                <tr key={key}>
-                    
-                    <td>{dateTime}</td>
-                    <td>{title}</td>
-                    <td>{description}</td>
-                    <td>{projectID}</td>
-                    <td>{revision}</td>
-                    <td>
-                        <p className='control-column'>
-                            {/* <button id='test' type="button" onClick={(e) => this.deleteProject(projectID, e)} className="btn btn-xs btn-danger">Delete</button> */}
-                            <Link to={`/project/${projectID}/`}>
-                                <button className="btn btn-primary">View</button>
-                            </Link>
-                        </p>
-                    </td>
-                </tr>
-            )
-        })
+    onClickHandler = (id) => {
+        this.props.history.push("/project/"+id)
     }
       
     render() {
+
         return (
-            <div className='container header'>
-                <div className="page-header">
-                    <div className="row justify-content-center">
-                        <span className="col text-left">
-                            <h1 className='left'>Projects</h1>
-                        </span>
-                        <span className="col text-right">
-                            <Link to={`/newProject/`}>
-                                <button className="btn btn-success">New Project</button>
-                            </Link>
-                        </span>
-                    </div>
+            <div className='container py-4'>
+                <div className="row justify-content-center">
+                    <span className="col text-left">
+                        <h1 className='left'>Projects</h1>
+                    </span>
+                    <span className="col text-right">
+                        <Link to={`/newProject/`}>
+                            <button className="btn btn-success">New Project</button>
+                        </Link>
+                    </span>
                 </div>
-                <div className='container'>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>CREATED</th>
-                                <th>TITLE</th>
-                                <th>DESCRIPTION</th>
-                                <th>ID</th>
-                                <th>REVISION</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.renderTableData()}
-                        </tbody>
-                    </table>
-                </div>
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>CREATED</th>
+                            <th>TITLE</th>
+                            <th>DESCRIPTION</th>
+                            <th>ID</th>
+                            <th>REVISION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.isLoading ? <tr><td colSpan="5" className="text-center"><strong>Loading...</strong></td></tr> :
+                        this.state.projects.map((project) => {
+                            return (
+                                <tr key={project.project_id} className="pointer" onClick={() => this.onClickHandler(project.project_id)}>
+                                    <td>{this.datetime(project.date_stamp)}</td>
+                                    <td>{project.title}</td>
+                                    <td>{project.description}</td>
+                                    <td>{project.project_id}</td>
+                                    <td>{project.revision}</td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
             </div>
         )
     }
