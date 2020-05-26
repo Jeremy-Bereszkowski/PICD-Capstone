@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
     
     projectList.sort(compare);
 
-    res.end(JSON.stringify({projectList: projectList}));
+    res.status(200).json(projectList);
   } catch (err) {
       console.log(err);
       res.status(500).end('Unable to retrieve projecs!');

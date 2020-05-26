@@ -45,7 +45,7 @@ router.get('/:id', async (req, res) => {
     var project = await pool.query(getProjectQuery, [id]);
     // console.log(project);
 
-    res.status(200).end(JSON.stringify({project: project}));
+    res.status(200).end(JSON.stringify({project: project[0]}));
   } catch (err) {
     console.log(err);
     res.status(500).end('Unable to retrieve Project')

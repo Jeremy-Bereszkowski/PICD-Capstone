@@ -1,5 +1,13 @@
 .App {
-  text-align: center;
+  position: relative;
+}
+
+main {
+  margin-bottom: 2.5rem;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .App-logo {

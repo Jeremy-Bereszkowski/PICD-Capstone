@@ -11,107 +11,122 @@ class EditProject extends Component {
             title: "",
             date_stamp: "",
             description: "",
-            revision: ""
+            revision: "",
+            err: ""
         }
     }
 
     getProjectData(projectID) {
-        fetch("http://localhost:9000/project/"+projectID)
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectID)
         .then(res => res.json())
         .then(res => {
             this.setState({
-                project_id: res.project[0].project_id,
-                title: res.project[0].title,
-                date_stamp: res.project[0].date_stamp,
-                description: res.project[0].description,
-                revision: res.project[0].revision
+                project_id: res.project.project_id,
+                title: res.project.title,
+                date_stamp: res.project.date_stamp,
+                description: res.project.description,
+                revision: res.project.revision
             })
         });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getProjectData(this.props.match.params.id);
     }
 
     handleSubmit = (event) => {
-        var title = event.target.title.value !== '' ? event.target.title.value : this.state.title
-        var description = event.target.description.value !== '' ? event.target.description.value : this.state.description
-        var revision = event.target.revision.value !== '' ? event.target.revision.value : this.state.revision
-
-        fetch('http://localhost:9000/project/'+this.state.project_id+'/update', {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: title,
-                description: description,
-                revision: revision
-            })
-        }).then((res) => {
-            window.location.href = "/";
-        })
         event.preventDefault()
+        try {
+            if(this.state.title.length < 1){
+                throw new Error('Title can not be empty');
+            }
+
+            fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+this.state.project_id+'/update', {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: this.state.title,
+                    description: this.state.description,
+                    revision: this.state.revision
+                })
+            })
+            .catch(error => this.setState({err: error.message}))
+
+        } catch (error) {
+            this.setState({err: error.message});
+        }
     }
 
-    renderProject() {
-        return (
-            <div className="container px-4 py-2">
-                <div className="row">
-                    <h3>
-                        {this.state.title}
-                    </h3>
-                </div>
-                <div className="row">
-                    <form className="col" method="post" onSubmit={this.handleSubmit}>
-                        <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
-                            
-                            <div className="col-md-6">
-                                <input type="text" className="form-control" id="title" placeholder={this.state.title} />
-                            </div>
-                        </div>
-
-                        <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Description: </label>
-                            
-                            <div className="col-md-6">
-                                <input type="text" className="form-control" id="description" placeholder={this.state.description} />
-                            </div>
-                        </div>
-
-                        <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
-                            
-                            <div className="col-md-6">
-                                <input type="text" className="form-control" id="revision" placeholder={this.state.revision} />
-                            </div>
-                        </div>
-
-                        <div className="form-group row mb-0">
-                            <div className="col-md-8 offset-md-4">
-                                <Link to={`/project/${this.props.match.params.id}`}>
-                                    <button className="btn btn-danger">Cancel</button>
-                                </Link>
-                                <button type="submit" className="btn btn-primary">
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        )
+    handleFormChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
     }
 
     render() {
         return (
-            <div className="row">
-                <Sidebar id={this.props.match.params.id}/>
-                <div className="col-md-8 p-2">
-                    {this.renderProject()}
+            <div className="col">
+                <div className="row justify-content-left">
+                    <Sidebar id={this.props.match.params.id}/>
+                    <div className="col">
+                        <div className="container-fluid">
+                            <h3>{this.state.title}</h3>
+                            <form onSubmit={this.handleSubmit}>
+                                <div className="form-group row">
+                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
+                                    
+                                    <div className="col-md-6">
+                                        <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange}/>
+                                    </div>
+                                </div>
+
+                                <div className="form-group row">
+                                    <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
+                                    
+                                    <div className="col-md-6">
+                                        <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
+                                    </div>
+                                </div>
+
+                                <div className="form-group row">
+                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
+                                    
+                                    <div className="col-md-6">
+                                        <input name="revision" type="text" className="form-control" id="revision" value={this.state.revision} disabled/>
+                                    </div>
+                                </div>
+
+                                {this.state.err !== "" ?
+                                <div className="form-group row">
+                                    <div className="col-md-6 offset-md-4">
+                                        <span className="alert-danger form-control">
+                                        {this.state.err}
+                                        </span>
+                                    </div>
+                                </div>: null}
+
+                                <div className="form-group row mb-0">
+                                    <div className="col-md-6 offset-md-2">
+                                        <span>
+                                            <Link to={`/project/${this.props.match.params.id}`}>
+                                                <button className="btn btn-danger">Cancel</button>
+                                            </Link>
+                                        </span>
+                                        <span className="px-1">
+                                            <button type="submit" className="btn btn-primary">
+                                                Update
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
         )
     }
 }

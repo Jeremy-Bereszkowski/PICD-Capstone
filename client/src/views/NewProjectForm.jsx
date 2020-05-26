@@ -7,7 +7,7 @@ class NewProjectForm extends Component {
         var description = event.target.description.value /* !== '' ? event.target.description.value : this.state.description */
         var revision = event.target.revision.value /* !== '' ? event.target.revision.value : this.state.revision */
 
-        fetch('http://localhost:9000/project/new', {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/new', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'
@@ -24,9 +24,9 @@ class NewProjectForm extends Component {
         event.preventDefault()
     }
 
-    renderProject() {
+    render() {
         return (
-            <div className="container px-4 py-2">
+            <div className="container">
                 <div className="row">
                     <h3>
                         New Project
@@ -69,16 +69,6 @@ class NewProjectForm extends Component {
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        )
-    }
-
-    render() {
-        return (
-            <div className="row">
-                <div className="col-md-8 p-2">
-                    {this.renderProject()}
                 </div>
             </div>
         )
