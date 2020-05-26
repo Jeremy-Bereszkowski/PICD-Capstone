@@ -22,7 +22,7 @@ class App extends Component{
             buttons: [
                 {title: 'Dashboard', type: "Link", link: "/dashboard"},
                 {title: 'Logout', type: "Logout", link: "/", onClick: () => {auth.logout()},
-                {title: '', type: "Link", link: "/admin"},
+                /* {title: '', type: "Link", link: "/admin"} */
                 /* {title: auth.getClearance() === 'Admin' ? 'Admin' : '', type: "Logout", link: "/", onClick: () => {auth.logout()}, */
             }
                 
