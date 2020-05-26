@@ -21,7 +21,9 @@ class App extends Component{
         const AuthHeaderItems = {
             buttons: [
                 {title: 'Dashboard', type: "Link", link: "/dashboard"},
-                {title: 'Logout', type: "Logout", link: "/", onClick: () => {auth.logout()}
+                {title: 'Logout', type: "Logout", link: "/", onClick: () => {auth.logout()},
+                {title: '', type: "Link", link: "/admin"}
+                /* {title: auth.getClearance() === 'Admin' ? 'Admin' : '', type: "Logout", link: "/", onClick: () => {auth.logout()}, */
             }
                 
             ],
@@ -56,6 +58,7 @@ class App extends Component{
         				<ProtectedRoute path="/newProject/" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <NewProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectEdit/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <EditProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectDelete/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <DeleteProject {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute path="/admin" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Admin {...props}/>} footer={() => <Footer />}/>
                     </Switch>
                 </Router>
             </div>

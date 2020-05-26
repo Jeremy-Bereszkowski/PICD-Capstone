@@ -64,6 +64,10 @@ class Auth {
   isAuthenticated = () => {
     return sessionStorage.getItem('authenticated');
   }
+
+  getClearance = () => {
+    return JSON.parse(sessionStorage.getItem('user')).clearance;
+  }
 }
 
 export default new Auth();
