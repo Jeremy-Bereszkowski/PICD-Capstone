@@ -32,7 +32,9 @@ class Header extends Component {
     render() {
         return (
             <nav className="navbar navbar-expand navbar-dark bg-dark">
-                <a href={this.props.items.title.link} className="navbar-brand col-sm-3 col md 2 mr-0">{this.props.items.title.name}</a>
+                <Link to={this.props.items.title.link} className="navbar-brand col-sm-3 col md 2 mr-0">
+                    {this.props.items.title.name}
+                </Link>
                 <ul className="navbar-nav px-3 ml-auto list-inline">
                     {this.props.items.buttons.map((item, index) => (
                         <li className="nav-item text-nowrap list-inline-item" key={index}>
