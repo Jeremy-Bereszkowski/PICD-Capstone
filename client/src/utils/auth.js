@@ -66,7 +66,11 @@ class Auth {
   }
 
   getClearance = () => {
-    return JSON.parse(sessionStorage.getItem('user')).clearance;
+    if (sessionStorage.getItem('user')) {
+      return JSON.parse(sessionStorage.getItem('user')).clearance;
+    } else {
+      return ''
+    }
   }
 }
 

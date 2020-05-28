@@ -10,6 +10,7 @@ var logger = require('morgan');
 var auth = require('./routes/auth');
 var dashboard = require('./routes/dashboard');
 var project = require('./routes/project')
+var admin = require('./routes/admin')
 var cors = require("cors");
 
 var app = express();
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
 app.use('/project', project)
+app.use('/admin', admin)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
