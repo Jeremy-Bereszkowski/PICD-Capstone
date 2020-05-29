@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, BrowserRouter as Router } from 'react-router-dom'
+import AdminRoute from './utils/admin.route'
 import ProtectedRoute from './utils/protected.route'
 import PublicRoute from './utils/public.route'
 import auth from './utils/auth'
@@ -59,15 +60,14 @@ class App extends Component{
         				<ProtectedRoute path="/newProject/" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <NewProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectEdit/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <EditProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectDelete/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <DeleteProject {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path="/admin" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Admin {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminNewUser {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminEditUser {...props}/>} footer={() => <Footer />}/>
+                        <AdminRoute exact path="/admin" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Admin {...props}/>} footer={() => <Footer />}/>
+                        <AdminRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminNewUser {...props}/>} footer={() => <Footer />}/>
+                        <AdminRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminEditUser {...props}/>} footer={() => <Footer />}/>
                     </Switch>
                 </Router>
             </div>
         );
     }
-    
 }
 
 export default App; 

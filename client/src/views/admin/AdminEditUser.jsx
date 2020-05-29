@@ -7,25 +7,25 @@ class AdminEditUser extends Component {
         super(props)
     
         this.state = {
-            project_id: "",
-            title: "",
-            date_stamp: "",
-            description: "",
-            revision: "",
+            user_id: "",
+            fname: "",
+            lname: "",
+            clearance: "",
+            email: "",
             err: ""
         }
     }
 
-    getProjectData(projectID) {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectID)
+    getProjectData(userID) {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/admin/users"+userID)
         .then(res => res.json())
         .then(res => {
             this.setState({
-                project_id: res.project.project_id,
-                title: res.project.title,
-                date_stamp: res.project.date_stamp,
-                description: res.project.description,
-                revision: res.project.revision
+                user_id: res.user.user_id,
+                fname: res.user.fname,
+                lname: res.user.lname,
+                clearance: res.user.clearance,
+                email: res.user.email
             })
         });
     }
@@ -37,10 +37,6 @@ class AdminEditUser extends Component {
     handleSubmit = (event) => {
         event.preventDefault()
         try {
-            if(this.state.title.length < 1){
-                throw new Error('Title can not be empty');
-            }
-
             fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+this.state.project_id+'/update', {
                 method: 'post',
                 headers: {
@@ -69,43 +65,55 @@ class AdminEditUser extends Component {
         return (
             <div className="col">
                 <div className="row justify-content-left">
-                    <Sidebar id={this.props.match.params.id}/>
                     <div className="col">
                         <div className="container-fluid">
-                            <h3>{this.state.title}</h3>
-                            <form onSubmit={this.handleSubmit}>
+                            <h3>Edit User</h3>
+                            <form className="col" method="post" onSubmit={this.handleSubmit}>
                                 <div className="form-group row">
-                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
+                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">First Name: </label>
                                     
                                     <div className="col-md-6">
-                                        <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange}/>
+                                        <input type="text" className="form-control" id="fname" required/>
                                     </div>
                                 </div>
 
                                 <div className="form-group row">
-                                    <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
+                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Last Name: </label>
                                     
                                     <div className="col-md-6">
-                                        <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
+                                        <input type="text" className="form-control" id="lname" required/>
                                     </div>
                                 </div>
 
                                 <div className="form-group row">
-                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
+                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Clearance: </label>
                                     
                                     <div className="col-md-6">
-                                        <input name="revision" type="text" className="form-control" id="revision" value={this.state.revision} disabled/>
+                                        <select className="form-control" id="clearance" >
+                                            <option value="read-only">Read-Only</option>
+                                            <option value="edit">Edit</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="form-group row">
+                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">E-Mail: </label>
+                                    
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" id="email" required/>
                                     </div>
                                 </div>
 
                                 {this.state.err !== "" ?
-                                <div className="form-group row">
-                                    <div className="col-md-6 offset-md-4">
-                                        <span className="alert-danger form-control">
-                                        {this.state.err}
-                                        </span>
-                                    </div>
-                                </div>: null}
+                                    <div className="form-group row">
+                                        <div className="col-md-6 offset-md-4">
+                                            <span className="alert-danger form-control">
+                                            {this.state.err}
+                                            </span>
+                                        </div>
+                                    </div> : null
+                                }
 
                                 <div className="form-group row mb-0">
                                     <div className="col-md-6 offset-md-2">
@@ -126,7 +134,6 @@ class AdminEditUser extends Component {
                     </div>
                 </div>
             </div>
-            
         )
     }
 }

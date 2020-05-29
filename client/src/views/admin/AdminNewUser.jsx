@@ -2,26 +2,59 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 class AdminNewUser extends Component {
-    handleSubmit = (event) => {
-        var title = event.target.title.value /* !== '' ? event.target.title.value : this.state.title */
-        var description = event.target.description.value /* !== '' ? event.target.description.value : this.state.description */
-        var revision = event.target.revision.value /* !== '' ? event.target.revision.value : this.state.revision */
+    constructor(props) {
+        super(props)
+        this.state ={
+            err: ''
+        }
+    }
 
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/admin/users/new', {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: title,
-                description: description,
-                revision: revision
-            })
-        }).then((res) => {
-            window.location.href = "/";
-        })
-        
+    handleSubmit = (event) => {
         event.preventDefault()
+
+        var fname = event.target.fname.value
+        var lname = event.target.lname.value
+        var clearance = event.target.clearance.value
+        var email = event.target.email.value
+        var pass = event.target.pass.value
+        var confirmpass = event.target.confirmpass.value
+
+        console.log(clearance)
+
+        if (pass !== confirmpass) {
+            this.setState({
+                ...this.state,
+                err: 'Passwords do not match'
+            })
+        } else {
+            fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/admin/users/new', {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fname: fname,
+                    lname: lname,
+                    clearance: clearance,
+                    email: email,
+                    password: pass,
+                })
+            }).then((res) => {
+                if(res.status === 200) {
+                    window.location.href = "/admin";
+                } else {
+                    this.setState({
+                        ...this.state,
+                        err: 'Error, please try again'
+                    })
+                }
+            }).catch((err) => {
+                this.setState({
+                    ...this.state,
+                    err: 'Error, please try again'
+                })
+            })
+        }
     }
 
     render() {
@@ -29,38 +62,80 @@ class AdminNewUser extends Component {
             <div className="container">
                 <div className="row">
                     <h3>
-                        New Project
+                        New User
                     </h3>
                 </div>
                 <div className="row">
                     <form className="col" method="post" onSubmit={this.handleSubmit}>
                         <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">First Name: </label>
                             
                             <div className="col-md-6">
-                                <input type="text" className="form-control" id="title" required/>
+                                <input type="text" className="form-control" id="fname" required/>
                             </div>
                         </div>
 
                         <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Description: </label>
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Last Name: </label>
                             
                             <div className="col-md-6">
-                                <input type="text" className="form-control" id="description" />
+                                <input type="text" className="form-control" id="lname" required/>
                             </div>
                         </div>
 
                         <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Clearance: </label>
                             
                             <div className="col-md-6">
-                                <input type="text" className="form-control" id="revision" />
+                                <select className="form-control" id="clearance">
+                                    <option value="read-only">Read-Only</option>
+                                    <option value="edit">Edit</option>
+                                    <option value="admin">Admin</option>
+                                </select>
                             </div>
                         </div>
+
+                        <div className="form-group row">
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">E-Mail: </label>
+                            
+                            <div className="col-md-6">
+                                <input type="text" className="form-control" id="email" required/>
+                            </div>
+                        </div>
+
+                        <div className="form-group row">
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Password: </label>
+                            
+                            <div className="col-md-6">
+                                <input type="password" className="form-control" id="pass" required/>
+                            </div>
+                        </div>
+
+                        <div className="form-group row">
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Confirm Password: </label>
+                            
+                            <div className="col-md-6">
+                                <input type="password" className="form-control" id="confirmpass" required/>
+                            </div>
+                        </div>
+
+                        
+
+                        {this.state.err !== "" &&
+                            <div className="form-group row">
+                                <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+
+                                <div className="col-md-6">
+                                    <span className="alert-danger form-control">
+                                    {this.state.err}
+                                    </span>
+                                </div>
+                            </div>
+                        }
 
                         <div className="form-group row mb-0">
                             <div className="col-md-8 offset-md-4">
-                                <Link to={`/`}>
+                                <Link to={`/admin`}>
                                     <button className="btn btn-danger">Cancel</button>
                                 </Link>
                                 <button type="submit" className="btn btn-success">

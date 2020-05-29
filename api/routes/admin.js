@@ -51,4 +51,16 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.post('/users/new', async (req, res) => {
+  try {
+    const newUserQuery = 'insert into users (fname,lname,clearance,email,password) values (?, ?, ?, ?, ?)';
+
+    await pool.query(newUserQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password]);
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+  } catch (err) {
+    res.status(500).send('Connection error!').end();
+  }
+});
+
 module.exports = router;
