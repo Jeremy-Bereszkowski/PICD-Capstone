@@ -9,11 +9,12 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 
 import Dashboard from './views/Dashboard'
-import Project from './views/Project'
-import NewProject from './views/NewProjectForm'
-import EditProject from './views/EditProject'
-import DeleteProject from './views/DeleteProject'
 import Login from './views/Login'
+
+import Project from './views/project/Project'
+import NewProject from './views/project/NewProjectForm'
+import EditProject from './views/project/EditProject'
+import DeleteProject from './views/project/DeleteProject'
 
 import Admin from './views/admin/Admin'
 import AdminNewUser from './views/admin/AdminNewUser'

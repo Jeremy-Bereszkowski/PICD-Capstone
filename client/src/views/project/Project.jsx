@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../components/Sidebar'
 
 class Project extends Component {
     constructor(props) {
