@@ -1,4 +1,4 @@
-use picd_capstone_test;
+use test;
 
 /*  Test users */
 insert into users (fname,lname,clearance,email,password)

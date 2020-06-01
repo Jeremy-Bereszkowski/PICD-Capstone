@@ -1,4 +1,4 @@
-use picd_capstone_test;
+use test;
 
 CREATE TABLE IF NOT EXISTS users
 (
