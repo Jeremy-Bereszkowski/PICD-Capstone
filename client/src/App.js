@@ -12,18 +12,18 @@ import Dashboard from './views/Dashboard'
 import Login from './views/Login'
 
 import Project from './views/project/Project'
-import NewProject from './views/project/NewProjectForm'
-import EditProject from './views/project/EditProject'
-import DeleteProject from './views/project/DeleteProject'
+import ProjectNew from './views/project/ProjectNew'
+import ProjectEdit from './views/project/ProjectEdit'
+import ProjectDelete from './views/project/ProjectDelete'
 
 import StageDesign from './views/project/stages/StageDesign'
 import StageSimulation from './views/project/stages/StageSimulation'
 import StageLayout from './views/project/stages/StageLayout'
 import StageTest from './views/project/stages/StageTest'
 
-import Admin from './views/admin/Admin'
-import AdminNewUser from './views/admin/AdminNewUser'
-import AdminEditUser from './views/admin/AdminEditUser'
+import AdminUser from './views/admin/AdminUser'
+import AdminUserNew from './views/admin/AdminUserNew'
+import AdminUserEdit from './views/admin/AdminUserEdit'
 
 import './css/App.css'
 
@@ -31,7 +31,7 @@ class App extends Component{
     render() {
         const AuthHeaderItems = {
             buttons: [
-                {title: auth.getClearance() === 'admin' ? 'Admin' : '', type: "Link", link: "/admin"},
+                {title: auth.getClearance() === 'admin' ? 'Admin' : '', type: "Link", link: "/admin/users"},
                 {title: 'Dashboard', type: "Link", link: "/dashboard"},
                 {title: 'Logout', type: "Logout", link: "/", onClick: () => {auth.logout()}},
             ],
@@ -63,6 +63,11 @@ class App extends Component{
                         <PublicRoute exact path="/" header={(props) => <Header items={unAuthHeaderItems} {...props}/>} component={(props) => <Login {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/dashboard" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Dashboard {...props}/>} footer={() => <Footer />}/>
 						<ProtectedRoute path="/project/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Project {...props}/>} footer={() => <Footer />}/>
+
+        				<ProtectedRoute path="/newProject/" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectNew {...props}/>} footer={() => <Footer />}/>
+        				<ProtectedRoute path="/projectEdit/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectEdit {...props}/>} footer={() => <Footer />}/>
+        				<ProtectedRoute path="/projectDelete/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectDelete {...props}/>} footer={() => <Footer />}/>
+
         				<ProtectedRoute path="/newProject/" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <NewProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectEdit/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <EditProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectDelete/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <DeleteProject {...props}/>} footer={() => <Footer />}/>
@@ -70,9 +75,10 @@ class App extends Component{
                         <ProtectedRoute path="/project/:id/simulation" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageSimulation {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/project/:id/layout" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageLayout {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/project/:id/test" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageTest {...props}/>} footer={() => <Footer />}/>
-                        <AdminRoute exact path="/admin" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Admin {...props}/>} footer={() => <Footer />}/>
-                        <AdminRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminNewUser {...props}/>} footer={() => <Footer />}/>
-                        <AdminRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminEditUser {...props}/>} footer={() => <Footer />}/>
+                        <AdminRoute exact path="/admin/users" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUser {...props}/>} footer={() => <Footer />}/>
+                        <AdminRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUserNew {...props}/>} footer={() => <Footer />}/>
+                        <AdminRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUserEdit {...props}/>} footer={() => <Footer />}/>
+
                     </Switch>
                 </Router>
             </div>
