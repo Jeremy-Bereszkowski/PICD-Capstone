@@ -5,13 +5,11 @@ class Sidebar extends Component {
     render() {
         const sidebarItems = [
             {title: 'Overview', link: `/project/${this.props.id}`},
-            {title: 'Design', link: '/'},
-            {title: 'Simulation', link: '/'},
-            {title: 'Layout', link: '/'},
-            {title: 'Test', link: '/'},
-            {title: 'Settings', link: '/'},
-            {title: 'Edit Project', link: `/projectEdit/${this.props.id}/`},
-            {title: 'Delete Project', link: `/projectDelete/${this.props.id}/`}
+            {title: 'Design', link: `/project/${this.props.id}/design`},
+            {title: 'Simulation', link: `/project/${this.props.id}/simulation`},
+            {title: 'Layout', link: `/project/${this.props.id}/layout`},
+            {title: 'Test', link: `/project/${this.props.id}/test`},
+            {title: 'Settings', link: `/projectSettings/${this.props.id}/`},
         ]
 
         return (

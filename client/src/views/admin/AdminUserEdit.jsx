@@ -94,10 +94,11 @@ class AdminUserEdit extends Component {
                             <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
                             <div className="col-md-6">
                                 <h3>
-                                    Edit User - UID: {this.state.user_id}
+                                Edit User - UID: {this.state.user_id}
                                 </h3>
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <form className="col" method="post" onSubmit={this.handleSubmit}>
                                 <div className="form-group row">

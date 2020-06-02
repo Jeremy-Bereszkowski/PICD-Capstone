@@ -73,6 +73,7 @@ class AdminUserNew extends Component {
                                 </h3>
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <form className="col" method="post" onSubmit={this.handleSubmit}>
                                 <div className="form-group row">
@@ -160,7 +161,6 @@ class AdminUserNew extends Component {
                     </div>
                 </div>
             </div>
-            
         )
     }
 }

@@ -13,8 +13,7 @@ import Login from './views/Login'
 
 import Project from './views/project/Project'
 import ProjectNew from './views/project/ProjectNew'
-import ProjectEdit from './views/project/ProjectEdit'
-import ProjectDelete from './views/project/ProjectDelete'
+import ProjectSettings from './views/project/ProjectSettings'
 
 import StageDesign from './views/project/stages/StageDesign'
 import StageSimulation from './views/project/stages/StageSimulation'
@@ -62,10 +61,9 @@ class App extends Component{
                     <Switch>
                         <PublicRoute exact path="/" header={(props) => <Header items={unAuthHeaderItems} {...props}/>} component={(props) => <Login {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/dashboard" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Dashboard {...props}/>} footer={() => <Footer />}/>
-						<ProtectedRoute path="/project/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Project {...props}/>} footer={() => <Footer />}/>
+						<ProtectedRoute exact path="/project/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Project {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/newProject/" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectNew {...props}/>} footer={() => <Footer />}/>
-        				<ProtectedRoute path="/projectEdit/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectEdit {...props}/>} footer={() => <Footer />}/>
-        				<ProtectedRoute path="/projectDelete/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectDelete {...props}/>} footer={() => <Footer />}/>
+        				<ProtectedRoute path="/projectSettings/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectSettings {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/project/:id/design" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageDesign {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/project/:id/simulation" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageSimulation {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/project/:id/layout" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageLayout {...props}/>} footer={() => <Footer />}/>
