@@ -52,7 +52,7 @@ class AdminUserEdit extends Component {
             })
             .then(res => {
                 if(res.status === 200) {
-                    window.location.href = "/admin";
+                    window.location.href = "/admin/users";
                 }
             })
             .catch(error => this.setState({err: error.message}))
@@ -69,7 +69,7 @@ class AdminUserEdit extends Component {
             fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/admin/users/delete/'+this.state.user_id)
             .then((res) => {
                 if (res.status === 200) {
-                    window.location.href = "/admin";
+                    window.location.href = "/admin/users";
                 }
             })
             .catch(error => this.setState({err: error.message}))

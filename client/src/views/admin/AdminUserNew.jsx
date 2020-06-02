@@ -43,7 +43,7 @@ class AdminUserNew extends Component {
             }).then((res) => {
                 if(res.status === 200) {
                     window.location.reload();
-                    window.location.href = "/admin";
+                    window.location.href = "/admin/users";
                 } else {
                     this.setState({
                         ...this.state,

@@ -9,7 +9,7 @@ class Sidebar extends Component {
             {title: 'Simulation', link: `/project/${this.props.id}/simulation`},
             {title: 'Layout', link: `/project/${this.props.id}/layout`},
             {title: 'Test', link: `/project/${this.props.id}/test`},
-            {title: 'Settings', link: `/projectSettings/${this.props.id}/`},
+            {title: 'Settings', link: `/project/${this.props.id}/settings`},
         ]
 
         return (
