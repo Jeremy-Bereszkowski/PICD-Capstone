@@ -16,6 +16,11 @@ import NewProject from './views/project/NewProjectForm'
 import EditProject from './views/project/EditProject'
 import DeleteProject from './views/project/DeleteProject'
 
+import StageDesign from './views/project/stages/StageDesign'
+import StageSimulation from './views/project/stages/StageSimulation'
+import StageLayout from './views/project/stages/StageLayout'
+import StageTest from './views/project/stages/StageTest'
+
 import Admin from './views/admin/Admin'
 import AdminNewUser from './views/admin/AdminNewUser'
 import AdminEditUser from './views/admin/AdminEditUser'
@@ -61,6 +66,10 @@ class App extends Component{
         				<ProtectedRoute path="/newProject/" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <NewProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectEdit/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <EditProject {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/projectDelete/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <DeleteProject {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute path="/project/:id/design" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageDesign {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute path="/project/:id/simulation" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageSimulation {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute path="/project/:id/layout" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageLayout {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute path="/project/:id/test" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageTest {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute exact path="/admin" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Admin {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminNewUser {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminEditUser {...props}/>} footer={() => <Footer />}/>
