@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS versions (
     REFERENCES projects (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
-);
+
 
 -- -----------------------------------------------------
 -- Table files

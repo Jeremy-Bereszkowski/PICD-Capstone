@@ -12,7 +12,7 @@ export default function Login(props) {
         const {email, password} = event.target.elements;
 
         auth.login(() => {
-            props.history.push("/dashboard");
+            window.location.reload();
         },
         email.value,
         password.value,

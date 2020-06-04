@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../components/Sidebar'
 import { Link } from 'react-router-dom'
 
-class EditProject extends Component {
+class ProjectSettings extends Component {
     constructor(props) {
         super(props)
     
@@ -65,15 +65,44 @@ class EditProject extends Component {
         });
     }
 
+    deleteProject(projectID, e) {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/delete/'+projectID)
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json(); 
+            }
+        })
+        .then((data) => {
+            /* console.log(data); */
+            window.location.href = "/";
+        });
+    }
+
     render() {
         return (
             <div className="col">
                 <div className="row justify-content-left">
                     <Sidebar id={this.props.match.params.id}/>
                     <div className="col">
-                        <div className="container-fluid">
-                            <h3>{this.state.title}</h3>
-                            <form onSubmit={this.handleSubmit}>
+                        <div className="row">
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+                            <div className="col-md-6">
+                                <h3>
+                                    Project Settings
+                                </h3>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div className="row">
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+                            <div className="col-md-6">
+                                <h5>
+                                    Edit
+                                </h5>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <form className="col" onSubmit={this.handleSubmit}>
                                 <div className="form-group row">
                                     <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
                                     
@@ -81,7 +110,6 @@ class EditProject extends Component {
                                         <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange}/>
                                     </div>
                                 </div>
-
                                 <div className="form-group row">
                                     <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
                                     
@@ -89,7 +117,6 @@ class EditProject extends Component {
                                         <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
                                     </div>
                                 </div>
-
                                 <div className="form-group row">
                                     <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
                                     
@@ -97,7 +124,6 @@ class EditProject extends Component {
                                         <input name="revision" type="text" className="form-control" id="revision" value={this.state.revision} disabled/>
                                     </div>
                                 </div>
-
                                 {this.state.err !== "" ?
                                 <div className="form-group row">
                                     <div className="col-md-6 offset-md-4">
@@ -106,7 +132,6 @@ class EditProject extends Component {
                                         </span>
                                     </div>
                                 </div>: null}
-
                                 <div className="form-group row mb-0">
                                     <div className="col-md-6 offset-md-2">
                                         <span>
@@ -123,12 +148,33 @@ class EditProject extends Component {
                                 </div>
                             </form>
                         </div>
+                        <hr/>
+                        <div className="row">
+                            <form className="col" onSubmit={this.handleSubmit}>
+                                {this.state.err !== "" ?
+                                <div className="form-group row">
+                                    <div className="col-md-6 offset-md-4">
+                                        <span className="alert-danger form-control">
+                                        {this.state.err}
+                                        </span>
+                                    </div>
+                                </div>: null}
+                                <div className="form-group row">
+                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project?</label>
+                                    
+                                    <div className="col-md-6">
+                                        <button id='test' type="button" onClick={(e) => this.deleteProject(this.props.match.params.id, e)} className="btn btn-xs btn-warning">
+                                            Confirm
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            
         )
     }
 }
 
-export default EditProject
+export default ProjectSettings

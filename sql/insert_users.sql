@@ -1,4 +1,4 @@
-use picd_capstone_test;
+use test;
 
 /*  Test users */
 insert into users (fname,lname,clearance,email,password)
@@ -6,6 +6,9 @@ values ('jeremy', 'beresh', 'admin', 'j.beresh@hotmail.com', 'hello');
 
 insert into users (fname,lname,clearance,email,password)
 values ('brenton', 'holloway', 'admin', 'brenton.holloway@gmail.com', 'testpass');
+
+insert into users (fname,lname,clearance,email,password)
+values ('test', 'one', 'edit', 'test@gmail.com', 'beep');
 
 +---------+---------+----------+-----------+------------------------------+----------+
 | user_id | fname   | lname    | clearance | email                        | password |

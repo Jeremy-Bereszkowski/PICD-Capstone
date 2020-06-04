@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../components/Sidebar'
 
 class Project extends Component {
     constructor(props) {
@@ -50,16 +50,21 @@ class Project extends Component {
     }
 
     render() {
-        return (                
+        return (
             <div className="col">
                 <div className="row justify-content-left">
                     <Sidebar id={this.props.match.params.id}/>
                     <div className="col">
-                        <div className="container-fluid">
-                            <h3>
+                        <div className="row">
+                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+                            <div className="col-md-6">
+                                <h3>
                                 {this.state.title}
-                            </h3>
+                                </h3>
+                            </div>
                         </div>
+                        <hr/>
+                        
                     </div>
                 </div>
             </div>

@@ -4,12 +4,7 @@ import { Link } from 'react-router-dom'
 class Sidebar extends Component {
     render() {
         const sidebarItems = [
-            {title: 'Overview', link: `/project/${this.props.id}`},
-            {title: 'Design', link: `/project/${this.props.id}/design`},
-            {title: 'Simulation', link: `/project/${this.props.id}/simulation`},
-            {title: 'Layout', link: `/project/${this.props.id}/layout`},
-            {title: 'Test', link: `/project/${this.props.id}/test`},
-            {title: 'Settings', link: `/project/${this.props.id}/settings`},
+            {title: 'Users', link: `/admin/users`}
         ]
 
         return (

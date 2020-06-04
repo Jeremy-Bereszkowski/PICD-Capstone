@@ -9,8 +9,6 @@ class Dashboard extends Component {
           projects: [],
           isLoading: true
         }
-
-        /* this.deleteProject = this.deleteProject.bind(this); */
     }
     
     callAPI() {
