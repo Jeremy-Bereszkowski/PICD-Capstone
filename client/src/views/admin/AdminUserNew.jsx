@@ -43,7 +43,7 @@ class AdminUserNew extends Component {
             }).then((res) => {
                 if(res.status === 200) {
                     window.location.reload();
-                    window.location.href = "/admin";
+                    window.location.href = "/admin/users";
                 } else {
                     this.setState({
                         ...this.state,
@@ -73,6 +73,7 @@ class AdminUserNew extends Component {
                                 </h3>
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <form className="col" method="post" onSubmit={this.handleSubmit}>
                                 <div className="form-group row">
@@ -160,7 +161,6 @@ class AdminUserNew extends Component {
                     </div>
                 </div>
             </div>
-            
         )
     }
 }

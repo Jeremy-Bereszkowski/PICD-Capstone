@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-class NewProjectForm extends Component {
+class ProjectNew extends Component {
     handleSubmit = (event) => {
         var title = event.target.title.value
         var description = event.target.description.value
@@ -82,4 +82,4 @@ class NewProjectForm extends Component {
     }
 }
 
-export default NewProjectForm
+export default ProjectNew
