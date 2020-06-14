@@ -5,7 +5,6 @@ class ProjectNew extends Component {
     handleSubmit = (event) => {
         var title = event.target.title.value
         var description = event.target.description.value
-        var revision = event.target.revision.value
 
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/new', {
             method: 'post',
@@ -15,7 +14,6 @@ class ProjectNew extends Component {
             body: JSON.stringify({
                 title: title,
                 description: description,
-                revision: revision
             })
         }).then((res) => {
             window.location.href = "/";
@@ -49,15 +47,7 @@ class ProjectNew extends Component {
                             <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Description: </label>
                             
                             <div className="col-md-6">
-                                <input type="text" className="form-control" id="description" />
-                            </div>
-                        </div>
-
-                        <div className="form-group row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
-                            
-                            <div className="col-md-6">
-                                <input type="text" className="form-control" id="revision" />
+                                <textarea type="text" className="form-control" id="description" />
                             </div>
                         </div>
 

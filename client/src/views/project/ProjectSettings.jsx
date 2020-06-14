@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Sidebar from '../../components/Sidebar'
-import { Link } from 'react-router-dom'
 
 class ProjectSettings extends Component {
     constructor(props) {
@@ -11,7 +10,8 @@ class ProjectSettings extends Component {
             title: "",
             date_stamp: "",
             description: "",
-            revision: "",
+            created_at: "",
+            updated_at: "",
             err: ""
         }
     }
@@ -23,15 +23,15 @@ class ProjectSettings extends Component {
             this.setState({
                 project_id: res.project.project_id,
                 title: res.project.title,
-                date_stamp: res.project.date_stamp,
                 description: res.project.description,
-                revision: res.project.revision
+                created_at: res.project.created_at,
+                updated_at: res.project.updated_at
             })
         });
     }
 
     componentDidMount() {
-        this.getProjectData(this.props.match.params.id);
+        this.getProjectData(this.props.match.params.projectId);
     }
 
     handleSubmit = (event) => {
@@ -78,11 +78,17 @@ class ProjectSettings extends Component {
         });
     }
 
+    datetime = (datetime) => {
+        var date = datetime.substring(0, 10).split('-');
+        var time = datetime.substring(11, 16);
+        return date[2] + "/" + date[1] + "/" + date[0] + ", " + time
+    }
+
     render() {
         return (
             <div className="col">
                 <div className="row justify-content-left">
-                    <Sidebar id={this.props.match.params.id}/>
+                    <Sidebar id={this.props.match.params.projectId}/>
                     <div className="col">
                         <div className="row">
                             <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
@@ -117,13 +123,6 @@ class ProjectSettings extends Component {
                                         <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
                                     </div>
                                 </div>
-                                <div className="form-group row">
-                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Project Revision: </label>
-                                    
-                                    <div className="col-md-6">
-                                        <input name="revision" type="text" className="form-control" id="revision" value={this.state.revision} disabled/>
-                                    </div>
-                                </div>
                                 {this.state.err !== "" ?
                                 <div className="form-group row">
                                     <div className="col-md-6 offset-md-4">
@@ -135,9 +134,9 @@ class ProjectSettings extends Component {
                                 <div className="form-group row mb-0">
                                     <div className="col-md-6 offset-md-2">
                                         <span>
-                                            <Link to={`/project/${this.props.match.params.id}`}>
-                                                <button className="btn btn-danger">Cancel</button>
-                                            </Link>
+                                            <button className="btn btn-danger" onClick={() => this.getProjectData(this.props.match.params.id)}>
+                                                Cancel
+                                            </button>
                                         </span>
                                         <span className="px-1">
                                             <button type="submit" className="btn btn-primary">
@@ -147,6 +146,19 @@ class ProjectSettings extends Component {
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                        <hr/>
+                        <div className="row">
+                            <div className="col">
+                                <div className="form-group row">
+                                    <label htmlFor="created_at" className="col-md-2 text-md-right">Created At:</label>
+                                    <span className="col-md-6">{this.datetime(this.state.created_at)}</span>
+                                </div>
+                                <div className="form-group row">
+                                    <label htmlFor="updated_at" className="col-md-2 text-md-right">Updated At:</label>
+                                    <span className="col-md-6">{this.datetime(this.state.updated_at)}</span>
+                                </div>
+                            </div>
                         </div>
                         <hr/>
                         <div className="row">
@@ -160,11 +172,11 @@ class ProjectSettings extends Component {
                                     </div>
                                 </div>: null}
                                 <div className="form-group row">
-                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project?</label>
+                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project:</label>
                                     
                                     <div className="col-md-6">
-                                        <button id='test' type="button" onClick={(e) => this.deleteProject(this.props.match.params.id, e)} className="btn btn-xs btn-warning">
-                                            Confirm
+                                        <button id='test' type="button" onClick={(e) => this.deleteProject(this.props.match.params.projectId, e)} className="btn btn-xs btn-danger">
+                                            Delete
                                         </button>
                                     </div>
                                 </div>
@@ -177,4 +189,4 @@ class ProjectSettings extends Component {
     }
 }
 
-export default ProjectSettings
+export default ProjectSettings;

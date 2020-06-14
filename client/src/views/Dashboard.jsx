@@ -25,12 +25,6 @@ class Dashboard extends Component {
     componentDidMount() {
         this.callAPI();
     }
-    
-    datetime = (datetime) => {
-        var date = datetime.substring(0, 10).split('-');
-        var time = datetime.substring(11, 16);
-        return date[2] + "/" + date[1] + "/" + date[0] + ", " + time
-    }
 
     onClickHandler = (id) => {
         this.props.history.push("/project/"+id)
@@ -45,7 +39,7 @@ class Dashboard extends Component {
                         <h1 className='left'>Projects</h1>
                     </span>
                     <span className="col text-right">
-                        <Link to={`/newProject/`}>
+                        <Link to={`/project/new`}>
                             <button className="btn btn-success">New Project</button>
                         </Link>
                     </span>
@@ -53,11 +47,8 @@ class Dashboard extends Component {
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th>CREATED</th>
                             <th>TITLE</th>
                             <th>DESCRIPTION</th>
-                            <th>ID</th>
-                            <th>REVISION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,11 +56,8 @@ class Dashboard extends Component {
                         this.state.projects.map((project) => {
                             return (
                                 <tr key={project.project_id} className="pointer" onClick={() => this.onClickHandler(project.project_id)}>
-                                    <td>{this.datetime(project.date_stamp)}</td>
                                     <td>{project.title}</td>
                                     <td>{project.description}</td>
-                                    <td>{project.project_id}</td>
-                                    <td>{project.revision}</td>
                                 </tr>
                             )
                         })}

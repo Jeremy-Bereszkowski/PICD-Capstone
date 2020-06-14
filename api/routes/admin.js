@@ -36,10 +36,25 @@ const createPool = async () => {
 };
 createPool();
 
+const getAllUsers = 'SELECT '+
+                      'user_id, '+
+                      'fname, '+
+                      'lname, '+
+                      'clearance, '+
+                      'profile, '+
+                      'email, '+
+                      'password, '+
+                      'created_at, '+
+                      'updated_at '+
+                    'FROM picd.user '+
+                    'JOIN clearance '+
+                    'ON user.clearance_id = clearance.clearance_id';
+
 router.get('/users', async (req, res) => {
   try {
     //Get current acct_value of customer
-    const getUserList = 'select * from users;';
+    const getUserList = getAllUsers + ';';
+
 
     //Run query - fetch response
     var userList = await pool.query(getUserList);
@@ -47,7 +62,7 @@ router.get('/users', async (req, res) => {
     res.status(200).json(userList);
   } catch (err) {
       console.log(err);
-      res.status(500).end('Unable to retrieve projecs!');
+      res.status(500).end('Unable to retrieve users!');
   }
 });
 
@@ -56,7 +71,7 @@ router.get('/users/:id', async (req, res) => {
 
   try {
     //Get current acct_value of customer
-    const getUser = 'select * from users where user_id=(?);';
+    const getUser = getAllUsers + ' where user_id=(?);';
 
     //Run query - fetch response
     var user = await pool.query(getUser, [id]);
@@ -64,14 +79,14 @@ router.get('/users/:id', async (req, res) => {
     res.status(200).end(JSON.stringify({user: user[0]}));
   } catch (err) {
       console.log(err);
-      res.status(500).end('Unable to retrieve projecs!');
+      res.status(500).end('Unable to retrieve user!');
   }
 });
 
 router.post('/users/new', async (req, res) => {
   console.log(req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password)
   try {
-    const newUserQuery = 'insert into users (fname,lname,clearance,email,password) values (?, ?, ?, ?, ?)';
+    const newUserQuery = 'insert into user (fname,lname,clearance_id,email,password) values (?, ?, ?, ?, ?)';
 
     await pool.query(newUserQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password]);
 
@@ -83,7 +98,7 @@ router.post('/users/new', async (req, res) => {
 
 router.post('/users/:userID/update', async (req, res) => {
   try {
-    const updateProjectQuery = 'UPDATE users SET fname=(?),lname=(?),clearance=(?),email=(?) WHERE user_id=(?)';
+    const updateProjectQuery = 'UPDATE user SET fname=(?),lname=(?),clearance_id=(?),email=(?) WHERE user_id=(?)';
 
     await pool.query(updateProjectQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.params.userID]);
 
@@ -98,7 +113,7 @@ router.get('/users/delete/:userID', async (req, res) => {
 
   try {
     //Get current acct_value of customer
-    const deleteQuery = 'delete from users where user_id=(?);';
+    const deleteQuery = 'delete from user where user_id=(?);';
 
     //Run query - fetch response
     await pool.query(deleteQuery, [userID]);
@@ -106,7 +121,7 @@ router.get('/users/delete/:userID', async (req, res) => {
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {
       console.log(err);
-      res.status(500).end('Unable to retrieve projecs!');
+      res.status(500).end('Unable to delete user!');
   }
 });
 

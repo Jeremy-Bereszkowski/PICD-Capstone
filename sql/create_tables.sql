@@ -1,116 +1,143 @@
-USE picd ;
+USE picd;
 
 -- -----------------------------------------------------
--- Table projects
+-- Table project
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS projects ;
+DROP TABLE IF EXISTS project;
 
-CREATE TABLE IF NOT EXISTS projects (
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS project (
+  project_id INT(11) NOT NULL AUTO_INCREMENT,
+  title VARCHAR(45) NOT NULL,
   description VARCHAR(45) NULL,
   deleted TINYINT(1) NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  PRIMARY KEY (id)
-);
-
--- -----------------------------------------------------
--- Table versions
--- -----------------------------------------------------
-DROP TABLE IF EXISTS versions ;
-
-CREATE TABLE IF NOT EXISTS versions (
-  id INT NOT NULL AUTO_INCREMENT,
-  project_id INT NOT NULL,
-  version VARCHAR(45) NOT NULL,
-  PRIMARY KEY (id,  project_id),
-  CONSTRAINT fk_versions_projects
-    FOREIGN KEY (project_id)
-    REFERENCES projects (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-
-
--- -----------------------------------------------------
--- Table files
--- -----------------------------------------------------
-DROP TABLE IF EXISTS files ;
-
-CREATE TABLE IF NOT EXISTS files (
-  id INT NOT NULL AUTO_INCREMENT,
-  version_id INT NOT NULL,
-  path VARCHAR(45) NOT NULL,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  PRIMARY KEY (id, version_id),
-  UNIQUE INDEX path (path ASC),
-  INDEX fk_files_versions1_idx (version_id ASC),
-  CONSTRAINT fk_files_versions1
-    FOREIGN KEY (version_id)
-    REFERENCES versions (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-);
-
--- -----------------------------------------------------
--- Table roles
--- -----------------------------------------------------
-DROP TABLE IF EXISTS roles ;
-
-CREATE TABLE IF NOT EXISTS roles (
-  id INT NOT NULL AUTO_INCREMENT,
-  role VARCHAR(45) NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE INDEX role (role ASC)
+  PRIMARY KEY (project_id)
 );
 
 
 -- -----------------------------------------------------
--- Table users
+-- Table clearance
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS users ;
+DROP TABLE IF EXISTS clearance;
 
-CREATE TABLE IF NOT EXISTS users (
-  id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS clearance (
+  clearance_id INT(11) NOT NULL AUTO_INCREMENT,
+  clearance ENUM('user', 'admin') NOT NULL,
+  PRIMARY KEY (clearance_id)
+);
+
+
+-- -----------------------------------------------------
+-- Table user
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE IF NOT EXISTS user (
+  user_id INT(11) NOT NULL AUTO_INCREMENT,
   fname VARCHAR(45) NOT NULL,
   lname VARCHAR(45) NOT NULL,
-  role_id INT NOT NULL,
+  clearance_id INT(11) NOT NULL,
+  profile VARCHAR(45) NOT NULL DEFAULT 'default.png',
   email VARCHAR(45) NOT NULL,
   password CHAR(255) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
   deleted TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (id),
+  PRIMARY KEY (user_id),
   UNIQUE INDEX email (email ASC),
-  INDEX role_id (role_id ASC),
-  CONSTRAINT users_ibfk_1
-    FOREIGN KEY (role_id)
-    REFERENCES roles (id)
+  INDEX fk_user_clearance1_idx (clearance_id ASC),
+  CONSTRAINT fk_user_clearance
+    FOREIGN KEY (clearance_id)
+    REFERENCES clearance (clearance_id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
 
 -- -----------------------------------------------------
--- Table users_has_projects
+-- Table user_has_project
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS users_has_projects ;
+DROP TABLE IF EXISTS user_has_project;
 
-CREATE TABLE IF NOT EXISTS users_has_projects (
-  users_id INT NOT NULL,
-  projects_id INT NOT NULL,
-  PRIMARY KEY (users_id, projects_id),
-  INDEX fk_users_has_projects_projects1_idx (projects_id ASC),
-  INDEX fk_users_has_projects_users1_idx (users_id ASC),
-  CONSTRAINT fk_users_has_projects_projects1
-    FOREIGN KEY (projects_id)
-    REFERENCES projects (id)
+CREATE TABLE IF NOT EXISTS user_has_project (
+  user_id INT(11) NOT NULL,
+  project_id INT(11) NOT NULL,
+  PRIMARY KEY (user_id, project_id),
+  INDEX fk_users_has_projects_projects1_idx (project_id ASC),
+  INDEX fk_users_has_projects_users1_idx (user_id ASC),
+  CONSTRAINT fk_users_has_projects_projects
+    FOREIGN KEY (project_id)
+    REFERENCES project (project_id)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT fk_users_has_projects_users1
-    FOREIGN KEY (users_id)
-    REFERENCES users (id)
-    ON DELETE CASCADE
+  CONSTRAINT fk_user_has_project_users
+    FOREIGN KEY (user_id)
+    REFERENCES user (user_id)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
+);
+
+
+-- -----------------------------------------------------
+-- Table stage
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS stage;
+
+CREATE TABLE IF NOT EXISTS stage (
+  stage_id INT NOT NULL AUTO_INCREMENT,
+  project_id INT(11) NOT NULL,
+  name VARCHAR(45) NULL,
+  PRIMARY KEY (stage_id, project_id),
+  INDEX fk_stages_project1_idx (project_id ASC),
+  CONSTRAINT fk_stages_project
+    FOREIGN KEY (project_id)
+    REFERENCES project (project_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+
+-- -----------------------------------------------------
+-- Table version
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS version;
+
+CREATE TABLE IF NOT EXISTS version (
+  version_id INT NOT NULL AUTO_INCREMENT,
+  stage_id INT NOT NULL,
+  project_id INT(11) NOT NULL,
+  version VARCHAR(45) NOT NULL,
+  description VARCHAR(45) NULL,
+  PRIMARY KEY (version_id, stage_id, project_id),
+  INDEX fk_version_stages1_idx (stage_id ASC, project_id ASC),
+  CONSTRAINT fk_version_stages
+    FOREIGN KEY (stage_id , project_id)
+    REFERENCES stage (stage_id , project_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+
+-- -----------------------------------------------------
+-- Table file
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS file;
+
+CREATE TABLE IF NOT EXISTS file (
+  file_id INT(11) NOT NULL AUTO_INCREMENT,
+  path VARCHAR(45) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  version_id INT NOT NULL,
+  stage_id INT NOT NULL,
+  project_id INT(11) NOT NULL,
+  PRIMARY KEY (file_id, version_id, stage_id, project_id),
+  UNIQUE INDEX path (path ASC),
+  INDEX fk_file_version1_idx (version_id ASC, stage_id ASC, project_id ASC),
+  CONSTRAINT fk_file_version
+    FOREIGN KEY (version_id , stage_id , project_id)
+    REFERENCES version (version_id , stage_id , project_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );

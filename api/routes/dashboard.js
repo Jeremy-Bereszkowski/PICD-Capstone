@@ -39,7 +39,7 @@ createPool();
 router.get('/', async (req, res) => {
   try {
     //Get current acct_value of customer
-    const getProjectsQuery = 'select * from projects;';
+    const getProjectsQuery = 'SELECT * FROM project;';
 
     //Run query - fetch response
     var projectList = await pool.query(getProjectsQuery);
@@ -71,7 +71,7 @@ router.get('/delete/:projectID', async (req, res) => {
 
   try {
     //Get current acct_value of customer
-    const getProjectsQuery = 'delete from projects where project_id=(?);';
+    const getProjectsQuery = 'DELETE FROM project WHERE project_id=(?);';
 
     //Run query - fetch response
     await pool.query(getProjectsQuery, [projectID]);
