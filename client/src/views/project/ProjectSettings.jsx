@@ -108,7 +108,7 @@ class ProjectSettings extends Component {
                             </div>
                         </div>
                         <div className="row">
-                            <form className="col" onSubmit={this.handleSubmit}>
+                            <form className="col">
                                 <div className="form-group row">
                                     <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
                                     
@@ -131,21 +131,25 @@ class ProjectSettings extends Component {
                                         </span>
                                     </div>
                                 </div>: null}
+                            </form>
+                        </div>
+                        <div className="row">
+                            <div className="col">
                                 <div className="form-group row mb-0">
                                     <div className="col-md-6 offset-md-2">
                                         <span>
-                                            <button className="btn btn-danger" onClick={() => this.getProjectData(this.props.match.params.id)}>
+                                            <button className="btn btn-danger" onClick={() => this.getProjectData(this.state.project_id)}>
                                                 Cancel
                                             </button>
                                         </span>
                                         <span className="px-1">
-                                            <button type="submit" className="btn btn-primary">
+                                            <button className="btn btn-primary" onClick={this.handleSubmit}>
                                                 Update
                                             </button>
                                         </span>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <hr/>
                         <div className="row">
