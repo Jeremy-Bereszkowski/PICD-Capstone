@@ -7,7 +7,8 @@ class Stage extends Component {
     
         this.state = {
             name: "",
-            err: ""
+            err: "",
+            stageId: null
         }
     }
 
@@ -16,13 +17,20 @@ class Stage extends Component {
         .then(res => res.json())
         .then(res => {
             this.setState({
-                name: res.name
+                name: res.name,
+                stageId: stageId
             })
         });
     }
     
     componentDidMount() {
         this.getStageData(this.props.match.params.projectId, this.props.match.params.stageId);
+    }
+
+    componentDidUpdate() {
+        if(this.props.match.params.stageId !== this.state.stageId) {
+            this.getStageData(this.props.match.params.projectId, this.props.match.params.stageId);
+        }
     }
 
     render() {
@@ -35,12 +43,16 @@ class Stage extends Component {
                             <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
                             <div className="col-md-6">
                                 <h3>
-                                    Stage {this.props.match.params.stageId} : {this.state.name}
+                                    Stage {this.state.stageId} : {this.state.name}
                                 </h3>
                             </div>
                         </div>
                         <hr/>
-                        
+                        <div className="row">
+                            <div className="col-md">
+                                Stage :)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
