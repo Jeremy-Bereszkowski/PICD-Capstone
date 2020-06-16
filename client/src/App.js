@@ -15,10 +15,7 @@ import Project from './views/project/Project'
 import ProjectNew from './views/project/ProjectNew'
 import ProjectSettings from './views/project/ProjectSettings'
 
-import StageDesign from './views/project/stages/StageDesign'
-import StageSimulation from './views/project/stages/StageSimulation'
-import StageLayout from './views/project/stages/StageLayout'
-import StageTest from './views/project/stages/StageTest'
+import Stage from './views/project/Stage'
 
 import AdminUser from './views/admin/AdminUser'
 import AdminUserNew from './views/admin/AdminUserNew'
@@ -62,12 +59,9 @@ class App extends Component{
                         <PublicRoute exact path="/" header={(props) => <Header items={unAuthHeaderItems} {...props}/>} component={(props) => <Login {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute path="/dashboard" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Dashboard {...props}/>} footer={() => <Footer />}/>
 						<ProtectedRoute path="/project/new" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectNew {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute exact path="/project/:id" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Project {...props}/>} footer={() => <Footer />}/>
-        				<ProtectedRoute path="/project/:id/settings" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectSettings {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path="/project/:id/design" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageDesign {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path="/project/:id/simulation" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageSimulation {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path="/project/:id/layout" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageLayout {...props}/>} footer={() => <Footer />}/>
-                        <ProtectedRoute path="/project/:id/test" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <StageTest {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute exact path="/project/:projectId" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Project {...props}/>} footer={() => <Footer />}/>
+        				<ProtectedRoute path="/project/:projectId/settings" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectSettings {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute exact path="/project/:projectId/stage/:stageId" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Stage {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute exact path="/admin/users" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUser {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUserNew {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUserEdit {...props}/>} footer={() => <Footer />}/>

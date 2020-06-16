@@ -25,7 +25,7 @@ class Project extends Component {
     }
 
     componentDidMount() {
-        this.getProjectData(this.props.match.params.id);
+        this.getProjectData(this.props.match.params.projectId);
     }
 
     handleFormChange = (event) => {
@@ -53,7 +53,7 @@ class Project extends Component {
         return (
             <div className="col">
                 <div className="row justify-content-left">
-                    <Sidebar id={this.props.match.params.id}/>
+                    <Sidebar id={this.props.match.params.projectId}/>
                     <div className="col">
                         <div className="row">
                             <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
