@@ -58,7 +58,6 @@ router.get('/:id/stages', async(req, res) => {
 
     res.status(200).json(stages);
   } catch (err) {
-    console.log(err);
     res.status(500).end('Unable to retrieve Project');
   }
 });

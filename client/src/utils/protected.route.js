@@ -19,7 +19,7 @@ const ProtectedRoute = ({
   return (
     <>
       <Header/>
-      <main>
+      <main className="container-fluid">
         <Route
           {...rest}
           render={props => {
