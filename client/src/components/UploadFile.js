@@ -1,8 +1,8 @@
-import React, {useState, useCallback} from 'react'
-import {useDropzone} from 'react-dropzone'; //Dropzone Examples and Documentation: https://react-dropzone.js.org/
+import React, {useState, useCallback, useEffect} from 'react'
+import {useDropzone} from 'react-dropzone'; // Dropzone Examples and Documentation: https://react-dropzone.js.org/
 import {Progress} from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
+import axios from 'axios'; // Used for uploading the files to the api server
 
 import uploadCloud from '../imgs/black_upload_cloud.svg';
 
@@ -11,18 +11,36 @@ import '../css/UploadFile.css';
 
 function UploadFile({projectId, stageId, stageVersion}) {
     const [files, setFiles] = useState([]);
+    const [upload, setUpload] = useState(false); //used to indecate when the upload button has been pressed and the uploading is about to commense
 
+    /**
+     * Removes a particular file from the files list.
+     * 
+     * @param {*} file 
+     */
     const removeFile = (file) => {
         const newFiles = [...files];
         newFiles.splice(newFiles.indexOf(file), 1);
         setFiles(newFiles);
     }
     
+    /**
+     * Removes all the files in the files list that havent been uploaded.
+     */
     const removeAllFiles = () => {
         toast.dismiss();
-        setFiles([]);
+        const newFiles = [...files];
+        files.map(file => {
+            if(file.progress !== 100) {
+                newFiles.splice(newFiles.indexOf(file), 1);
+            }
+        })
+        setFiles(newFiles);
     }
 
+    /**
+     * This callback is called when a droped file is accepted according to the dropzone settings
+     */
     const onDrop = useCallback(
         (acceptedFiles) => {
             let fileObjs = []
@@ -33,11 +51,18 @@ function UploadFile({projectId, stageId, stageVersion}) {
                    status: "success"
                 });
             })
+
             setFiles([...files, ...fileObjs]);
+            setUpload(false)
+
+            return true;
         },
         [files],
     )
-
+    
+    /**
+     * This callback is called when a droped files in is rejected according to the dropzone settings
+     */
     const onDropRejected = useCallback(
         data => {
             data.map(({file, errors}) => {
@@ -46,7 +71,12 @@ function UploadFile({projectId, stageId, stageVersion}) {
         },
         [],
     )
-
+    
+    /**
+     * Updates the progress bar for the file that is currently being uploaded asynchronously.
+     * 
+     * @param {*} file 
+     */
     const uploadProgress = (file) => (progress) => {
         let percentage = Math.floor((progress.loaded * 100) / progress.total);
         const newFiles = [...files];
@@ -54,23 +84,30 @@ function UploadFile({projectId, stageId, stageVersion}) {
         setFiles(newFiles);
     }
 
+    /**
+     * Upload the files to the API Server using axios.
+     * 
+     * Currently it uploads them one by one so that the progress of each file can be tracked
+     * for the loading bars.
+     */
     const uploadFile = () => {
-        //uploads files one at a time
-        for(var x = 0; x < files.length; x++) {
-            const data = new FormData();
-            data.append('stage_version', stageVersion);
-            data.append('stage', stageId);
-            data.append('project', projectId);
-            data.append('file', files[x].file);
-            axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
-                onUploadProgress: uploadProgress(files[x])
-            })
-            .catch(err => {
-                toast.error(err)
-            })
-        }
-
-        removeAllFiles();
+        setUpload(true);
+        files.map((file) => {
+            if(file.progress !== 100) {
+                const data = new FormData();
+                data.append('stage_version', stageVersion);
+                data.append('stage', stageId);
+                data.append('project', projectId);
+                data.append('file', file.file);
+                axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
+                    onUploadProgress: uploadProgress(file)
+                })
+                .catch(err => {
+                    toast.error(err)
+                })
+            }
+            return true;
+        });
     }
 
     //print a list of all the files
@@ -94,7 +131,10 @@ function UploadFile({projectId, stageId, stageVersion}) {
             </div>}
         </div>
     ));
-
+    
+    /**
+     * Settings for the dropzone
+     */
     const {
         getRootProps, 
         getInputProps, 
@@ -120,7 +160,7 @@ function UploadFile({projectId, stageId, stageVersion}) {
             </div>
             <aside className="pt-1">
                 {filesList}
-                {files.length > 0 ? 
+                {files.length > 0  && !upload? 
                 <div className="row justify-contnet-right pt-1">
                     <div className="col text-right">
                         <input type="button" value="Cancel All" className="btn btn-warning mr-1" onClick={removeAllFiles}/>
@@ -133,89 +173,3 @@ function UploadFile({projectId, stageId, stageVersion}) {
 }
 
 export default UploadFile;
-
-
-
-
-
-// import React, { Component, useCallback } from 'react';
-// import Dropzone from 'react-dropzone';
-// import axios from 'axios';
-// import {Progress} from 'reactstrap';
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-// import '../css/UploadFile.css';
-// import uploadCloud from '../imgs/black_upload_cloud.svg';
-
-//     onClickHandler = () => {
-//         const data = new FormData()
-
-//         for(var x = 0; x < this.state.selectedFile.length; x++) {
-//             data.append('file', this.state.selectedFile[x])
-//         }
-
-//         axios.post("", data, {
-//             onUploadProgress: ProgressEvent => {
-//                 this.setState({
-//                     loaded: (ProgressEvent.loaded / ProgressEvent.total*100),
-//                 })
-//             }
-//         }).then(res => {
-//             toast.success('upload success')
-//         })
-//         .catch(err => {
-//             toast.error('upload fail')
-//         })
-//     }
-
-//     render() {
-//         const files = this.state.files.map(file => (
-//             <li key={file.name}>
-//                 {file.name} - {file.size} bytes
-//             </li>
-//         ))
-//         return (
-//             <div className="container">
-//                 <Dropzone onDrop={this.onDrop}>
-//                             {({getRootProps, getInputProps}) => (
-//                             <section className="container">
-//                                 <div {...getRootProps({className: ['dropzone']})}>
-//                                     <input {...getInputProps()} />
-//                                     <p>Drag 'n' drop some files here, or click to select files</p>
-//                                     <img src={uploadCloud} alt="Upload"/>
-//                                 </div>
-//                                 <aside>
-//                                     <h4>Files</h4>
-//                                     <ul>{files}</ul>
-//                                 </aside>
-//                             </section>
-//                             )}
-//                         </Dropzone>
-                        
-//                 <div className="row">
-//                     <div className="col-md">
-                    
-                        
-                    
-//                         {/* <form>
-//                             <div className={`form-group ${styles.files}`}>
-//                                 <input type="file" name="file" id="file" className="form-control" multiple/>
-//                             </div>
-//                             <div className="form-group">
-//                                 <ToastContainer/>
-//                                 <div className="progress">
-//                                     <Progress max="100" color="success" value={this.state.loadeed}>
-//                                         {Math.round(this.state.loaded, 2)} %
-//                                     </Progress>
-//                                 </div>
-//                             </div>
-//                             <input type="button" value="Upload" className="btn btn-success" onClick={this.onClickHandler}/>
-//                         </form> */}
-//                     </div>
-//                 </div>
-//             </div>
-//         );
-//     }
-// }
-
-// export default UploadFile;
