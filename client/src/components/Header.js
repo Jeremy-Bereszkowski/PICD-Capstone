@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import '../css/Header.css'
+//import '../css/Header.css'
 
 class Header extends Component {
     constructor(props) {
@@ -31,8 +31,8 @@ class Header extends Component {
 
     render() {
         return (
-            <nav className="navbar navbar-expand navbar-dark bg-dark">
-                <Link to={this.props.items.title.link} className="navbar-brand col-sm-3 col md 2 mr-0">
+            <header className="navbar navbar-expand navbar-dark bg-dark">
+                <Link to={this.props.items.title.link} className="navbar-brand col-sm-1 mr-0">
                     {this.props.items.title.name}
                 </Link>
                 <ul className="navbar-nav px-3 ml-auto list-inline">
@@ -41,15 +41,15 @@ class Header extends Component {
                             {this.headerButon(item, index)}
                         </li>
                     ))}
-                    {this.props.items.profile ?
+                    {/* {this.props.items.profile ?
                         <li>
                             <Link to={this.props.items.profile.link}>
-                                <img className="profile px-1" src={'https://storage.googleapis.com/teacher-student-forum-files/'+JSON.parse(sessionStorage.getItem('user')).profile} alt="Profile"/>
+                                <img className="profile px-1" src={""} alt="Profile"/>
                             </Link>
                         </li>
-                        :'' }
+                        :'' } */}
                 </ul>
-            </nav>
+            </header>
         )
     }
 }

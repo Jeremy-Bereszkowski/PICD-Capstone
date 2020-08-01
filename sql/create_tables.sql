@@ -3,9 +3,9 @@ USE picd;
 -- -----------------------------------------------------
 -- Table project
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS project;
+DROP TABLE IF EXISTS `project`;
 
-CREATE TABLE IF NOT EXISTS project (
+CREATE TABLE IF NOT EXISTS `project` (
   project_id INT(11) NOT NULL AUTO_INCREMENT,
   title VARCHAR(45) NOT NULL,
   description VARCHAR(45) NULL,
@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS project (
 -- -----------------------------------------------------
 -- Table clearance
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS clearance;
+DROP TABLE IF EXISTS `clearance`;
 
-CREATE TABLE IF NOT EXISTS clearance (
+CREATE TABLE IF NOT EXISTS `clearance` (
   clearance_id INT(11) NOT NULL AUTO_INCREMENT,
   clearance ENUM('user', 'admin') NOT NULL,
   PRIMARY KEY (clearance_id)
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS clearance (
 -- -----------------------------------------------------
 -- Table user
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS `user`;
 
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE IF NOT EXISTS `user` (
   user_id INT(11) NOT NULL AUTO_INCREMENT,
   fname VARCHAR(45) NOT NULL,
   lname VARCHAR(45) NOT NULL,
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS user (
 -- -----------------------------------------------------
 -- Table user_has_project
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS user_has_project;
+DROP TABLE IF EXISTS `user_has_project`;
 
-CREATE TABLE IF NOT EXISTS user_has_project (
+CREATE TABLE IF NOT EXISTS `user_has_project` (
   user_id INT(11) NOT NULL,
   project_id INT(11) NOT NULL,
   PRIMARY KEY (user_id, project_id),
@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS user_has_project (
 -- -----------------------------------------------------
 -- Table stage
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS stage;
+DROP TABLE IF EXISTS `stage`;
 
-CREATE TABLE IF NOT EXISTS stage (
+CREATE TABLE IF NOT EXISTS `stage` (
   stage_id INT NOT NULL AUTO_INCREMENT,
   project_id INT(11) NOT NULL,
   name VARCHAR(45) NULL,
@@ -101,9 +101,9 @@ CREATE TABLE IF NOT EXISTS stage (
 -- -----------------------------------------------------
 -- Table version
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS version;
+DROP TABLE IF EXISTS `version`;
 
-CREATE TABLE IF NOT EXISTS version (
+CREATE TABLE IF NOT EXISTS `version` (
   version_id INT NOT NULL AUTO_INCREMENT,
   stage_id INT NOT NULL,
   project_id INT(11) NOT NULL,
@@ -122,11 +122,13 @@ CREATE TABLE IF NOT EXISTS version (
 -- -----------------------------------------------------
 -- Table file
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS file;
+DROP TABLE IF EXISTS `file`;
 
-CREATE TABLE IF NOT EXISTS file (
+CREATE TABLE IF NOT EXISTS `file` (
   file_id INT(11) NOT NULL AUTO_INCREMENT,
   path VARCHAR(45) NOT NULL,
+  original_filename VARCHAR(45) NOT NULL,
+  mime VARCHAR(45) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
   version_id INT NOT NULL,

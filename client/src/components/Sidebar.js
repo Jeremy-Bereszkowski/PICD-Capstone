@@ -19,7 +19,6 @@ class Sidebar extends Component {
             this.setState({
                 stages: res
             });
-            console.log(this.state.stages)
         });
     }
 
@@ -34,7 +33,7 @@ class Sidebar extends Component {
         ]
 
         return (
-            <div className="col-md-2 d-sm-block bg-light text-nowrap">
+            <div className="col-md-2 d-sm-block bg-light text-nowrap sidenav">
                 <div className="sidebar-sticky">
                     <ul className="nav flex-column">
                         <li className="nav-item">

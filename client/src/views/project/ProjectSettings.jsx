@@ -86,106 +86,104 @@ class ProjectSettings extends Component {
 
     render() {
         return (
-            <div className="col">
-                <div className="row justify-content-left">
-                    <Sidebar id={this.props.match.params.projectId}/>
-                    <div className="col">
-                        <div className="row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
-                            <div className="col-md-6">
-                                <h3>
-                                    Project Settings
-                                </h3>
-                            </div>
+            <div className="row justify-content-left">
+                <Sidebar id={this.props.match.params.projectId}/>
+                <div className="col">
+                    <div className="row">
+                        <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+                        <div className="col-md-6">
+                            <h3>
+                                Project Settings
+                            </h3>
                         </div>
-                        <hr/>
-                        <div className="row">
-                            <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
-                            <div className="col-md-6">
-                                <h5>
-                                    Edit
-                                </h5>
-                            </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+                        <div className="col-md-6">
+                            <h5>
+                                Edit
+                            </h5>
                         </div>
-                        <div className="row">
-                            <form className="col">
-                                <div className="form-group row">
-                                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
-                                    
-                                    <div className="col-md-6">
-                                        <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange}/>
-                                    </div>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
-                                    
-                                    <div className="col-md-6">
-                                        <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
-                                    </div>
-                                </div>
-                                {this.state.err !== "" ?
-                                <div className="form-group row">
-                                    <div className="col-md-6 offset-md-4">
-                                        <span className="alert-danger form-control">
-                                        {this.state.err}
-                                        </span>
-                                    </div>
-                                </div>: null}
-                            </form>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <div className="form-group row mb-0">
-                                    <div className="col-md-6 offset-md-2">
-                                        <span>
-                                            <button className="btn btn-danger" onClick={() => this.getProjectData(this.state.project_id)}>
-                                                Cancel
-                                            </button>
-                                        </span>
-                                        <span className="px-1">
-                                            <button className="btn btn-primary" onClick={this.handleSubmit}>
-                                                Update
-                                            </button>
-                                        </span>
-                                    </div>
+                    </div>
+                    <div className="row">
+                        <form className="col">
+                            <div className="form-group row">
+                                <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
+                                
+                                <div className="col-md-6">
+                                    <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange}/>
                                 </div>
                             </div>
-                        </div>
-                        <hr/>
-                        <div className="row">
-                            <div className="col">
-                                <div className="form-group row">
-                                    <label htmlFor="created_at" className="col-md-2 text-md-right">Created At:</label>
-                                    <span className="col-md-6">{this.datetime(this.state.created_at)}</span>
-                                </div>
-                                <div className="form-group row">
-                                    <label htmlFor="updated_at" className="col-md-2 text-md-right">Updated At:</label>
-                                    <span className="col-md-6">{this.datetime(this.state.updated_at)}</span>
+                            <div className="form-group row">
+                                <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
+                                
+                                <div className="col-md-6">
+                                    <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
                                 </div>
                             </div>
-                        </div>
-                        <hr/>
-                        <div className="row">
-                            <form className="col" onSubmit={this.handleSubmit}>
-                                {this.state.err !== "" ?
-                                <div className="form-group row">
-                                    <div className="col-md-6 offset-md-4">
-                                        <span className="alert-danger form-control">
-                                        {this.state.err}
-                                        </span>
-                                    </div>
-                                </div>: null}
-                                <div className="form-group row">
-                                    <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project:</label>
-                                    
-                                    <div className="col-md-6">
-                                        <button id='test' type="button" onClick={(e) => this.deleteProject(this.props.match.params.projectId, e)} className="btn btn-xs btn-danger">
-                                            Delete
+                            {this.state.err !== "" ?
+                            <div className="form-group row">
+                                <div className="col-md-6 offset-md-4">
+                                    <span className="alert-danger form-control">
+                                    {this.state.err}
+                                    </span>
+                                </div>
+                            </div>: null}
+                        </form>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <div className="form-group row mb-0">
+                                <div className="col-md-6 offset-md-2">
+                                    <span>
+                                        <button className="btn btn-danger" onClick={() => this.getProjectData(this.state.project_id)}>
+                                            Cancel
                                         </button>
-                                    </div>
+                                    </span>
+                                    <span className="px-1">
+                                        <button className="btn btn-primary" onClick={this.handleSubmit}>
+                                            Update
+                                        </button>
+                                    </span>
                                 </div>
-                            </form>
+                            </div>
                         </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <div className="col">
+                            <div className="form-group row">
+                                <label htmlFor="created_at" className="col-md-2 text-md-right">Created At:</label>
+                                <span className="col-md-6">{this.datetime(this.state.created_at)}</span>
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="updated_at" className="col-md-2 text-md-right">Updated At:</label>
+                                <span className="col-md-6">{this.datetime(this.state.updated_at)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <form className="col" onSubmit={this.handleSubmit}>
+                            {this.state.err !== "" ?
+                            <div className="form-group row">
+                                <div className="col-md-6 offset-md-4">
+                                    <span className="alert-danger form-control">
+                                    {this.state.err}
+                                    </span>
+                                </div>
+                            </div>: null}
+                            <div className="form-group row">
+                                <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project:</label>
+                                
+                                <div className="col-md-6">
+                                    <button id='test' type="button" onClick={(e) => this.deleteProject(this.props.match.params.projectId, e)} className="btn btn-xs btn-danger">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
