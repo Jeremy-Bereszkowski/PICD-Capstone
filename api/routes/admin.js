@@ -40,12 +40,12 @@ const getAllUsers = 'SELECT '+
                       'user_id, '+
                       'fname, '+
                       'lname, '+
-                      'clearance, '+
-                      'profile, '+
-                      'email, '+
-                      'password, '+
+                      'clearance, '+/* 
+                      'profile, '+ */
+                      'email '+/*
+                      'password, '+ 
                       'created_at, '+
-                      'updated_at '+
+                      'updated_at '+ */
                     'FROM picd.user '+
                     'JOIN clearance '+
                     'ON user.clearance_id = clearance.clearance_id';
@@ -86,7 +86,7 @@ router.get('/users/:id', async (req, res) => {
 router.post('/users/new', async (req, res) => {
   console.log(req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password)
   try {
-    const newUserQuery = 'insert into user (fname,lname,clearance_id,email,password) values (?, ?, ?, ?, ?)';
+    const newUserQuery = 'insert into user (fname,lname,clearance_id,email,password) values (?, ?, ?, ?, ?);';
 
     await pool.query(newUserQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password]);
 
