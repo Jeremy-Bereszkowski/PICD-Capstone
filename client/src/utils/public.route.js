@@ -18,7 +18,7 @@ const PublicRoute = ({
   return (
     <>
       <Header/>
-      <main>
+      <main className="container-fluid">
         <Route
           {...rest}
           render={props => {
