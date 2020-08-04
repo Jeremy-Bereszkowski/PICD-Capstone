@@ -53,7 +53,7 @@ class AdminUserEdit extends Component {
 
   deleteProject = (event) => {
     event.preventDefault()
-    console.log()
+    //console.log()
     callAPI.deleteProject(() => {
       window.location.href = "/admin/users";
     },
@@ -65,7 +65,7 @@ class AdminUserEdit extends Component {
 
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + this.state.user_id
 
-    console.log(url)
+    //console.log(url)
   }
 
   handleFormChange = (event) => {
