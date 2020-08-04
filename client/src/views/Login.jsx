@@ -11,6 +11,9 @@ export default function Login(props) {
         event.preventDefault();
         const {email, password} = event.target.elements;
 
+        if (email.value === "" || password.value === "")
+            return
+
         auth.login(() => {
             window.location.reload();
         },

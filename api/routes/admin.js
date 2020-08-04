@@ -40,20 +40,21 @@ const getAllUsers = 'SELECT '+
                       'user_id, '+
                       'fname, '+
                       'lname, '+
-                      'clearance, '+
-                      'profile, '+
-                      'email, '+
-                      'password, '+
+                      'clearance, '+/* 
+                      'profile, '+ */
+                      'email '+/*
+                      'password, '+ 
                       'created_at, '+
-                      'updated_at '+
+                      'updated_at '+ */
                     'FROM picd.user '+
                     'JOIN clearance '+
-                    'ON user.clearance_id = clearance.clearance_id';
+                    'ON user.clearance_id = clearance.clearance_id ';
 
 router.get('/users', async (req, res) => {
   try {
     //Get current acct_value of customer
-    const getUserList = getAllUsers + ';';
+    const getUserList = getAllUsers +
+    'WHERE user.deleted = FALSE;';
 
 
     //Run query - fetch response
@@ -71,7 +72,7 @@ router.get('/users/:id', async (req, res) => {
 
   try {
     //Get current acct_value of customer
-    const getUser = getAllUsers + ' where user_id=(?);';
+    const getUser = getAllUsers + ' WHERE user_id=(?);';
 
     //Run query - fetch response
     var user = await pool.query(getUser, [id]);
@@ -86,7 +87,7 @@ router.get('/users/:id', async (req, res) => {
 router.post('/users/new', async (req, res) => {
   console.log(req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password)
   try {
-    const newUserQuery = 'insert into user (fname,lname,clearance_id,email,password) values (?, ?, ?, ?, ?)';
+    const newUserQuery = 'INSERT INTO user (fname,lname,clearance_id,email,password) VALUES (?, ?, ?, ?, ?);';
 
     await pool.query(newUserQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password]);
 
@@ -111,12 +112,18 @@ router.post('/users/:userID/update', async (req, res) => {
 router.get('/users/delete/:userID', async (req, res) => {
   const userID = req.params.userID;
 
+/*   var integer = parseInt(userID, 10);
+
+  console.log(typeof integer, integer)
+ */
   try {
     //Get current acct_value of customer
-    const deleteQuery = 'delete from user where user_id=(?);';
+    const deleteQuery = 'UPDATE user SET deleted=1 WHERE user_id='+userID+';';
+
+    console.log(deleteQuery/* , [userID] */)
 
     //Run query - fetch response
-    await pool.query(deleteQuery, [userID]);
+    await pool.query(deleteQuery/* , [integer] */);
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {

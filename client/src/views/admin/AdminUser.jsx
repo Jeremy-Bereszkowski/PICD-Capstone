@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import AdminSidebar from '../../components/AdminSidebar'
-import '../../css/dashboard.css';
+import callAPI from '../../utils/callAPI'
+import '../../css/dashboard.css'
 
 class AdminUser extends Component {
     constructor(props) {
@@ -17,14 +18,21 @@ class AdminUser extends Component {
     }
     
     callAPI() {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/admin/users/')
+        callAPI.getUserList((users) => {
+            this.setState({
+                users: users,
+                isLoading: false
+            })
+        })
+
+        /* fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/admin/users/')
         .then((response) => { return response.json(); })
         .then((data) => {
             this.setState({
                 users: data,
                 isLoading: false
             })
-        });
+        }); */
     }
     
     onClickHandler = (id) => {
