@@ -7,7 +7,7 @@ class Auth {
   }
 
   handleResponse = res => {
-    console.log(res)
+    //console.log(res)
     if (res.status === 200) {
       return res.json()
     }
@@ -15,7 +15,7 @@ class Auth {
   }
 
   login = (cb, email, password, error) => {
-    console.log(email + " " + password)
+    //console.log(email + " " + password)
     
     callAPI.login(cb, email, password, error, ((res) => this.setSession(res)))
   }
