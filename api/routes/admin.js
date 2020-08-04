@@ -48,12 +48,13 @@ const getAllUsers = 'SELECT '+
                       'updated_at '+ */
                     'FROM picd.user '+
                     'JOIN clearance '+
-                    'ON user.clearance_id = clearance.clearance_id';
+                    'ON user.clearance_id = clearance.clearance_id ';
 
 router.get('/users', async (req, res) => {
   try {
     //Get current acct_value of customer
-    const getUserList = getAllUsers + ';';
+    const getUserList = getAllUsers +
+    'WHERE user.deleted = FALSE;';
 
 
     //Run query - fetch response
@@ -111,12 +112,18 @@ router.post('/users/:userID/update', async (req, res) => {
 router.get('/users/delete/:userID', async (req, res) => {
   const userID = req.params.userID;
 
+/*   var integer = parseInt(userID, 10);
+
+  console.log(typeof integer, integer)
+ */
   try {
     //Get current acct_value of customer
-    const deleteQuery = 'delete from user where user_id=(?);';
+    const deleteQuery = 'update user set deleted=1 where user_id='+userID+';';
+
+    console.log(deleteQuery/* , [userID] */)
 
     //Run query - fetch response
-    await pool.query(deleteQuery, [userID]);
+    await pool.query(deleteQuery/* , [integer] */);
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {

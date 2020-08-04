@@ -122,13 +122,18 @@ class CallAPI {
 
   deleteProject = (cb, user_id, err) => {
     console.log(typeof user_id)
-    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + user_id)
-        .then((res) => {
-          if (res.status === 200) {
-            cb()
-          }
-        })
-        .catch((error) => err(error))
+
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + user_id
+
+    console.log(url)
+
+    fetch(url)
+      .then((res) => {
+        if (res.status === 200) {
+          cb()
+        }
+      })
+      .catch((error) => err(error))
   }
 }
 

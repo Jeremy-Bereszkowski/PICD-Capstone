@@ -55,21 +55,17 @@ class AdminUserEdit extends Component {
     event.preventDefault()
     console.log()
     callAPI.deleteProject(() => {
-        //window.location.href = "/admin/users";
-      },
+      window.location.href = "/admin/users";
+    },
       this.state.user_id,
       (error) => {
-        //this.setState({ err: error.message })
+        this.setState({ err: error.message })
       }
     )
-    /* fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + this.state.user_id)
-      .then((res) => {
-        if (res.status === 200) {
-          window.location.href = "/admin/users";
-        }
-      })
-      .catch(error => this.setState({ err: error.message })) */
 
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + this.state.user_id
+
+    console.log(url)
   }
 
   handleFormChange = (event) => {
