@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react'
+import React, {useState, useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'; // Dropzone Examples and Documentation: https://react-dropzone.js.org/
 import {Progress} from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
@@ -30,7 +30,7 @@ function UploadFile({projectId, stageId, stageVersion}) {
     const removeAllFiles = () => {
         toast.dismiss();
         const newFiles = [...files];
-        files.map(file => {
+        files.forEach(file => {
             if(file.progress !== 100) {
                 newFiles.splice(newFiles.indexOf(file), 1);
             }
@@ -44,8 +44,8 @@ function UploadFile({projectId, stageId, stageVersion}) {
     const onDrop = useCallback(
         (acceptedFiles) => {
             let fileObjs = []
-            acceptedFiles.map(file => {
-                return fileObjs.push({
+            acceptedFiles.forEach(file => {
+                fileObjs.push({
                    file: file,
                    progress: 0,
                    status: "success"
@@ -53,9 +53,7 @@ function UploadFile({projectId, stageId, stageVersion}) {
             })
 
             setFiles([...files, ...fileObjs]);
-            setUpload(false)
-
-            return true;
+            setUpload(false);
         },
         [files],
     )
@@ -65,8 +63,8 @@ function UploadFile({projectId, stageId, stageVersion}) {
      */
     const onDropRejected = useCallback(
         data => {
-            data.map(({file, errors}) => {
-                return toast.error(`${file.name} - ${errors[0].message}`)
+            data.forEach(({file, errors}) => {
+                toast.error(`${file.name} - ${errors[0].message}`)
             });
         },
         [],
