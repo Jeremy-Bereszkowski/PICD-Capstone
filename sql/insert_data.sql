@@ -14,10 +14,10 @@ VALUES
 (3, '30f01a870297f1aea190f3fccd1bb453', '116ba6486a4c316a315ff80733a3aedc', 2, '14bd6bea0e013bf8535a7809c3542a71', '8b74293c9767b02f266acc20eb31629a'),
 (4, '90f0e281c7b7852e784a8ead9ef8f7cf', '116ba6486a4c316a315ff80733a3aedc', 2, '8715e94c14f0dd96cab2175d72eaf299', '8b74293c9767b02f266acc20eb31629a');
 /* 
-(1, 'Jane', 'Doe', 1, 'user@user.com', 'user'),
-(2, 'John', 'Doe', 1, 'user2@user.com', 'user'),
-(3, 'John', 'Smith', 2, 'admin@admin.com', 'admin'),
-(4, 'Jane', 'Smith', 2, 'admin2@admin.com', 'admin'); */
+(1, 'Jane', 'Doe', 1, 'jane@doe.com', 'user'),
+(2, 'John', 'Doe', 1, 'john@doe.com', 'user'),
+(3, 'John', 'Smith', 2, 'john@smith.com', 'admin'),
+(4, 'Jane', 'Smith', 2, 'jane@smith.com', 'admin'); */
 
 INSERT INTO `project` (project_id, title, description)
 VALUES
