@@ -1,35 +1,39 @@
 import React, { Component } from 'react'
 import Sidebar from '../../components/Sidebar'
 import UploadFile from '../../components/UploadFile'
+import DropdownExampleDropdown from'../../components/VersionSelect'
 
 class Stage extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
             name: "",
             err: "",
-            stageId: null
+            stageId: null,
+            stage_version: "0.1"
         }
     }
 
-    getStageData(projectId, stageId) {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectId+'/stage/'+stageId)
-        .then(res => res.json())
-        .then(res => {
-            this.setState({
-                name: res.name,
-                stageId: stageId
-            })
-        });
-    }
     
+
+    getStageData(projectId, stageId) {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/" + projectId + '/stage/' + stageId)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    name: res.name,
+                    stageId: stageId
+                })
+            });
+    }
+
     componentDidMount() {
         this.getStageData(this.props.match.params.projectId, this.props.match.params.stageId);
     }
 
     componentDidUpdate() {
-        if(this.props.match.params.stageId !== this.state.stageId) {
+        if (this.props.match.params.stageId !== this.state.stageId) {
             this.getStageData(this.props.match.params.projectId, this.props.match.params.stageId);
         }
     }
@@ -37,7 +41,7 @@ class Stage extends Component {
     render() {
         return (
             <div className="row justify-content-left content">
-                <Sidebar id={this.props.match.params.projectId}/>
+                <Sidebar id={this.props.match.params.projectId} />
                 <div className="col">
                     <div className="row">
                         <div className="col-md-6">
@@ -45,9 +49,16 @@ class Stage extends Component {
                                 Stage {this.state.stageId} : {this.state.name}
                             </h3>
                         </div>
+                        <div className="col-md-6">
+                            <hi className="float-right">
+                                Version {this.state.stage_version}
+                                <DropdownExampleDropdown/>
+                            </hi>
+
+                        </div>
                     </div>
-                    <hr/>
-                    <UploadFile projectId={this.props.match.params.projectId} stageId={this.state.stageId} stageVersion={1}/>
+                    <hr />
+                    <UploadFile projectId={this.props.match.params.projectId} stageId={this.state.stageId} stageVersion={1} />
                 </div>
             </div>
         )
