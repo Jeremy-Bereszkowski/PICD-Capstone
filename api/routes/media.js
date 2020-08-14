@@ -4,6 +4,7 @@ const express = require('express');
 const multer = require('multer');
 const mysql = require('promise-mysql');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 var router = express.Router();
 
@@ -47,11 +48,37 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage}).single('file'); //change to array for multiple file upload
 
 router.get('/:projectId/:stageId/:stageVersion', async(req, res) => {
-  var projectId = req.params.projectId;
-  var stageId = req.params.stageId;
-  var stageVersion = req.params.stageVersion;
+  try {
+    console.log('project id: ', req.params.projectId);
+    console.log('stage id: ', req.params.stageId);
+    console.log('version id: ', req.params.stageVersion);
+
+    const getFilesQuery = 'SELECT * FROM `file` WHERE project_id = (?) AND stage_id = (?) AND version_id = (?);';
+    var files = await pool.query(getFilesQuery, [req.params.projectId, req.params.stageId, req.params.stageVersion]);
+
+    res.status(200).json(files);
+  } catch (error) {
+    res.status(500).end('Unable to retreive files');
+  }
+  
 
   res.status(200).end();
+});
+
+router.get('/download/:fileID', async(req, res) => {
+  const getFileQuery = 'SELECT path FROM `file` WHERE file_id = (?);';
+  try {
+    var fileData = await pool.query(getFileQuery, [req.params.fileID]);
+    var file = fileData[0].path;
+    console.log(file);
+    res.download(file), function(err){
+      console.log(err);
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+  
 });
 
 router.post('/upload', async(req, res) => {

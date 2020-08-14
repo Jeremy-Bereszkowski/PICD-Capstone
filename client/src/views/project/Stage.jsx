@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Sidebar from '../../components/Sidebar'
 import UploadFile from '../../components/UploadFile'
+import File from '../../components/File'
 
 class Stage extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class Stage extends Component {
         .then(res => {
             this.setState({
                 name: res.name,
-                stageId: stageId
+                stageId: stageId,
             })
         });
     }
@@ -47,7 +48,8 @@ class Stage extends Component {
                         </div>
                     </div>
                     <hr/>
-                    <UploadFile projectId={this.props.match.params.projectId} stageId={this.state.stageId} stageVersion={1}/>
+                    <UploadFile projectId={this.props.match.params.projectId} stageId={this.props.match.params.stageId} stageVersion={1}/>
+                    <File projectId={this.props.match.params.projectId} stageId={this.props.match.params.stageId} stageVersion={1}/>
                 </div>
             </div>
         )
