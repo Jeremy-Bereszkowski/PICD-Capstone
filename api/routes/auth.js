@@ -54,8 +54,11 @@ router.post('/login', async (req, res) => {
 
   try {
     console.log(process.env.DB_HOST);
+    
     //Create new deposit record
     const getUserDetails = getAllUsers + ' WHERE email="' + req.body.uname + '";';
+
+    console.log(getUserDetails)
 
     //Run query - fetch response
     var userDetails = await pool.query(getUserDetails);
@@ -78,6 +81,7 @@ router.post('/login', async (req, res) => {
       res.status(403).send({message: 'Incorrect Password'});
     }
   } catch (err) {
+    console.log(err)
     res.status(500).send('Connection error!');
   }
 });

@@ -107,8 +107,8 @@ CREATE TABLE IF NOT EXISTS `version` (
   version_id INT NOT NULL AUTO_INCREMENT,
   stage_id INT NOT NULL,
   project_id INT(11) NOT NULL,
-  version VARCHAR(45) NOT NULL,
-  description VARCHAR(45) NULL,
+  revision INT(3) NOT NULL,
+  name VARCHAR(45) NULL,
   PRIMARY KEY (version_id, stage_id, project_id),
   INDEX fk_version_stages1_idx (stage_id ASC, project_id ASC),
   CONSTRAINT fk_version_stages
