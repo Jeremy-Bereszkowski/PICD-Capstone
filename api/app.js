@@ -10,6 +10,7 @@ var logger = require('morgan');
 var auth = require('./routes/auth');
 var dashboard = require('./routes/dashboard');
 var project = require('./routes/project');
+var version = require('./routes/version');
 var admin = require('./routes/admin');
 var media = require('./routes/media');
 var cors = require("cors");
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
 app.use('/project', project);
+app.use('/project/version', version);
 app.use('/admin', admin);
 app.use('/media', media);
 
