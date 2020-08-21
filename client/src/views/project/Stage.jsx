@@ -98,7 +98,7 @@ class Stage extends Component {
                         </div>
                     </div>
                     <hr />
-                    <UploadFile projectId={this.props.match.params.projectId} stageId={this.state.stageId} stageVersion={1} />
+                    <UploadFile projectId={this.props.match.params.projectId} stageId={this.state.stageId} stageVersion={this.state.selectVersion.version_id} />
                 </div>
             </div>
         )
