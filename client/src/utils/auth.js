@@ -55,6 +55,14 @@ class Auth {
       return ''
     }
   }
+
+  getUID = () => {
+    if (sessionStorage.getItem('user')) {
+      return JSON.parse(sessionStorage.getItem('user')).id;
+    } else {
+      return ''
+    } 
+  }
 }
 
 export default new Auth();

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import auth from '../utils/auth'
 import '../css/dashboard.css';
 
 class Dashboard extends Component {
@@ -12,7 +13,7 @@ class Dashboard extends Component {
     }
     
     callAPI() {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/')
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/' + auth.getUID() +'/')
         .then((response) => { return response.json(); })
         .then((data) => {
             this.setState({
