@@ -78,12 +78,12 @@ router.post('/new/:userID', async (req, res) => {
   try {
     const userID = req.params.userID
 
-    const insertProjectQuery = 'insert into project (title, description) values (?, ?);';
-    const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id) VALUES (?, ?);'
+    const insertProjectQuery = 'INSERT INTO project (owner, title, description) values (?, ?, ?);';
+    const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id, collaboration_id) VALUES (?, ?, ?);'
     const insertStages = 'INSERT INTO stage (project_id, name) VALUES (?, "Design"), (?, "Simulation"), (?, "Layout"), (?, "Test");';
 
-    var project = await pool.query(insertProjectQuery, [req.body.title, req.body.description]);
-    await pool.query(insertUserProjectQuery, [userID, project.insertId])
+    var project = await pool.query(insertProjectQuery, [userID, req.body.title, req.body.description]);
+    await pool.query(insertUserProjectQuery, [userID, project.insertId, 3])
     await pool.query(insertStages, [project.insertId, project.insertId, project.insertId, project.insertId])
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));

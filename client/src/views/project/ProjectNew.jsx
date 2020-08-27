@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import callAPI from '../../utils/callAPI'
 
-class ProjectNew extends Component {
+class ProjectNew extends Component {/* 
     handleSubmit = (event) => {
         var title = event.target.title.value
         var description = event.target.description.value
@@ -20,6 +21,20 @@ class ProjectNew extends Component {
         })
         
         event.preventDefault()
+    } */
+
+    handleSubmit = (event) => {
+        event.preventDefault()
+
+        var title = event.target.title.value
+        var description = event.target.description.value
+
+        callAPI.newProject((res) => {
+            window.location.href = "/";
+        }, JSON.stringify({
+            title: title,
+            description: description,
+        }))
     }
 
     render() {

@@ -1,3 +1,5 @@
+import auth from './auth'
+
 class CallAPI {
 
   constructor() {
@@ -65,7 +67,6 @@ class CallAPI {
   }
 
   newUser = (cb, fname, lname, clearance, email, pass, error) => {
-
     fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/new', {
       method: 'post',
       headers: {
@@ -118,6 +119,23 @@ class CallAPI {
       }).catch((err) => {
         error(err)
       })
+  }
+
+  newProject = (cb, body) => {
+    const uid = auth.getUID()
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/new/' + uid
+
+    console.log(url)
+
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: body
+    }).then((res) => {
+      cb(res)
+    })
   }
 
   deleteProject = (cb, user_id, err) => {
