@@ -6,8 +6,14 @@ VALUES (1, 'user');
 INSERT INTO `clearance` (clearance_id, clearance)
 VALUES (2, 'admin');
 
-INSERT INTO 'collab' (collab)
-values ('owner'), ('collab'); 
+INSERT INTO `collaboration` (privilege)
+VALUES ('read');
+
+INSERT INTO `collaboration` (privilege)
+VALUES ('write');
+
+INSERT INTO `collaboration` (privilege)
+VALUES ('admin'); 
 
 INSERT INTO `user` (user_id, fname, lname, clearance_id, email, password)
 VALUES 
@@ -15,17 +21,12 @@ VALUES
 (2, '90f0e281c7b7852e784a8ead9ef8f7cf', '6e9c4e78d78acc707b2048e705594b14', 1, 'b0f9d646cdf0e73731ce96d77fdf8e7b', '808bf2f0e1c687b5b95eb29ba4a6e1b1'),
 (3, '30f01a870297f1aea190f3fccd1bb453', '116ba6486a4c316a315ff80733a3aedc', 2, '14bd6bea0e013bf8535a7809c3542a71', '8b74293c9767b02f266acc20eb31629a'),
 (4, '90f0e281c7b7852e784a8ead9ef8f7cf', '116ba6486a4c316a315ff80733a3aedc', 2, '8715e94c14f0dd96cab2175d72eaf299', '8b74293c9767b02f266acc20eb31629a');
-/* 
-(1, 'Jane', 'Doe', 1, 'jane@doe.com', 'user'),
-(2, 'John', 'Doe', 1, 'john@doe.com', 'user'),
-(3, 'John', 'Smith', 2, 'jane@smith.com', 'admin'),
-(4, 'Jane', 'Smith', 2, 'john@smith.com', 'admin'); */
 
-INSERT INTO `project` (project_id, title, description)
+INSERT INTO `project` (project_id, owner, title, description)
 VALUES
-(1, 'Project 1', 'First Project'),
-(2, 'Project 2', 'Second Project'),
-(3, 'Project 3', 'Third Project');
+(1, 3, 'Project 1', 'First Project'),
+(2, 3, 'Project 2', 'Second Project'),
+(3, 4, 'Project 3', 'Third Project');
 
 INSERT INTO `stage` (stage_id, project_id, name)
 VALUES
@@ -39,7 +40,13 @@ VALUES
 (5, 2, 1, 'init'), (6, 2, 1, 'init'), (7, 2, 1, 'init'), (8, 2, 1, 'init'),
 (9, 3, 1, 'init'), (10, 3, 1, 'init'), (11, 3, 1, 'init'), (12, 3, 1, 'init');
 
-INSERT INTO `user_has_project` (user_id, project_id, collab_id)
+INSERT INTO `user_has_project` (user_id, project_id, collaboration_id)
 VALUES
-(1, 1, 1), (1, 3, 1),
-(2, 2, 1), (2, 3, 2);
+(3, 1, 3), (1, 3, 2),
+(3, 2, 3), (4, 3, 3);
+
+/* 
+(1, 'Jane', 'Doe', 1, 'jane@doe.com', 'user'),
+(2, 'John', 'Doe', 1, 'john@doe.com', 'user'),
+(3, 'John', 'Smith', 2, 'jane@smith.com', 'admin'),
+(4, 'Jane', 'Smith', 2, 'john@smith.com', 'admin'); */

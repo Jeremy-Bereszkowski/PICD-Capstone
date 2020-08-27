@@ -1,19 +1,5 @@
 USE picd;
 
--- -----------------------------------------------------
--- Table project
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `project`;
-
-CREATE TABLE IF NOT EXISTS `project` (
-  project_id INT(11) NOT NULL AUTO_INCREMENT,
-  title VARCHAR(45) NOT NULL,
-  description VARCHAR(45) NULL,
-  deleted TINYINT(1) NOT NULL DEFAULT 0,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  PRIMARY KEY (project_id)
-);
 
 
 -- -----------------------------------------------------
@@ -29,14 +15,14 @@ CREATE TABLE IF NOT EXISTS `clearance` (
 
 
 -- -----------------------------------------------------
--- Table collab
+-- Table clearance
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `collab`;
+DROP TABLE IF EXISTS `collaboration`;
 
-CREATE TABLE IF NOT EXISTS `collab` (
-  collab_id INT(11) NOT NULL AUTO_INCREMENT,
-  collab ENUM('owner', 'collaborator') NOT NULL,
-  PRIMARY KEY (collab_id)
+CREATE TABLE IF NOT EXISTS `collaboration` (
+  collaboration_id INT(11) NOT NULL AUTO_INCREMENT,
+  privilege ENUM('read', 'write', 'admin') NOT NULL,
+  PRIMARY KEY (collaboration_id)
 );
 
 -- -----------------------------------------------------
@@ -65,6 +51,26 @@ CREATE TABLE IF NOT EXISTS `user` (
     ON UPDATE NO ACTION
 );
 
+-- -----------------------------------------------------
+-- Table project
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `project`;
+
+CREATE TABLE IF NOT EXISTS `project` (
+  project_id INT(11) NOT NULL AUTO_INCREMENT,
+  owner INT(11) NOT NULL,
+  title VARCHAR(45) NOT NULL,
+  description VARCHAR(45) NULL,
+  deleted TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  PRIMARY KEY (project_id),
+  CONSTRAINT fk_project_owner
+    FOREIGN KEY (owner)
+    REFERENCES user (user_id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
 -- -----------------------------------------------------
 -- Table user_has_project
@@ -74,7 +80,7 @@ DROP TABLE IF EXISTS `user_has_project`;
 CREATE TABLE IF NOT EXISTS `user_has_project` (
   user_id INT(11) NOT NULL,
   project_id INT(11) NOT NULL,
-  collab_id INT(11) NOT NULL,
+  collaboration_id INT(11) NOT NULL,
   PRIMARY KEY (user_id, project_id),
   INDEX fk_users_has_projects_projects1_idx (project_id ASC),
   INDEX fk_users_has_projects_users1_idx (user_id ASC),
@@ -87,8 +93,16 @@ CREATE TABLE IF NOT EXISTS `user_has_project` (
     FOREIGN KEY (user_id)
     REFERENCES user (user_id)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_user_has_project_collaborators
+    FOREIGN KEY (collaboration_id)
+    REFERENCES  collaboration (collaboration_id)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
+
+
+
 
 
 -- -----------------------------------------------------
