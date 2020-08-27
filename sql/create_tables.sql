@@ -29,6 +29,17 @@ CREATE TABLE IF NOT EXISTS `clearance` (
 
 
 -- -----------------------------------------------------
+-- Table collab
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `collab`;
+
+CREATE TABLE IF NOT EXISTS `collab` (
+  collab_id INT(11) NOT NULL AUTO_INCREMENT,
+  collab ENUM('owner', 'collaborator') NOT NULL,
+  PRIMARY KEY (collab_id)
+);
+
+-- -----------------------------------------------------
 -- Table user
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `user`;
@@ -63,6 +74,7 @@ DROP TABLE IF EXISTS `user_has_project`;
 CREATE TABLE IF NOT EXISTS `user_has_project` (
   user_id INT(11) NOT NULL,
   project_id INT(11) NOT NULL,
+  collab_id INT(11) NOT NULL,
   PRIMARY KEY (user_id, project_id),
   INDEX fk_users_has_projects_projects1_idx (project_id ASC),
   INDEX fk_users_has_projects_users1_idx (user_id ASC),

@@ -6,8 +6,10 @@ VALUES (1, 'user');
 INSERT INTO `clearance` (clearance_id, clearance)
 VALUES (2, 'admin');
 
-INSERT INTO `user` (user_id, fname, lname, clearance_id, email, password)
+INSERT INTO 'collab' (collab)
+values ('owner'), ('collab'); 
 
+INSERT INTO `user` (user_id, fname, lname, clearance_id, email, password)
 VALUES 
 (1, '30f01a870297f1aea190f3fccd1bb453', '6e9c4e78d78acc707b2048e705594b14', 1, '2bc33731776fa6f54ed7c489f621a00d', '808bf2f0e1c687b5b95eb29ba4a6e1b1'),
 (2, '90f0e281c7b7852e784a8ead9ef8f7cf', '6e9c4e78d78acc707b2048e705594b14', 1, 'b0f9d646cdf0e73731ce96d77fdf8e7b', '808bf2f0e1c687b5b95eb29ba4a6e1b1'),
@@ -37,7 +39,7 @@ VALUES
 (5, 2, 1, 'init'), (6, 2, 1, 'init'), (7, 2, 1, 'init'), (8, 2, 1, 'init'),
 (9, 3, 1, 'init'), (10, 3, 1, 'init'), (11, 3, 1, 'init'), (12, 3, 1, 'init');
 
-INSERT INTO `user_has_project` (user_id, project_id)
+INSERT INTO `user_has_project` (user_id, project_id, collab_id)
 VALUES
-(1, 1), (1, 3),
-(2, 2), (2, 3);
+(1, 1, 1), (1, 3, 1),
+(2, 2, 1), (2, 3, 2);
