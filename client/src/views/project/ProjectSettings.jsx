@@ -52,28 +52,17 @@ class ProjectSettings extends Component {
         }
     }
 
-    handleSubmit = (event) => {
+    handleSubmit = (event, uid) => {
         event.preventDefault()
-        try {
-            if (this.state.title.length < 1) {
-                throw new Error('Title can not be empty');
-            }
-
-            fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + this.state.project_id + '/update', {
-                method: 'post',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    title: this.state.title,
-                    description: this.state.description,
-                    revision: this.state.revision
-                })
-            })
-                .catch(error => this.setState({ err: error.message }))
-
-        } catch (error) {
-            this.setState({ err: error.message });
+        console.log("HELOOO", this.state.owner, uid)
+        
+        if (this.state.owner === uid) {
+            //SET ERROR OR ALERT
+        } else {
+            callAPI.removeProjectUser((data) => {
+                /* this.props.history.push("/project/"+this.props.match.params.projectId+"/settings") */
+                window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
+            }, this.state.project_id, uid)
         }
     }
 
@@ -140,11 +129,15 @@ class ProjectSettings extends Component {
                                                     <tr key={user.user_id} className="pointer" >
                                                         <td>{user.fname} {user.lname}</td>
                                                         <td>{user.privilege.toUpperCase()}</td>
-                                                        <td>
-                                                            <button className="btn btn-primary btn-sm" onClick={this.handleSubmit}>
-                                                                Remove
-                                                            </button>
-                                                        </td>
+                                                        {
+                                                            this.state.owner === user.user_id ? null :
+                                                            <td>
+                                                                <button className="btn btn-primary btn-sm" onClick={(event) => this.handleSubmit(event, user.user_id)}>
+                                                                    Remove
+                                                                </button>
+                                                            </td>
+                                                        }
+                                                        
                                                     </tr>
                                                 )
                                             })}

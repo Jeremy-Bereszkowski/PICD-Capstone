@@ -89,6 +89,18 @@ router.post('/:id/update', async (req, res) => {
   }
 });
 
+router.get('/:id/remove_user/:uid', async(req, res) => {
+  try {
+    const removeUserFromProjectQuery = 'DELETE FROM user_has_project WHERE project_id=(?) AND user_id=(?);';
+
+    await pool.query(removeUserFromProjectQuery, [req.params.id, req.params.uid]);
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+  } catch (err) {
+    res.status(500).send('Connection error!');
+  }
+})
+
 router.post('/new/:userID', async (req, res) => {
   try {
     const userID = req.params.userID
