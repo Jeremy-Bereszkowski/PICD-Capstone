@@ -54,12 +54,11 @@ class ProjectSettings extends Component {
 
     handleSubmit = (event, uid) => {
         event.preventDefault()
-        console.log("HELOOO", this.state.owner, uid)
-        
         if (this.state.owner === uid) {
             //SET ERROR OR ALERT
         } else {
             callAPI.removeProjectUser((data) => {
+                
                 /* this.props.history.push("/project/"+this.props.match.params.projectId+"/settings") */
                 window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
             }, this.state.project_id, uid)
@@ -81,6 +80,7 @@ class ProjectSettings extends Component {
             })
             .then((data) => {
                 /* console.log(data); */
+            
                 window.location.href = "/";
             });
     }
@@ -91,23 +91,20 @@ class ProjectSettings extends Component {
         return date[2] + "/" + date[1] + "/" + date[0] + ", " + time
     }
 
-    onDeleteUser = (event, user_id) => {
-        event.preventDefault();
-
-        if (user_id !== this.state.owner) {
-
-        }
-    }
-
     projectCollaborators = () => {
         return this.state.owner === auth.getUID() ? (
             <div>
                 <div className="row">
                     <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <h5>
                             User List
                         </h5>
+                    </div>
+                    <div className="col-md-4">
+                        <button className="btn btn-success btn-sm" >
+                            Add +
+                        </button>
                     </div>
                 </div>
                 <div className="row">
@@ -137,7 +134,6 @@ class ProjectSettings extends Component {
                                                                 </button>
                                                             </td>
                                                         }
-                                                        
                                                     </tr>
                                                 )
                                             })}
