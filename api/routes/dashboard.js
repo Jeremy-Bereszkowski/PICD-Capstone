@@ -46,21 +46,6 @@ router.get('/:userID', async (req, res) => {
     //Run query - fetch response
     var projectList = await pool.query(getProjectsQuery, [userID]);
 
-    /* function compare(a, b) {
-      const bandA = a.date_stamp;
-      const bandB = b.date_stamp;
-
-      let comparison = 0;
-      if (bandA > bandB) {
-      comparison = 1;
-      } else if (bandA < bandB) {
-      comparison = -1;
-      }
-      return comparison * -1;
-    }
-    
-    projectList.sort(compare); */
-
     res.status(200).json(projectList);
   } catch (err) {
       console.log(err);

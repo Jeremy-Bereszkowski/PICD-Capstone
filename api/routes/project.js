@@ -51,6 +51,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/users', async(req, res) => {
+  try {
+    const getProjectsUsersQuery = 'SELECT user.user_id, user.fname, user.lname, collaboration.privilege ' +
+      'FROM user JOIN user_has_project ON user_has_project.user_id = user.user_id ' +
+      'JOIN collaboration ON user_has_project.collaboration_id = collaboration.collaboration_id  ' +
+      'WHERE user_has_project.project_id=(?);';
+    var projectUsers = await pool.query(getProjectsUsersQuery, [req.params.id])
+
+    res.status(200).end(JSON.stringify({projectUsers: projectUsers}));
+  } catch (err) {
+    console.log(err)
+    res.status(500).end(err);
+  }
+});
+
 router.get('/:id/stages', async(req, res) => {
   try {
     const getStages = 'SELECT * FROM stage WHERE project_id=(?);';

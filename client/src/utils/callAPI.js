@@ -138,6 +138,25 @@ class CallAPI {
     })
   }
 
+  getProjectUserList = (cb, projectID) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectID + '/users'
+
+    fetch(url)
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        data.projectUsers.forEach(element => {
+          element.fname = decrypt(element.fname)
+          element.lname = decrypt(element.lname)
+        });
+
+        cb(data);
+      })
+  }
+
   deleteProject = (cb, user_id, err) => {
     console.log(typeof user_id)
 

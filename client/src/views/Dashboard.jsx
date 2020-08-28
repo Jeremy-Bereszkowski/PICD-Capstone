@@ -16,6 +16,8 @@ class Dashboard extends Component {
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/' + auth.getUID() +'/')
         .then((response) => { return response.json(); })
         .then((data) => {
+            console.log(data)
+            
             this.setState({
                 projects: data,
                 isLoading: false
