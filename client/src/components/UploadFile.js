@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useEffect} from 'react'
 import {useDropzone} from 'react-dropzone'; // Dropzone Examples and Documentation: https://react-dropzone.js.org/
 import {Progress} from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,6 +12,10 @@ import '../css/UploadFile.css';
 function UploadFile({projectId, stageId, stageVersion}) {
     const [files, setFiles] = useState([]);
     const [upload, setUpload] = useState(false); //used to indecate when the upload button has been pressed and the uploading is about to commense
+
+    useEffect(() => {
+        setFiles([]);
+    }, [projectId, stageId, stageVersion])
 
     /**
      * Removes a particular file from the files list.

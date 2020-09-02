@@ -112,7 +112,7 @@ router.get('/file/:fileID', async(req, res) => {
     const getFileQuery = 'SELECT * FROM `file` WHERE file_id = (?);';  
     try {
         var fileData = await pool.query(getFileQuery, [req.params.fileID]);
-        console.log(fileData);
+        // console.log(fileData);
         // var options = {
         //     headers: {
         //         'x-timestamp': Date.now(),

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios';
 import download from 'js-file-download';
 
+// TODO: should be refactored as a functional component
 class File extends Component {
 
     constructor(props) {
