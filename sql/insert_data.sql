@@ -16,8 +16,8 @@ VALUES
 /* 
 (1, 'Jane', 'Doe', 1, 'jane@doe.com', 'user'),
 (2, 'John', 'Doe', 1, 'john@doe.com', 'user'),
-(3, 'John', 'Smith', 2, 'john@smith.com', 'admin'),
-(4, 'Jane', 'Smith', 2, 'jane@smith.com', 'admin'); */
+(3, 'John', 'Smith', 2, 'jane@smith.com', 'admin'),
+(4, 'Jane', 'Smith', 2, 'john@smith.com', 'admin'); */
 
 INSERT INTO `project` (project_id, title, description)
 VALUES
@@ -31,11 +31,11 @@ VALUES
 (5, 2, 'Design'), (6, 2, 'Simulation'), (7, 2, 'Layout'), (8, 2, 'Test'),
 (9, 3, 'Design'), (10, 3, 'Simulation'), (11, 3, 'Layout'), (12, 3, 'Test');
 
-INSERT INTO `version` (stage_id, project_id, version, description)
+INSERT INTO `version` (stage_id, project_id, revision, name)
 VALUES
-(1, 1, 'init', 'init'), (2, 1, 'init', 'init'), (3, 1, 'init', 'init'), (4, 1, 'init', 'init'),
-(5, 2, 'init', 'init'), (6, 2, 'init', 'init'), (7, 2, 'init', 'init'), (8, 2, 'init', 'init'),
-(9, 3, 'init', 'init'), (10, 3, 'init', 'init'), (11, 3, 'init', 'init'), (12, 3, 'init', 'init');
+(1, 1, 1, 'init'), (1, 1, 2, 'init'), (2, 1, 1, 'init'), (3, 1, 1, 'init'), (4, 1, 1, 'init'),
+(5, 2, 1, 'init'), (6, 2, 1, 'init'), (7, 2, 1, 'init'), (8, 2, 1, 'init'),
+(9, 3, 1, 'init'), (10, 3, 1, 'init'), (11, 3, 1, 'init'), (12, 3, 1, 'init');
 
 INSERT INTO `user_has_project` (user_id, project_id)
 VALUES
