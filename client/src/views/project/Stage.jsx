@@ -8,7 +8,7 @@ import '../../css/stage.css'
 function Stage(props) {
     const [name, setName] = useState("");
     const [versions, setVersions] = useState([]);
-    const [selectedVersion, setSelectedVersion] = useState(null);
+    const [selectedVersion, setSelectedVersion] = useState();
     //const [showModal, setShowModal] = useState(false);
     
     /**

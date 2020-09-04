@@ -61,6 +61,7 @@ router.get('/stage/:stageID/:stageVersion', async(req, res) => {
                         'AND stage_id = (?) '+
                         'AND version_id = (?);';
     const getStageDetails = 'SELECT * FROM `stage` WHERE stage_id = (?);';
+    const getVersionDetails = 'SELECT * FROM `version` WHERE version_id = (?);';
 
   try {
     
@@ -68,18 +69,19 @@ router.get('/stage/:stageID/:stageVersion', async(req, res) => {
 
     var filesQuery = pool.query(getFilesQuery, [req.params.stageID, req.params.stageVersion]);
     var stageQuery = pool.query(getStageDetails, req.params.stageID);
-    var [files, stage] = await Promise.all([filesQuery, stageQuery]);
+    var versionQuery = pool.query(getVersionDetails, req.params.stageVersion);
+    var [files, stage, version] = await Promise.all([filesQuery, stageQuery, versionQuery]);
     
     console.log('Stage Name => ', stage[0].name);
 
-    var folder = zip.folder(stage[0].name);
+    var folder = zip.folder(stage[0].name+'-R'+version[0].revision+'-'+version[0].name);
     files.map(file => {
         //console.log(file.original_filename, ' => ', file.path);
-        folder.file(file.original_filename, file.path);
+        folder.file(file.original_filename, fs.readFileSync(file.path));
     });
     
     var dir = path.join('public', 'media');
-    var zipFileName = path.join(dir, stage[0].name+'-'+stage[0].stage_id+'-'+req.params.stageVersion+'.zip');
+    var zipFileName = path.join(dir, stage[0].name+'-'+stage[0].stage_id+'-'+version[0].revision+'.zip');
 
     zip.generateNodeStream({
         streamFiles: true

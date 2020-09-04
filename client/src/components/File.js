@@ -51,7 +51,7 @@ function File({projectId, stageId, stageVersion}) {
         const responseType = 'blob';
         console.log('Download all');
         axios({
-            url: process.env.REACT_APP_API_SERVER_ADDRESS+'/media/download/stage/'+this.state.stageId+'/'+this.state.stageVersion,
+            url: process.env.REACT_APP_API_SERVER_ADDRESS+'/media/download/stage/'+stageId+'/'+stageVersion,
             method: 'GET',
             responseType: responseType,
         })
@@ -62,40 +62,46 @@ function File({projectId, stageId, stageVersion}) {
     }
 
     return (
-        <div className="container">
-                 <table>
-                     <tbody>
-                         <tr>
-                             <td className="text-right"><input type="button" value="Download All" className="btn btn-primary" onClick={() => onDownloadAllHandler()}/></td>
-                         </tr>
-                     </tbody>
-                 </table>
-                 <table className="table table-hover">
-                     <tbody>
-                         {
-                             files.map((file, index) => {
-                                 const timestamp = new Date(file.created_at);
-                                 var formattedTimestamp = new Intl.DateTimeFormat('en-US',{
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "2-digit",
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                    second: "2-digit"
-                                  }).format(timestamp);
-                                 return (
-                                     <tr key={file.file_id}>
-                                         <td>{file.original_filename}</td>
-                                         <td className="text-right">{formattedTimestamp}</td>
-                                         <td className="text-right"><input type="button" value="Download" className="btn btn-primary" onClick={() => onIndividualDownloadHandler(file.file_id, file.original_filename)}/></td>
-                                     </tr>
-                                 )
-                             })
-                         }
-                     </tbody>
-                    
-                 </table>
-             </div>
+        <>
+        {
+            files.length === 0 ?
+                <div className="col text-center">
+                    <h5 className="pt-2">No Files have been Uploaded</h5>
+                    <p>Change Version to see files of other versions</p>
+                </div>
+            :
+            <div className="container">
+                <div className="col text-right py-2">
+                    <input type="button" value="Download All" className="btn btn-primary" onClick={() => onDownloadAllHandler()}/>
+                </div>
+                <table className="table table-hover">
+                    <tbody>
+                        {
+                            files.map((file, index) => {
+                                const timestamp = new Date(file.created_at);
+                                var formattedTimestamp = new Intl.DateTimeFormat('en-AU',{
+                                year: "numeric",
+                                month: "short",
+                                day: "2-digit",
+                                hour: "numeric",
+                                minute: "2-digit",
+                                second: "2-digit"
+                                }).format(timestamp);
+                                return (
+                                    <tr key={file.file_id}>
+                                        <td>{file.original_filename}</td>
+                                        <td className="text-right">{formattedTimestamp}</td>
+                                        <td className="text-right"><input type="button" value="Download" className="btn btn-primary" onClick={() => onIndividualDownloadHandler(file.file_id, file.original_filename)}/></td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                
+                </table>
+            </div>
+        }
+        </>
     )
 }
 
