@@ -8,14 +8,19 @@ export default function NewVersionModal({handleSubmit}) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const submit = (event) => {
+        handleSubmit(event);
+        handleClose(event);
+    }
+
     return (
-        <>
+        <div className="d-inline-block">
             <Button variant="success" size="sm" onClick={handleShow}>
                 +
             </Button>
 
             <Modal show={show} onHide={handleClose}>
-                <form className="col" method="post" onSubmit={handleSubmit}>
+                <form className="col" method="post" onSubmit={submit}>
                     <Modal.Header closeButton>
                         <Modal.Title>New Version</Modal.Title>
                     </Modal.Header>
@@ -39,6 +44,6 @@ export default function NewVersionModal({handleSubmit}) {
                     </Modal.Footer>
                 </form>
             </Modal>
-        </>
+        </div>
     );
 }
