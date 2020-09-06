@@ -9,7 +9,9 @@ function Stage(props) {
     const [name, setName] = useState("");
     const [versions, setVersions] = useState([]);
     const [selectedVersion, setSelectedVersion] = useState();
-    //const [showModal, setShowModal] = useState(false);
+    const [update, setUpdate] = useState(false);
+
+
     
     /**
      * Submit new stage version to the api server.
@@ -62,6 +64,10 @@ function Stage(props) {
             });
     }, [props.match.params.projectId, props.match.params.stageId]);
 
+    const handleUpdate = () => {
+        setUpdate(prevUpdate => !prevUpdate);
+    }
+
     return (
         <div className="row justify-content-left content">
             <Sidebar id={props.match.params.projectId} />
@@ -93,8 +99,8 @@ function Stage(props) {
                     <p>Loading...</p>
                 </div> :
                 <div>
-                    <UploadFile projectId={props.match.params.projectId} stageId={props.match.params.stageId} stageVersion={selectedVersion}/>
-                    <File projectId={props.match.params.projectId} stageId={props.match.params.stageId} stageVersion={selectedVersion}/>
+                    <UploadFile projectId={props.match.params.projectId} stageId={props.match.params.stageId} stageVersion={selectedVersion} uploadComplete={handleUpdate}/>
+                    <File projectId={props.match.params.projectId} stageId={props.match.params.stageId} stageVersion={selectedVersion} update={update}/>
                 </div> }   
             </div>
         </div>

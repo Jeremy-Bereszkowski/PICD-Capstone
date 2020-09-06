@@ -9,7 +9,7 @@ import uploadCloud from '../imgs/black_upload_cloud.svg';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/UploadFile.css';
 
-function UploadFile({projectId, stageId, stageVersion}) {
+function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
     const [files, setFiles] = useState([]);
     const [upload, setUpload] = useState(false); //used to indecate when the upload button has been pressed and the uploading is about to commense
 
@@ -94,7 +94,8 @@ function UploadFile({projectId, stageId, stageVersion}) {
      */
     const uploadFile = () => {
         setUpload(true);
-        files.map((file) => {
+
+        var complete = files.map((file) => {
             if(file.progress !== 100) {
                 const data = new FormData();
                 data.append('stage_version', stageVersion);
@@ -110,6 +111,8 @@ function UploadFile({projectId, stageId, stageVersion}) {
             }
             return true;
         });
+        
+        uploadComplete()
     }
 
     //print a list of all the files

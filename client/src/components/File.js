@@ -3,7 +3,7 @@ import axios from 'axios';
 import download from 'js-file-download';
 import FileHistoryModal from './FileHistoryModal';
 
-function File({ projectId, stageId, stageVersion }) {
+function File({ projectId, stageId, stageVersion, update }) {
     const [files, setFiles] = useState([]);
 
     /**
@@ -17,12 +17,14 @@ function File({ projectId, stageId, stageVersion }) {
      * This function is run every time one of the props are changed.
      */
     useEffect(() => {
+        console.log("Updating")
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/media/' + projectId + '/' + stageId + '/' + stageVersion)
             .then(res => res.json())
             .then(files => {
+                console.log(files)
                 setFiles(files);
             });
-    }, [projectId, stageId, stageVersion])
+    }, [projectId, stageId, stageVersion, update])
 
     const onIndividualDownloadHandler = (file_id, filename) => {
         /**
@@ -77,7 +79,7 @@ function File({ projectId, stageId, stageVersion }) {
         })
 
 
-    const showHistory = (files, index) => {
+    const showHistory = (files) => {
         setFileGroup(files);
         setShowFileHistory(true);
     }
@@ -105,7 +107,7 @@ function File({ projectId, stageId, stageVersion }) {
                         <table className="table table-hover">
                             <tbody>
                                 {
-                                    fileGroups.map((group, index) => {
+                                    fileGroups.map((group) => {
                                         var files = group.sort((a, b) => new Date(a.updated_at) < new Date(b.updated_at) ? 1 : -1);
                                         var file = files[0];
                                         const timestamp = new Date(file.updated_at);
@@ -118,7 +120,7 @@ function File({ projectId, stageId, stageVersion }) {
                                             second: "2-digit"
                                         }).format(timestamp);
                                         return (
-                                            <tr key={file.file_id} onClick={() => showHistory(files, index)}>
+                                            <tr key={file.file_id} onClick={() => showHistory(files)}>
                                                 <td>{file.original_filename}</td>
                                                 <td className="text-right">{'v' + files.length}</td>
                                                 <td className="text-right">{formattedTimestamp}</td>

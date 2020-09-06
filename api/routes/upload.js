@@ -51,7 +51,7 @@ router.post('/', async(req, res) => {
     try {
         const insertFileQuery = 'INSERT INTO `file` (path, original_filename, mime, version_id, stage_id, project_id) values (?, ?, ?, ?, ?, ?);';
 
-        await upload(req, res, function(err) {
+        await upload(req, res, async(err) => {
             if(err instanceof multer.MulterError) {
                 throw err
             } else if (err) {
@@ -59,7 +59,7 @@ router.post('/', async(req, res) => {
             }
   
             try {
-                pool.query(insertFileQuery, [req.file.path, req.file.originalname, req.file.mimetype, req.body.stage_version, req.body.stage, req.body.project]);
+                await pool.query(insertFileQuery, [req.file.path, req.file.originalname, req.file.mimetype, req.body.stage_version, req.body.stage, req.body.project]);
             } catch (error) {
                 console.log(error);
                 return res.status(500).json(error);
