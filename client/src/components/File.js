@@ -26,7 +26,8 @@ function File({ projectId, stageId, stageVersion, update }) {
             });
     }, [projectId, stageId, stageVersion, update])
 
-    const onIndividualDownloadHandler = (file_id, filename) => {
+    const onIndividualDownloadHandler = (e, file_id, filename) => {
+        e.stopPropagation();
         /**
          * Valid Response Types
          * * arraybuffer
@@ -124,7 +125,7 @@ function File({ projectId, stageId, stageVersion, update }) {
                                                 <td>{file.original_filename}</td>
                                                 <td className="text-right">{'v' + files.length}</td>
                                                 <td className="text-right">{formattedTimestamp}</td>
-                                                <td className="text-right"><input type="button" value="Download" className="btn btn-primary" onClick={() => onIndividualDownloadHandler(file.file_id, file.original_filename)} /></td>
+                                                <td className="text-right"><input type="button" value="Download" className="btn btn-primary" onClick={(e) => onIndividualDownloadHandler(e, file.file_id, file.original_filename)} /></td>
                                             </tr>
                                         )
                                     })
