@@ -43,7 +43,10 @@ VALUES
 INSERT INTO `user_has_project` (user_id, project_id, collaboration_id)
 VALUES
 (3, 1, 3), (1, 3, 2),
-(3, 2, 3), (4, 3, 3),
+(3, 2, 3), (4, 3, 3);
+
+INSERT INTO `user_has_project` (user_id, project_id, collaboration_id)
+VALUES
 (1, 1, 2), (2, 3, 2),
 (1, 2, 2), (3, 3, 2);
 
