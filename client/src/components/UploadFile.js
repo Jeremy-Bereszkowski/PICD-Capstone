@@ -92,17 +92,17 @@ function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
      * Currently it uploads them one by one so that the progress of each file can be tracked
      * for the loading bars.
      */
-    const uploadFile = () => {
+    const uploadFile = async () => {
         setUpload(true);
 
-        var complete = files.map((file) => {
+        await Promise.all(files.map(async (file) => {
             if(file.progress !== 100) {
                 const data = new FormData();
                 data.append('stage_version', stageVersion);
                 data.append('stage', stageId);
                 data.append('project', projectId);
                 data.append('file', file.file);
-                axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
+                await axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
                     onUploadProgress: uploadProgress(file)
                 })
                 .catch(err => {
@@ -110,9 +110,9 @@ function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
                 })
             }
             return true;
-        });
-        
-        uploadComplete()
+        })).then(() => {
+            uploadComplete()
+        })
     }
 
     //print a list of all the files
