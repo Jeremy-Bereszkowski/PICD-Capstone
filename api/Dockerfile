@@ -2,15 +2,19 @@
 FROM node:12.16
 
 # set working directory
-WORKDIR /picd-server
+RUN mkdir -p /app
+WORKDIR /app
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install --silent
+# get app dependencies
+COPY package.json ./app
+COPY package-lock.json ./app
 
 # add app
-COPY . ./
+COPY . /app
+
+# install app dependencies
+RUN npm install --silent
+
 
 # start app
 CMD ["npm", "start"]

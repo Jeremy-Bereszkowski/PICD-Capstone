@@ -33,7 +33,7 @@ VALUES
 
 INSERT INTO `version` (stage_id, project_id, revision, name)
 VALUES
-(1, 1, 1, 'init'), (1, 1, 2, 'init'), (2, 1, 1, 'init'), (3, 1, 1, 'init'), (4, 1, 1, 'init'),
+(1, 1, 1, 'init'), (2, 1, 1, 'init'), (3, 1, 1, 'init'), (4, 1, 1, 'init'),
 (5, 2, 1, 'init'), (6, 2, 1, 'init'), (7, 2, 1, 'init'), (8, 2, 1, 'init'),
 (9, 3, 1, 'init'), (10, 3, 1, 'init'), (11, 3, 1, 'init'), (12, 3, 1, 'init');
 

@@ -1,40 +1,151 @@
-version: '3.7'
+version: "3.8"
+
+x-common-variables: &common-variables
+  MYSQL_USER: picd
+  MYSQL_PASSWORD: picdcapstone
+  MYSQL_DATABASE: picd
+
+  REACT_APP_NAME: "PICD"
+  REACT_APP_API_SERVER_ADDRESS: http://localhost:9000
+  REACT_APP_CIPHER: ThisIsThePicdProjectReallyLongAndSecureKey
+  REACT_APP_IV_KEY: myIVKey_DoYouThinkThisIsSecureEnoughQuestionMark
+  APP_SERVER_PORT: 9000
+  REACT_APP_PORT: 3000
 
 services:
+
+  # MySql server service settings
+  mysql:
+    image: mysql:5.6
+    environment:
+      <<: *common-variables
+      MYSQL_HOST: localhost
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+    volumes:
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./sql/insert_data.sql:/docker-entrypoint-initdb.d/insert_data.sql
+  
+  # PHP My Admin service settings
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+    links:
+      - mysql:mysql
+    ports:
+      - 8080:80
+    restart: always
+  
+  # API service settings
+  api:
+    build: ./api
+    depends_on:
+      - mysql
+    expose:
+      - 9000
+    environment:
+      <<: *common-variables
+      MYSQL_HOST_IP: mysql
+      MYSQL_PORT: 3306
+    ports:
+      - 9000:9000
+    volumes:
+      - ./api:/app
+    links:
+      - mysql
+    command: npm start
+  
+  # Client service settings
+  client:
+    build: ./client
+    environment:
+      <<: *common-variables
+      NODE_PATH: src
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/src:/app/src
+    links:
+      - api
+    command: npm start
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# version: '3.7'
+
+# services:
 
 ##################################
 # Setup Node API Container       #
 ##################################
-  picd-server:
-    container_name: picd-server
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    environment:
-      SERVER_HOST: ${SERVER_HOST}
-      APP_SERVER_PORT: ${APP_SERVER_PORT}
-    ports:
-      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
-    volumes:
-      - ./api:/picd-server
-      - /picd-server/node_modules
-    command: npm start
+  # picd-server:
+  #   container_name: picd-server
+  #   build:
+  #     context: ./api
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     SERVER_HOST: ${SERVER_HOST}
+  #     APP_SERVER_PORT: ${APP_SERVER_PORT}
+  #   ports:
+  #     - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+  #   volumes:
+  #     - ./api:/picd-server
+  #     - /picd-server/node_modules
+  #   command: npm start
 
 ##################################
 # Setup REACT Client Container   #
 ##################################
-  picd-client:
-    container_name: picd-app
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    ports:
-      - ${REACT_APP_PORT}:${REACT_APP_PORT}
-    volumes:
-      - ./client:/picd-app
-      - /picd-app/node_modules
-    depends_on:
-      - picd-server
-    command: npm start
+  # picd-client:
+  #   container_name: picd-app
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   ports:
+  #     - ${REACT_APP_PORT}:${REACT_APP_PORT}
+  #   volumes:
+  #     - ./client:/picd-app
+  #     - /picd-app/node_modules
+  #   depends_on:
+  #     - picd-server
+  #   command: npm start

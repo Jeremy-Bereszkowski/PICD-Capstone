@@ -13,18 +13,17 @@ router.use(bodyParser.json());
 let pool;
 const createPool = async () => {
   pool = await mysql.createPool({
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
 
-    database: process.env.DB_NAME,
+    database: process.env.MYSQL_DATABASE,
     
     // If connecting via unix domain socket, specify the path
     //socketPath: process.env.DB_CONNECTION,
-
     
     // If connecting via TCP, enter the IP and port instead
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    host: process.env.MYSQL_HOST_IP,
+    port: process.env.MYSQL_PORT,
 
     connectionLimit: 5,
     connectTimeout: 10000,
@@ -53,7 +52,10 @@ const getAllUsers = 'SELECT '+
 router.post('/login', async (req, res) => {
 
   try {
-    console.log(process.env.DB_HOST);
+    console.log(process.env.MYSQL_HOST_IP+":"+process.env.MYSQL_PORT);
+    console.log(process.env.MYSQL_DATABASE);
+    console.log(process.env.MYSQL_USER);
+    console.log(process.env.MYSQL_PASSWORD);
     
     //Create new deposit record
     const getUserDetails = getAllUsers + ' WHERE email="' + req.body.uname + '";';

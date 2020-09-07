@@ -2,19 +2,19 @@
 FROM node:12.16
 
 # set working directory
-WORKDIR /picd-app
+RUN mkdir -p /app
+WORKDIR /app
 
-# add `/node_modules/.bin` to $PATH
-#ENV PATH /picd-app/node_modules/.bin:$PATH
-
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install --silent
-RUN npm install react-scripts@3.4.0 -g --silent
+# get app dependencies
+COPY package.json ./app
+COPY package-lock.json ./app
 
 # add app
-COPY . ./
+COPY . /app
+
+# install app dependencies
+RUN npm install --silent
+
 
 # start app
 CMD ["npm", "start"]
