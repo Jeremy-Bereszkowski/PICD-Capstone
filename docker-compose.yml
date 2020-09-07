@@ -27,6 +27,7 @@ services:
     volumes:
       - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - ./sql/insert_data.sql:/docker-entrypoint-initdb.d/insert_data.sql
+      - dbdata:/var/lib/mysql
   
   # PHP My Admin service settings
   phpmyadmin:
@@ -43,7 +44,9 @@ services:
   
   # API service settings
   api:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     depends_on:
       - mysql
     expose:
@@ -56,16 +59,20 @@ services:
       - 9000:9000
     volumes:
       - ./api:/app
+      - apidata:/app/public/media
     links:
       - mysql
     command: npm start
   
   # Client service settings
   client:
-    build: ./client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     environment:
       <<: *common-variables
       NODE_PATH: src
+      CHOKIDAR_USEPOLLING: 'true' #This allows the react app to refresh on modification
     expose:
       - 3000
     ports:
@@ -76,7 +83,9 @@ services:
       - api
     command: npm start
 
-
+volumes:
+  dbdata:
+  apidata:
 
 
 
