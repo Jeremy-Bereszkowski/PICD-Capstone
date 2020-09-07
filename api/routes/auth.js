@@ -36,27 +36,53 @@ const createPool = async () => {
 };
 createPool();
 
+const getAllUsers = 'SELECT '+
+                      'user_id, '+
+                      'fname, '+
+                      'lname, '+
+                      'clearance, '+
+                      'profile, '+
+                      'email, '+
+                      'password, '+
+                      'created_at, '+
+                      'updated_at '+
+                    'FROM picd.user '+
+                    'JOIN clearance '+
+                    'ON user.clearance_id = clearance.clearance_id';
+
 router.post('/login', async (req, res) => {
 
   try {
     console.log(process.env.DB_HOST);
+    
     //Create new deposit record
-    const getUserDetails = 'select password, clearance from users where email="' + req.body.uname + '";';
+    const getUserDetails = getAllUsers + ' WHERE email="' + req.body.uname + '";';
+
+    console.log(getUserDetails)
 
     //Run query - fetch response
     var userDetails = await pool.query(getUserDetails);
 
     if (userDetails.length < 1) {
-      res.status(403).send({message: 'Unkown E-Mail'}).end();
+      res.status(403).send({message: 'Unkown E-Mail'});
     }
     else if (userDetails[0].password === req.body.pword) {
-      res.status(200).send(userDetails[0].clearance).end();
+      res.status(200).send({
+        user: {
+          id: userDetails[0].user_id,
+          fname: userDetails[0].fname,
+          lname: userDetails[0].lname,
+          email: userDetails[0].email,
+          clearance: userDetails[0].clearance,
+        }
+      });
     }
     else {
-      res.status(403).send({message: 'Incorrect Password'}).end();
+      res.status(403).send({message: 'Incorrect Password'});
     }
   } catch (err) {
-    res.status(500).send('Connection error!').end();
+    console.log(err)
+    res.status(500).send('Connection error!');
   }
 });
 

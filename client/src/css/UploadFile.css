@@ -1,0 +1,18 @@
+.dropzone {
+    outline: 2px dashed lightgray;
+    height: 20vh;
+    text-align: center;
+}
+
+/* .dropzone:hover, .dropzone > img:hover{
+    background-color: lightblue;
+} */
+
+.dropzoneDagActive {
+    background-color: lightgreen;
+}
+
+.dropzone > img {
+    height: 15vmin;
+    pointer-events: none;
+}
