@@ -15,6 +15,5 @@ COPY . /app
 # install app dependencies
 RUN npm install --silent
 
-
 # start app
 CMD ["npm", "start"]

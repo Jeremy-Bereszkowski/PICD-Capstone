@@ -52,15 +52,8 @@ const getAllUsers = 'SELECT '+
 router.post('/login', async (req, res) => {
 
   try {
-    console.log(process.env.MYSQL_HOST_IP+":"+process.env.MYSQL_PORT);
-    console.log(process.env.MYSQL_DATABASE);
-    console.log(process.env.MYSQL_USER);
-    console.log(process.env.MYSQL_PASSWORD);
-    
     //Create new deposit record
     const getUserDetails = getAllUsers + ' WHERE email="' + req.body.uname + '";';
-
-    console.log(getUserDetails)
 
     //Run query - fetch response
     var userDetails = await pool.query(getUserDetails);
