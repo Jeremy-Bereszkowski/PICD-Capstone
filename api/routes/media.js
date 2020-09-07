@@ -35,46 +35,18 @@ const createPool = async () => {
 };
 createPool();
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/media')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-})
-
-var upload = multer({storage: storage}).single('file'); //change to array for multiple file upload
-
 router.get('/:projectId/:stageId/:stageVersion', async(req, res) => {
-  var projectId = req.params.projectId;
-  var stageId = req.params.stageId;
-  var stageVersion = req.params.stageVersion;
-
-  res.status(200).end();
-});
-
-router.post('/upload', async(req, res) => {
   try {
-    const insertFileQuery = 'INSERT INTO file (path, original_filename, mime, version_id, stage_id, project_id) values (?, ?, ?, ?, ?, ?);';
+    const getFilesQuery = 'SELECT * FROM `file` WHERE project_id = (?) AND stage_id = (?) AND version_id = (?);';
+    var files = await pool.query(getFilesQuery, [req.params.projectId, req.params.stageId, req.params.stageVersion]);
 
-    //console.log(req)
-    upload(req, res, function(err) {
-      if(err instanceof multer.MulterError) {
-        throw err
-      } else if (err) {
-        throw err
-      }
-
-      pool.query(insertFileQuery, [req.file.path, req.file.originalname, req.file.mimetype, req.body.stage_version, req.body.stage, req.body.project]);
-
-    });
-    
-    return res.status(200).end();
+    res.status(200).json(files);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).end('Unable to retreive files');
   }
   
+
+  res.status(200).end();
 });
 
 module.exports = router ;

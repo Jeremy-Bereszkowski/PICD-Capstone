@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useEffect} from 'react'
 import {useDropzone} from 'react-dropzone'; // Dropzone Examples and Documentation: https://react-dropzone.js.org/
 import {Progress} from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,9 +9,13 @@ import uploadCloud from '../imgs/black_upload_cloud.svg';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/UploadFile.css';
 
-function UploadFile({projectId, stageId, stageVersion}) {
+function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
     const [files, setFiles] = useState([]);
     const [upload, setUpload] = useState(false); //used to indecate when the upload button has been pressed and the uploading is about to commense
+
+    useEffect(() => {
+        setFiles([]);
+    }, [projectId, stageId, stageVersion])
 
     /**
      * Removes a particular file from the files list.
@@ -88,16 +92,17 @@ function UploadFile({projectId, stageId, stageVersion}) {
      * Currently it uploads them one by one so that the progress of each file can be tracked
      * for the loading bars.
      */
-    const uploadFile = () => {
+    const uploadFile = async () => {
         setUpload(true);
-        files.map((file) => {
+
+        await Promise.all(files.map(async (file) => {
             if(file.progress !== 100) {
                 const data = new FormData();
                 data.append('stage_version', stageVersion);
                 data.append('stage', stageId);
                 data.append('project', projectId);
                 data.append('file', file.file);
-                axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
+                await axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
                     onUploadProgress: uploadProgress(file)
                 })
                 .catch(err => {
@@ -105,7 +110,9 @@ function UploadFile({projectId, stageId, stageVersion}) {
                 })
             }
             return true;
-        });
+        })).then(() => {
+            uploadComplete()
+        })
     }
 
     //print a list of all the files
