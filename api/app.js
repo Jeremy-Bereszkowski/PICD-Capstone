@@ -13,6 +13,8 @@ var project = require('./routes/project');
 var version = require('./routes/version');
 var admin = require('./routes/admin');
 var media = require('./routes/media');
+var download = require('./routes/download');
+var upload = require('./routes/upload');
 var cors = require("cors");
 
 var app = express();
@@ -26,14 +28,17 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { dotfiles: 'allow' }));
 
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
 app.use('/project', project);
 app.use('/project/version', version);
 app.use('/admin', admin);
+app.use('/media/download', download);
+app.use('/media/upload', upload);
 app.use('/media', media);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
