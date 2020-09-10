@@ -89,7 +89,23 @@ router.post('/:id/update', async (req, res) => {
   }
 });
 
-router.get('/:id/remove_user/:uid', async(req, res) => {
+router.post('/:id/add-user/:uid', async(req, res) => {
+  try {
+    const addUserToProjectQuery = 'INSERT INTO `user_has_project` (user_id, project_id, collaboration_id) VALUES (?, ?, ?);';
+
+    await pool.query(addUserToProjectQuery, [req.params.uid, req.params.id, req.body.collabId]);
+
+    res.status(200).end(JSON.stringify({success: true}));
+  } catch(err) {
+    res.status(500).json({success: false, message: err.message})
+  }
+});
+
+/*
+Remove project collaborator
+  Cannot remove project owner
+ */
+router.get('/:id/remove-user/:uid', async(req, res) => {
   try {
     const removeUserFromProjectQuery = 'DELETE FROM user_has_project WHERE project_id=(?) AND user_id=(?);';
 

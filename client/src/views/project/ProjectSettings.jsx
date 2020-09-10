@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Sidebar from '../../components/Sidebar'
 import auth from '../../utils/auth'
 import callAPI from '../../utils/callAPI'
+import NewProjectCollabModal from '../../components/NewProjectCollabModal'
 
 class ProjectSettings extends Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class ProjectSettings extends Component {
                     owner: res.project.owner,
                 })
                 this.getProjectUserList();
-            });        
+            });
     }
 
     componentDidMount() {
@@ -63,7 +64,7 @@ class ProjectSettings extends Component {
 
 
                 /* this.props.history.push("/project/"+this.props.match.params.projectId+"/settings") */
-                //window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
+                window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
             }, this.state.project_id, uid)
         }
     }
@@ -105,9 +106,7 @@ class ProjectSettings extends Component {
                         </h5>
                     </div>
                     <div className="col-md-4">
-                        <button className="btn btn-success btn-sm" >
-                            Add +
-                        </button>
+                        <NewProjectCollabModal projectId={this.state.project_id}/>
                     </div>
                 </div>
                 <div className="row">
