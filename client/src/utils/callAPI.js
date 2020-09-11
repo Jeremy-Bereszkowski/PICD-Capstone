@@ -1,3 +1,5 @@
+import auth from './auth'
+
 class CallAPI {
 
   constructor() {
@@ -13,59 +15,58 @@ class CallAPI {
     console.log(encryptEmail, encryptPass)
 
     postFetch(cb,
-      '/auth/login',
-      JSON.stringify({
-        uname: encryptEmail,
-        pword: encryptPass
-      }),
-      error,
-      'Email or Password Incorrect',
-      sessionCB
+        '/auth/login',
+        JSON.stringify({
+          uname: encryptEmail,
+          pword: encryptPass
+        }),
+        error,
+        'Email or Password Incorrect',
+        sessionCB
     )
   }
 
   getUserList = (cb) => {
     fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/')
-      .then((response) => { return response.json(); })
-      .then((data) => {
+        .then((response) => { return response.json(); })
+        .then((data) => {
 
-        var i
-        for (i = 0; i < data.length; i++) {
-          console.log(data[i])
-          data[i] = {
-            clearance: data[i].clearance,
-            email: decrypt(data[i].email),
-            fname: decrypt(data[i].fname),
-            lname: decrypt(data[i].lname),
-            user_id: data[i].user_id
+          var i
+          for (i = 0; i < data.length; i++) {
+            console.log(data[i])
+            data[i] = {
+              clearance: data[i].clearance,
+              email: decrypt(data[i].email),
+              fname: decrypt(data[i].fname),
+              lname: decrypt(data[i].lname),
+              user_id: data[i].user_id
+            }
           }
-        }
 
-        cb(data);
-      });
+          cb(data);
+        });
   }
 
   getUser = (cb, userID) => {
     fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/admin/users/" + userID)
-      .then(res => res.json())
-      .then(res => {
+        .then(res => res.json())
+        .then(res => {
 
-        var user = {
-          user_id: res.user.user_id,
-          fname: decrypt(res.user.fname),
-          lname: decrypt(res.user.lname),
-          clearance: res.user.clearance,
-          email: decrypt(res.user.email)
-        }
+          var user = {
+            user_id: res.user.user_id,
+            fname: decrypt(res.user.fname),
+            lname: decrypt(res.user.lname),
+            clearance: res.user.clearance,
+            email: decrypt(res.user.email)
+          }
 
 
-        console.log(user)
-        cb(user)
-      });
+          console.log(user)
+          cb(user)
+        });
   }
 
   newUser = (cb, fname, lname, clearance, email, pass, error) => {
-
     fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/new', {
       method: 'post',
       headers: {
@@ -109,15 +110,85 @@ class CallAPI {
         email: encrypt(email)
       })
     })
-      .then((res) => {
-        if (res.status === 200) {
-          cb()
-        } else {
-          error()
-        }
-      }).catch((err) => {
-        error(err)
+        .then((res) => {
+          if (res.status === 200) {
+            cb()
+          } else {
+            error()
+          }
+        }).catch((err) => {
+      error(err)
+    })
+  }
+
+  newProject = (cb, body) => {
+    const uid = auth.getUID()
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/new/' + uid
+
+    console.log(url)
+
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: body
+    }).then((res) => {
+      cb(res)
+    })
+  }
+
+  addProjectUser = (cb, projectId, uid, collabId) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectId + '/add-user/' + uid
+
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        collabId: collabId
       })
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json();
+      }
+    }).then(res => {
+      cb(res);
+    })
+  }
+
+  removeProjectUser = (cb, projectID, uid) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectID + '/remove-user/' + uid
+
+    fetch(url)
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          cb(data);
+        })
+  }
+
+  getProjectUserList = (cb, projectID) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectID + '/users'
+
+    fetch(url)
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          data.projectUsers.forEach(element => {
+            element.fname = decrypt(element.fname)
+            element.lname = decrypt(element.lname)
+          });
+
+          cb(data);
+        })
   }
 
   deleteProject = (cb, user_id, err) => {
@@ -128,12 +199,12 @@ class CallAPI {
     console.log(url)
 
     fetch(url)
-      .then((res) => {
-        if (res.status === 200) {
-          cb()
-        }
-      })
-      .catch((error) => err(error))
+        .then((res) => {
+          if (res.status === 200) {
+            cb()
+          }
+        })
+        .catch((error) => err(error))
   }
 }
 
@@ -145,33 +216,33 @@ function postFetch(cb, endpoint, body, error, errString, sessionCB) {
     },
     body: body
   })
-    .then((res) => {
-      if (res.status === 200) {
-        return res.json()
-      }
-      throw new Error(errString);
-    })
-    .then((res) => {
-      sessionCB(res)
-      cb();
-    })
-    .catch(err => error(err));
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json()
+        }
+        throw new Error(errString);
+      })
+      .then((res) => {
+        sessionCB(res)
+        cb();
+      })
+      .catch(err => error(err));
 }
 
 function encrypt(toEncode) {
   const crypto = require('crypto'),
-    resizedIV = Buffer.allocUnsafe(16),
-    iv = crypto
-      .createHash("sha256")
-      .update(process.env.REACT_APP_IV_KEY)
-      .digest();
+      resizedIV = Buffer.allocUnsafe(16),
+      iv = crypto
+          .createHash("sha256")
+          .update(process.env.REACT_APP_IV_KEY)
+          .digest();
 
   iv.copy(resizedIV);
 
   const key = crypto
-    .createHash("sha256")
-    .update(process.env.REACT_APP_CIPHER)
-    .digest()
+      .createHash("sha256")
+      .update(process.env.REACT_APP_CIPHER)
+      .digest()
 
   const cipher = crypto.createCipheriv("aes256", key, resizedIV)
   const msg = []
@@ -184,18 +255,18 @@ function encrypt(toEncode) {
 
 function decrypt(toDecode) {
   const crypto = require('crypto'),
-    resizedIV = Buffer.allocUnsafe(16),
-    iv = crypto
-      .createHash("sha256")
-      .update(process.env.REACT_APP_IV_KEY)
-      .digest();
+      resizedIV = Buffer.allocUnsafe(16),
+      iv = crypto
+          .createHash("sha256")
+          .update(process.env.REACT_APP_IV_KEY)
+          .digest();
 
   iv.copy(resizedIV);
 
   const key = crypto
-    .createHash("sha256")
-    .update(process.env.REACT_APP_CIPHER)
-    .digest()
+      .createHash("sha256")
+      .update(process.env.REACT_APP_CIPHER)
+      .digest()
 
   const decipher = crypto.createDecipheriv("aes256", key, resizedIV)
   const msg = []

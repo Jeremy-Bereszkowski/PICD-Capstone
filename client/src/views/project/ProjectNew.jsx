@@ -1,25 +1,20 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import callAPI from '../../utils/callAPI'
 
 class ProjectNew extends Component {
     handleSubmit = (event) => {
+        event.preventDefault()
+
         var title = event.target.title.value
         var description = event.target.description.value
 
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/new', {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: title,
-                description: description,
-            })
-        }).then((res) => {
+        callAPI.newProject((res) => {
             window.location.href = "/";
-        })
-        
-        event.preventDefault()
+        }, JSON.stringify({
+            title: title,
+            description: description,
+        }))
     }
 
     render() {

@@ -1,61 +1,70 @@
 import React, { Component } from 'react'
 import Sidebar from '../../components/Sidebar'
+import auth from '../../utils/auth'
+import callAPI from '../../utils/callAPI'
+import NewProjectCollabModal from '../../components/NewProjectCollabModal'
 
 class ProjectSettings extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
             project_id: "",
             title: "",
+            owner: "",
             date_stamp: "",
             description: "",
             created_at: "",
             updated_at: "",
+            isLoading: true,
+            userList: "",
             err: ""
         }
     }
 
     getProjectData(projectID) {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectID)
-        .then(res => res.json())
-        .then(res => {
-            this.setState({
-                project_id: res.project.project_id,
-                title: res.project.title,
-                description: res.project.description,
-                created_at: res.project.created_at,
-                updated_at: res.project.updated_at
-            })
-        });
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/" + projectID)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    project_id: res.project.project_id,
+                    title: res.project.title,
+                    description: res.project.description,
+                    created_at: res.project.created_at,
+                    updated_at: res.project.updated_at,
+                    owner: res.project.owner,
+                })
+                this.getProjectUserList();
+            });
     }
 
     componentDidMount() {
         this.getProjectData(this.props.match.params.projectId);
     }
 
-    handleSubmit = (event) => {
-        event.preventDefault()
-        try {
-            if(this.state.title.length < 1){
-                throw new Error('Title can not be empty');
-            }
-
-            fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+this.state.project_id+'/update', {
-                method: 'post',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    title: this.state.title,
-                    description: this.state.description,
-                    revision: this.state.revision
+    getProjectUserList() {
+        if (this.state.owner === auth.getUID()) {
+            callAPI.getProjectUserList((data) => {
+                this.setState({
+                    userList: data.projectUsers,
+                    isLoading: false
                 })
-            })
-            .catch(error => this.setState({err: error.message}))
+            }, this.state.project_id)
+        }
+    }
 
-        } catch (error) {
-            this.setState({err: error.message});
+    handleSubmit = (event, uid) => {
+        event.preventDefault()
+        if (this.state.owner === uid) {
+            //SET ERROR OR ALERT
+        } else {
+            callAPI.removeProjectUser((data) => {
+                console.log(typeof this.state.userList, this.state.userList)
+                console.log(typeof this.state.userList, this.state.userList)
+
+                /* this.props.history.push("/project/"+this.props.match.params.projectId+"/settings") */
+                window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
+            }, this.state.project_id, uid)
         }
     }
 
@@ -66,16 +75,17 @@ class ProjectSettings extends Component {
     }
 
     deleteProject(projectID, e) {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/delete/'+projectID)
-        .then((response) => {
-            if (response.status === 200) {
-                return response.json(); 
-            }
-        })
-        .then((data) => {
-            /* console.log(data); */
-            window.location.href = "/";
-        });
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/dashboard/delete/' + projectID)
+            .then((response) => {
+                if (response.status === 200) {
+                    return response.json();
+                }
+            })
+            .then((data) => {
+                /* console.log(data); */
+            
+                window.location.href = "/";
+            });
     }
 
     datetime = (datetime) => {
@@ -84,10 +94,65 @@ class ProjectSettings extends Component {
         return date[2] + "/" + date[1] + "/" + date[0] + ", " + time
     }
 
+    projectCollaborators = () => {
+        return this.state.owner === auth.getUID() ? (
+            <div>
+                <div className="row">
+                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
+                    <div className="col-md-4">
+                        <h5>
+                            User List
+                        </h5>
+                    </div>
+                    <div className="col-md-4">
+                        <NewProjectCollabModal projectId={this.state.project_id}/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <div className="form-group row mb-0">
+                            <div className="col-md-6 offset-md-2">
+                                <table className="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Privilege</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.isLoading ? <tr><td colSpan="5" className="text-center"><strong>Loading...</strong></td></tr> :
+                                            this.state.userList.map((user) => {
+                                                return (
+                                                    <tr key={user.user_id} className="pointer" >
+                                                        <td>{user.fname} {user.lname}</td>
+                                                        <td>{user.privilege.toUpperCase()}</td>
+                                                        {
+                                                            this.state.owner === user.user_id ? null :
+                                                            <td>
+                                                                <button className="btn btn-primary btn-sm" onClick={(event) => this.handleSubmit(event, user.user_id)}>
+                                                                    Remove
+                                                                </button>
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                )
+                                            })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        ) : null
+    }
+
     render() {
         return (
             <div className="row justify-content-left">
-                <Sidebar id={this.props.match.params.projectId}/>
+                <Sidebar id={this.props.match.params.projectId} />
                 <div className="col">
                     <div className="row">
                         <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
@@ -97,7 +162,7 @@ class ProjectSettings extends Component {
                             </h3>
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
                     <div className="row">
                         <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
                         <div className="col-md-6">
@@ -110,26 +175,26 @@ class ProjectSettings extends Component {
                         <form className="col">
                             <div className="form-group row">
                                 <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
-                                
+
                                 <div className="col-md-6">
-                                    <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange}/>
+                                    <input type="text" name="title" className="form-control" id="title" value={this.state.title} onChange={this.handleFormChange} />
                                 </div>
                             </div>
                             <div className="form-group row">
                                 <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
-                                
+
                                 <div className="col-md-6">
-                                    <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange}/>
+                                    <textarea name="description" className="form-control" id="description" value={this.state.description} onChange={this.handleFormChange} />
                                 </div>
                             </div>
                             {this.state.err !== "" ?
-                            <div className="form-group row">
-                                <div className="col-md-6 offset-md-4">
-                                    <span className="alert-danger form-control">
-                                    {this.state.err}
-                                    </span>
-                                </div>
-                            </div>: null}
+                                <div className="form-group row">
+                                    <div className="col-md-6 offset-md-4">
+                                        <span className="alert-danger form-control">
+                                            {this.state.err}
+                                        </span>
+                                    </div>
+                                </div> : null}
                         </form>
                     </div>
                     <div className="row">
@@ -150,7 +215,7 @@ class ProjectSettings extends Component {
                             </div>
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
                     <div className="row">
                         <div className="col">
                             <div className="form-group row">
@@ -163,20 +228,21 @@ class ProjectSettings extends Component {
                             </div>
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
+                    {this.projectCollaborators()}
                     <div className="row">
                         <form className="col" onSubmit={this.handleSubmit}>
                             {this.state.err !== "" ?
-                            <div className="form-group row">
-                                <div className="col-md-6 offset-md-4">
-                                    <span className="alert-danger form-control">
-                                    {this.state.err}
-                                    </span>
-                                </div>
-                            </div>: null}
+                                <div className="form-group row">
+                                    <div className="col-md-6 offset-md-4">
+                                        <span className="alert-danger form-control">
+                                            {this.state.err}
+                                        </span>
+                                    </div>
+                                </div> : null}
                             <div className="form-group row">
                                 <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project:</label>
-                                
+
                                 <div className="col-md-6">
                                     <button id='test' type="button" onClick={(e) => this.deleteProject(this.props.match.params.projectId, e)} className="btn btn-xs btn-danger">
                                         Delete

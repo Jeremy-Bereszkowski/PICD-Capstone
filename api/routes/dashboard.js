@@ -36,28 +36,15 @@ const createPool = async () => {
 };
 createPool();
 
-router.get('/', async (req, res) => {
+router.get('/:userID', async (req, res) => {
   try {
+    const userID = req.params.userID
+
     //Get current acct_value of customer
-    const getProjectsQuery = 'SELECT * FROM project;';
+    const getProjectsQuery = 'SELECT * FROM project JOIN user_has_project on project.project_id = user_has_project.project_id where user_has_project.user_id = (?);';
 
     //Run query - fetch response
-    var projectList = await pool.query(getProjectsQuery);
-
-    function compare(a, b) {
-      const bandA = a.date_stamp;
-      const bandB = b.date_stamp;
-
-      let comparison = 0;
-      if (bandA > bandB) {
-      comparison = 1;
-      } else if (bandA < bandB) {
-      comparison = -1;
-      }
-      return comparison * -1;
-    }
-    
-    projectList.sort(compare);
+    var projectList = await pool.query(getProjectsQuery, [userID]);
 
     res.status(200).json(projectList);
   } catch (err) {

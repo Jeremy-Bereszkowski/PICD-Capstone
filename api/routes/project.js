@@ -51,6 +51,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/users', async(req, res) => {
+  try {
+    const getProjectsUsersQuery = 'SELECT user.user_id, user.fname, user.lname, collaboration.privilege ' +
+      'FROM user JOIN user_has_project ON user_has_project.user_id = user.user_id ' +
+      'JOIN collaboration ON user_has_project.collaboration_id = collaboration.collaboration_id  ' +
+      'WHERE user_has_project.project_id=(?);';
+    var projectUsers = await pool.query(getProjectsUsersQuery, [req.params.id])
+
+    res.status(200).end(JSON.stringify({projectUsers: projectUsers}));
+  } catch (err) {
+    console.log(err)
+    res.status(500).end(err);
+  }
+});
+
 router.get('/:id/stages', async(req, res) => {
   try {
     const getStages = 'SELECT * FROM stage WHERE project_id=(?);';
@@ -62,6 +77,9 @@ router.get('/:id/stages', async(req, res) => {
   }
 });
 
+/**
+ * Update project details
+ */
 router.post('/:id/update', async (req, res) => {
   try {
     const updateProjectQuery = 'UPDATE project SET title=(?), description=(?) WHERE project_id=(?);';
@@ -74,16 +92,66 @@ router.post('/:id/update', async (req, res) => {
   }
 });
 
-router.post('/new', async (req, res) => {
+/**
+ * Add project collaborator
+ */
+router.post('/:id/add-user/:uid', async(req, res) => {
   try {
-    const insertProjectQuery = 'insert into project (title, description) values (?, ?);';
+    const addUserToProjectQuery = 'INSERT INTO `user_has_project` (user_id, project_id, collaboration_id) VALUES (?, ?, ?);';
+
+    var collabId;
+
+    switch (req.body.collabId.toLowerCase()) {
+      case 'read':
+        collabId = 1;
+        break;
+      case 'write':
+        collabId = 2;
+        break;
+        case 'admin':
+        collabId = 3;
+        break;
+    }
+
+    await pool.query(addUserToProjectQuery, [req.params.uid, req.params.id, collabId]);
+
+    res.status(200).end(JSON.stringify({success: true}));
+  } catch(err) {
+    res.status(500).json({success: false, message: err.message})
+  }
+});
+
+/**
+ * Remove project collaborator
+ * Cannot remove project owner
+ */
+router.get('/:id/remove-user/:uid', async(req, res) => {
+  try {
+    const removeUserFromProjectQuery = 'DELETE FROM user_has_project WHERE project_id=(?) AND user_id=(?);';
+
+    await pool.query(removeUserFromProjectQuery, [req.params.id, req.params.uid]);
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+  } catch (err) {
+    res.status(500).send('Connection error!');
+  }
+})
+
+router.post('/new/:userID', async (req, res) => {
+  try {
+    const userID = req.params.userID
+
+    const insertProjectQuery = 'INSERT INTO project (owner, title, description) values (?, ?, ?);';
+    const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id, collaboration_id) VALUES (?, ?, ?);'
     const insertStages = 'INSERT INTO stage (project_id, name) VALUES (?, "Design"), (?, "Simulation"), (?, "Layout"), (?, "Test");';
 
-    var project = await pool.query(insertProjectQuery, [req.body.title, req.body.description]);
+    var project = await pool.query(insertProjectQuery, [userID, req.body.title, req.body.description]);
+    await pool.query(insertUserProjectQuery, [userID, project.insertId, 3])
     await pool.query(insertStages, [project.insertId, project.insertId, project.insertId, project.insertId])
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {
+    console.log(err)
     res.status(500).send('Connection error!');
   }
 });

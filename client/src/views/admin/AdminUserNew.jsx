@@ -144,7 +144,7 @@ class AdminUserNew extends Component {
                     <span className="px-1">
                       <button type="submit" className="btn btn-success">
                         Create
-                                            </button>
+                      </button>
                     </span>
                   </div>
                 </div>
