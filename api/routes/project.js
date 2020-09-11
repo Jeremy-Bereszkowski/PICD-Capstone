@@ -77,6 +77,9 @@ router.get('/:id/stages', async(req, res) => {
   }
 });
 
+/**
+ * Update project details
+ */
 router.post('/:id/update', async (req, res) => {
   try {
     const updateProjectQuery = 'UPDATE project SET title=(?), description=(?) WHERE project_id=(?);';
@@ -89,11 +92,28 @@ router.post('/:id/update', async (req, res) => {
   }
 });
 
+/**
+ * Add project collaborator
+ */
 router.post('/:id/add-user/:uid', async(req, res) => {
   try {
     const addUserToProjectQuery = 'INSERT INTO `user_has_project` (user_id, project_id, collaboration_id) VALUES (?, ?, ?);';
 
-    await pool.query(addUserToProjectQuery, [req.params.uid, req.params.id, req.body.collabId]);
+    var collabId;
+
+    switch (req.body.collabId.toLowerCase()) {
+      case 'read':
+        collabId = 1;
+        break;
+      case 'write':
+        collabId = 2;
+        break;
+        case 'admin':
+        collabId = 3;
+        break;
+    }
+
+    await pool.query(addUserToProjectQuery, [req.params.uid, req.params.id, collabId]);
 
     res.status(200).end(JSON.stringify({success: true}));
   } catch(err) {
@@ -101,9 +121,9 @@ router.post('/:id/add-user/:uid', async(req, res) => {
   }
 });
 
-/*
-Remove project collaborator
-  Cannot remove project owner
+/**
+ * Remove project collaborator
+ * Cannot remove project owner
  */
 router.get('/:id/remove-user/:uid', async(req, res) => {
   try {

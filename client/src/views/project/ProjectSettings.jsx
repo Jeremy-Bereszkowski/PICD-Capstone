@@ -62,7 +62,6 @@ class ProjectSettings extends Component {
                 console.log(typeof this.state.userList, this.state.userList)
                 console.log(typeof this.state.userList, this.state.userList)
 
-
                 /* this.props.history.push("/project/"+this.props.match.params.projectId+"/settings") */
                 window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
             }, this.state.project_id, uid)

@@ -139,22 +139,22 @@ class CallAPI {
   }
 
   addProjectUser = (cb, projectId, uid, collabId) => {
-    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectId + '/add-user' + uid
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectId + '/add-user/' + uid
 
     fetch(url, {
       method: 'post',
       headers: {
         'content-type': 'application/json'
       },
-      body: {
+      body: JSON.stringify({
         collabId: collabId
-      }
+      })
     }).then(res => {
       if (res.status === 200) {
         return res.json();
       }
-    }).then(() => {
-
+    }).then(res => {
+      cb(res);
     })
   }
 

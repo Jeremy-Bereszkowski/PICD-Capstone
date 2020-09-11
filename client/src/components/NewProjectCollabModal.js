@@ -10,8 +10,18 @@ export default function NewProjectCollabModal({projectId}) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const submit = (event, uid, collabId) => {
-        callAPI.addProjectUser(() => {
+    const submit = (event) => {
+        event.preventDefault();
+
+        var uid = event.target.newUid.value;
+        var collabId = event.target.clearance.value;
+
+        callAPI.addProjectUser(res => {
+            console.log(res)
+
+            if (res.success === true) {
+                window.location.href = "/project/"+projectId+"/settings";
+            }
 
         }, projectId, uid, collabId);
 
@@ -34,7 +44,7 @@ export default function NewProjectCollabModal({projectId}) {
                             <label htmlFor="title" className="col-md-4 col-form-label text-md-right">User Id: </label>
 
                             <div className="col-md-4">
-                                <input type="text" className="form-control" id="title" required />
+                                <input type="text" className="form-control" id="newUid" required />
                             </div>
                         </div>
                         <div className="form-group row">
