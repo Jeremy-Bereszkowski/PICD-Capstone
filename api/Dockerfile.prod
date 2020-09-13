@@ -1,5 +1,5 @@
 # pull official base image
-FROM node:12.16
+FROM node:12.16 as build
 
 # set working directory
 RUN mkdir -p /app
@@ -15,5 +15,13 @@ COPY . /app
 # install app dependencies
 RUN npm install --silent
 
+
+FROM node:latest
+
+WORKDIR /app
+COPY --from=build /app/node_modules /app/node_modules
+
+COPY . /app
+
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:prod"]
