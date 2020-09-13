@@ -47,6 +47,9 @@ services:
   api:
     container_name: picd-api
     image: docker.pkg.github.com/s3539822/picd-capstone/picd-api:beta-1.1
+    build:
+        context: ./api
+        dockerfile: Dockerfile.prod
     depends_on:
       - mysql
     expose:
@@ -67,6 +70,9 @@ services:
   client:
     container_name: picd-client
     image: docker.pkg.github.com/s3539822/picd-capstone/picd-client:beta-1.1
+    build:
+        context: ./api
+        dockerfile: Dockerfile.prod
     environment:
       <<: *common-variables
       REACT_APP_API_SERVER_ADDRESS: http://localhost:9000
