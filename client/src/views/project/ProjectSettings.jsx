@@ -3,6 +3,7 @@ import Sidebar from '../../components/Sidebar'
 import auth from '../../utils/auth'
 import callAPI from '../../utils/callAPI'
 import NewProjectCollabModal from '../../components/NewProjectCollabModal'
+import TransferOwnershipModal from '../../components/TransferOwnershipModal'
 
 class ProjectSettings extends Component {
     constructor(props) {
@@ -130,7 +131,9 @@ class ProjectSettings extends Component {
                                                         {
                                                             this.state.owner === user.user_id ? null :
                                                             <td>
-                                                                <button className="btn btn-primary btn-sm" onClick={(event) => this.handleSubmit(event, user.user_id)}>
+                                                                <TransferOwnershipModal projectId={this.state.project_id} oldOwnerId={this.state.owner} newOwnerId={user.user_id}/>
+
+                                                                <button className="btn btn-warning btn-sm" onClick={(event) => this.handleSubmit(event, user.user_id)}>
                                                                     Remove
                                                                 </button>
                                                             </td>

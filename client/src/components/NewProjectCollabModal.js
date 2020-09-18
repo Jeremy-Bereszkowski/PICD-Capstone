@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import callAPI from '../utils/callAPI';
-import auth from '../utils/auth';
 
 export default function NewProjectCollabModal({projectId}) {
     const [show, setShow] = useState(false);
