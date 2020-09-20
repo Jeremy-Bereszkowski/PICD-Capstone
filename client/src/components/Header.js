@@ -56,17 +56,20 @@ function Header(props) {
     }
 
     return (
-        <Navbar bg="dark" variant="dark" expand="lg" className="row">
-            <Navbar.Brand href={props.items.title.link} className="col mr-0">{props.items.title.name}</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav" className="col mr-0 justify-content-end">
-                <Nav>
-                    {props.items.buttons.map((item, index) => (
-                        headerButtons(item, index)
-                    ))}
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
+        <header>
+            <Navbar bg="dark" variant="dark" expand="lg">
+                <Navbar.Brand href={props.items.title.link} className="col mr-0">{props.items.title.name}</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" className="col mr-0 justify-content-end">
+                    <Nav>
+                        {props.items.buttons.map((item, index) => (
+                            headerButtons(item, index)
+                        ))}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        </header>
+        
     )
 }
 
