@@ -20,7 +20,7 @@ import Stage from './views/project/Stage'
 import AdminUser from './views/admin/AdminUser'
 import AdminUserNew from './views/admin/AdminUserNew'
 import AdminUserEdit from './views/admin/AdminUserEdit'
-import Settings from './views/user/settings'
+import Settings from './views/user/Settings'
 
 import './css/App.css'
 

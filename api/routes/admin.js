@@ -90,7 +90,7 @@ router.post('/users/new', async (req, res) => {
 
     await pool.query(newUserQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password]);
 
-    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+    res.status(200).end(JSON.stringify({response: 'Successful!'}));
   } catch (err) {
     res.status(500).send('Connection error!').end();
   }
@@ -102,9 +102,32 @@ router.post('/users/:userID/update', async (req, res) => {
 
     await pool.query(updateProjectQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.params.userID]);
 
-    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+    res.status(200).end(JSON.stringify({response: 'Successful!'}));
   } catch (err) {
     res.status(500).send('Connection error!').end();
+  }
+});
+
+router.post('/users/:userID/update/password', async (req, res) => {
+  try {
+    const getCurrentPassword = 'SELECT password FROM user WHERE user_id=(?)';
+    const updateProjectQuery = 'UPDATE user SET password=(?) WHERE user_id=(?)';
+
+    var current = await pool.query(getCurrentPassword, [req.params.userID]);
+
+    if(req.body.old_password !== current[0].password){
+      console.log("Passwords Don't Match")
+      console.log(req.body.old_password, "=> ", current[0].password)
+      return res.status(412).json({message: "Incorrect Password"});
+    }
+
+    await pool.query(updateProjectQuery, [req.body.new_password, req.params.userID]);
+
+    console.log('Updated Password Successfully!')
+    res.status(200).json({message: 'Updated Password Successfully!'});
+  } catch (err) {
+    console.log('Connection error!');
+    res.status(500).json({message: 'Connection error!'});
   }
 });
 
@@ -124,7 +147,7 @@ router.get('/users/delete/:userID', async (req, res) => {
     //Run query - fetch response
     await pool.query(deleteQuery/* , [integer] */);
 
-    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+    res.status(200).end(JSON.stringify({response: 'Successful!'}));
   } catch (err) {
       console.log(err);
       res.status(500).end('Unable to delete user!');
