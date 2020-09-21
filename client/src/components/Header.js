@@ -50,6 +50,7 @@ function Header(props) {
                                     )
                                 }
                             }
+                            return false
                         })}
                     </NavDropdown>
                 )
