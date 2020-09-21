@@ -11,6 +11,10 @@ function Settings() {
     const [newpword, setNewpword] = useState("");
     const [confirmpword, setConfirmpword] = useState("");
     const [match, setMatch] = useState(false);
+
+    //Message for User Details Update
+    const [detailsMessage, setDetailsMessage] = useState("");
+    const [detailsMessageType, setDetailsMessageType] = useState("");
     
     //Message for Password Update
     const [message, setMessage] = useState("");
@@ -55,6 +59,17 @@ function Settings() {
         })
     }
 
+    const updateUserDetails = (e) => {
+        e.preventDefault();
+        callAPI.updateUser(() => {
+            setDetailsMessage("Updated Successfully!");
+            setDetailsMessageType("alert-success");
+        }, auth.getUID(), fname, lname, auth.getClearance(), email, () => {
+            setDetailsMessage("Update Failed!");
+            setDetailsMessageType("alsert-danger");
+        })
+    }
+
     return (
         <div className='container py-4'>
             <div className="row justify-content-center">
@@ -74,45 +89,52 @@ function Settings() {
                 </span>
             </div>
             <div className="row">
-                <form className="col">
+                <form className="col" onSubmit={updateUserDetails}>
                     <div className="form-group row">
                         <label htmlFor="fname" className="col-md-3 col-form-label text-md-right">First Name:</label>
 
                         <div className="col-md-6">
-                            <input type="text" name="fname" className="form-control" id="fname" value={fname} disabled={auth.getClearance().toLowerCase() !== 'admin'? true : false}/>
+                            <input type="text" name="fname" className="form-control" id="fname" value={fname} onChange={e => setFname(e.target.value)} disabled={auth.getClearance().toLowerCase() !== 'admin'? true : false}/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="lname" className="col-md-3 col-form-label text-md-right">Last Name:</label>
 
                         <div className="col-md-6">
-                            <input type="text" name="lname" className="form-control" id="lname" value={lname} disabled={auth.getClearance().toLowerCase() !== 'admin'? true : false}/>
+                            <input type="text" name="lname" className="form-control" id="lname" value={lname} onChange={e => setLname(e.target.value)} disabled={auth.getClearance().toLowerCase() !== 'admin'? true : false}/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="email" className="col-md-3 col-form-label text-md-right">Email:</label>
 
                         <div className="col-md-6">
-                            <input type="text" name="email" className="form-control" id="email" value={email} disabled={auth.getClearance().toLowerCase() !== 'admin'? true : false}/>
+                            <input type="text" name="email" className="form-control" id="email" value={email} onChange={e => setEmail(e.target.value)} disabled={auth.getClearance().toLowerCase() !== 'admin'? true : false}/>
                         </div>
                     </div>
-                </form>
-            </div>
-            {auth.getClearance().toLowerCase() === 'admin'? 
-            <div className="row">
-                <div className="col">
+
+                    {detailsMessage !== "" &&
+                    <div className="form-group row">
+                        <div className="col-md-6 offset-md-3">
+                            <span className={'form-control ' + detailsMessageType}>
+                                {detailsMessage}
+                            </span>
+                        </div>
+                    </div>}
+
+                    {auth.getClearance().toLowerCase() === 'admin'? 
                     <div className="form-group row mb-0">
                         <div className="col-md-6 offset-md-3">
                             <span>
-                                <button className="btn btn-primary">
+                                <button className="btn btn-primary" type="submit">
                                     Update Details
                                 </button>
                             </span>
                         </div>
                     </div>
-                </div>
+                    : null}
+                </form>
             </div>
-            : null}
+            
             <div className="row justify-content-center">
                 <span className="col text-left">
                     <h5 className="left">Reset Password</h5>
