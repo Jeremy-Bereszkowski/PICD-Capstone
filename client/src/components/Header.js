@@ -7,30 +7,32 @@ function Header(props) {
         if(item.clearance.toLowerCase() === "all" || item.clearance.toLowerCase() === auth.getClearance().toLowerCase()) {
             if(item.type.toLowerCase() === "link") {
                     return (
-                        <Nav.Link href={item.link}>{item.title}</Nav.Link>
+                        <Nav.Link href={item.link} key={item.title + index}>{item.title}</Nav.Link>
                     )
             }
             
             if(item.type.toLowerCase() === "logout") {
                 return (
-                    <Nav.Link onclick={item.onclick}>{item.title}</Nav.Link>
+                    <Nav.Link onclick={item.onclick} key={item.title + index}>{item.title}</Nav.Link>
                 )
             }
 
             if(item.type === "menu") {
                 return (
-                    <NavDropdown title={item.title} id="basic-nav-dropdown" drop="down" alignRight>
+                    <NavDropdown title={item.title} id="basic-nav-dropdown" drop="down" alignRight key={item.title + index}>
                         {item.menu.map((i, index) => {
                             if(i.clearance.toLowerCase() === "all" || i.clearance.toLowerCase() === auth.getClearance().toLowerCase()) {
                                 if(i.type.toLowerCase() === "link") {
                                     return (
-                                        <NavDropdown.Item href={i.link} eventKey={index}>{i.title}</NavDropdown.Item>
+                                        <NavDropdown.Item href={i.link} key={i.title + index}>
+                                            {i.title}
+                                        </NavDropdown.Item>
                                     )
                                 }
                                 
                                 if(i.type.toLowerCase() === "logout") {
                                     return (
-                                        <NavDropdown.Item href={i.link} onClick={() => i.onClick()} eventKey={index}>
+                                        <NavDropdown.Item href={i.link} onClick={() => i.onClick()} key={i.title + index}>
                                             {i.title}
                                         </NavDropdown.Item>
                                     )
@@ -38,13 +40,13 @@ function Header(props) {
 
                                 if(i.type.toLowerCase() === "divider") {
                                     return (
-                                        <Dropdown.Divider />
+                                        <Dropdown.Divider key={i.title + index}/>
                                     )
                                 }
 
                                 if(i.type.toLowerCase() === "header") {
                                     return (
-                                        <Dropdown.Header>{i.title}</Dropdown.Header>
+                                        <Dropdown.Header key={item.title + index}>{i.title}</Dropdown.Header>
                                     )
                                 }
                             }
