@@ -90,6 +90,13 @@ function Settings() {
             </div>
             <div className="row">
                 <form className="col" onSubmit={updateUserDetails}>
+                <div className="form-group row">
+                        <label htmlFor="fname" className="col-md-3 col-form-label text-md-right">ID:</label>
+
+                        <div className="col-md-6">
+                            <input type="text" name="fname" className="form-control" id="fname" value={auth.getUID()} disabled/>
+                        </div>
+                    </div>
                     <div className="form-group row">
                         <label htmlFor="fname" className="col-md-3 col-form-label text-md-right">First Name:</label>
 
