@@ -201,6 +201,33 @@ class CallAPI {
         })
   }
 
+  transferProjectOwnership = (cb, projectId, newOwnerId, oldOwnerId) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/transfer'
+
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        newOwnerId: newOwnerId,
+        oldOwnerId: oldOwnerId,
+        projectId: projectId,
+      })
+    })
+        .then(res => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then(data => {
+          cb(data);
+        })
+        .catch(e => {
+
+        })
+  }
+
   getProjectUserList = (cb, projectID) => {
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectID + '/users'
 

@@ -121,6 +121,29 @@ router.post('/:id/add-user/:uid', async(req, res) => {
 });
 
 /**
+ * Transfer project ownership
+ */
+router.post('/transfer', async(req, res) => {
+  try {
+    const newOwnerId = req.body.newOwnerId;
+    const oldOwnerId = req.body.oldOwnerId;
+    const projectId = req.body.projectId;
+
+    const updateProjectQuery = 'UPDATE project SET owner=(?) WHERE project_id=(?);';
+    const updateUserHasProjectQuery1 = 'UPDATE user_has_project SET collaboration_id=2 WHERE project_id=(?) AND user_id=(?);';
+    const updateUserHasProjectQuery2 = 'UPDATE user_has_project SET collaboration_id=3 WHERE project_id=(?) AND user_id=(?);';
+
+    await pool.query(updateProjectQuery, [newOwnerId, projectId]);
+    await pool.query(updateUserHasProjectQuery1, [projectId, oldOwnerId]);
+    await pool.query(updateUserHasProjectQuery2, [projectId, newOwnerId]);
+
+    res.status(200).json(JSON.stringify({isSuccess: true}));
+  } catch (err) {
+    res.status(500).send('Connection error!');
+  }
+});
+
+/**
  * Remove project collaborator
  * Cannot remove project owner
  */
