@@ -59,9 +59,6 @@ class CallAPI {
             clearance: res.user.clearance,
             email: decrypt(res.user.email)
           }
-
-
-          console.log(user)
           cb(user)
         });
   }
@@ -121,11 +118,43 @@ class CallAPI {
     })
   }
 
+  updateUserPassword = (cb, user_id, old_password, new_password, error) => {
+
+    if(old_password === "" || new_password === "") {
+      error({message: "Password Not Long enough"});
+      return false
+    }
+
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/' + user_id + '/update/password', {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        old_password: encrypt(old_password),
+        new_password: encrypt(new_password)
+      })
+    })
+    .then(res => {
+      const status = res.status;
+      const data = res.json();
+      return Promise.all([status, data])
+    })
+    .then(([status, data]) => {
+      if(status !== 200) {
+        error(data)
+      }else{
+        cb(data)
+      }
+    })
+    .catch((err) => {
+      error(err)
+    })
+  }
+
   newProject = (cb, body) => {
     const uid = auth.getUID()
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/new/' + uid
-
-    console.log(url)
 
     fetch(url, {
       method: 'post',
@@ -222,8 +251,6 @@ class CallAPI {
     console.log(typeof user_id)
 
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + user_id
-
-    console.log(url)
 
     fetch(url)
         .then((res) => {

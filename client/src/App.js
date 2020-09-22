@@ -20,6 +20,7 @@ import Stage from './views/project/Stage'
 import AdminUser from './views/admin/AdminUser'
 import AdminUserNew from './views/admin/AdminUserNew'
 import AdminUserEdit from './views/admin/AdminUserEdit'
+import Settings from './views/user/Settings'
 
 import './css/App.css'
 
@@ -27,9 +28,16 @@ class App extends Component{
     render() {
         const AuthHeaderItems = {
             buttons: [
-                {title: auth.getClearance() === 'admin' ? 'Admin' : '', type: "Link", link: "/admin/users"},
-                {title: 'Dashboard', type: "Link", link: "/dashboard"},
-                {title: 'Logout', type: "Logout", link: "/", onClick: () => {auth.logout()}},
+                {title: 'Dashboard', type: "Link", clearance: "all", link: "/dashboard"},
+                {title: 'User', type: "menu", clearance: "all", menu: [
+                    {title: 'User', type: "header", clearance: "all"},
+                    {title: 'Settings', type: "Link", clearance: "all", link: "/user/settings"},
+                    {title: 'Administator', type: "header", clearance: "admin"},
+                    {title: 'Settings', type: "Link", clearance: "admin", link: "/admin/users"},
+                    {type: "divider", clearance: "all"},
+                    {title: 'Logout', type: "Logout", clearance: "all", link: "/", onClick: () => {auth.logout()}},
+                    ],
+                icon: "user-icon"}
             ],
             title: {
                 name: process.env.REACT_APP_NAME,
@@ -62,6 +70,7 @@ class App extends Component{
                         <ProtectedRoute exact path="/project/:projectId" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Project {...props}/>} footer={() => <Footer />}/>
         				<ProtectedRoute path="/project/:projectId/settings" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <ProjectSettings {...props}/>} footer={() => <Footer />}/>
                         <ProtectedRoute exact path="/project/:projectId/stage/:stageId" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Stage {...props}/>} footer={() => <Footer />}/>
+                        <ProtectedRoute path="/user/settings" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <Settings {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute exact path="/admin/users" header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUser {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute path='/admin/users/new' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUserNew {...props}/>} footer={() => <Footer />}/>
                         <AdminRoute path='/admin/users/:id' header={(props) => <Header items={AuthHeaderItems} {...props}/>} component={(props) => <AdminUserEdit {...props}/>} footer={() => <Footer />}/>
