@@ -1,0 +1,11 @@
+.navItem:hover{
+    background-color: grey;
+}
+
+.navItem:hover a{
+    color: lightgray;
+}
+
+.navItem a{
+    color: black;
+}
