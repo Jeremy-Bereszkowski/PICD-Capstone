@@ -189,4 +189,29 @@ router.get('/:projectId/stage/:stageId', async(req, res) => {
   }
 });
 
+router.post('/:projectId/stage/new', async(req, res) => {
+  try {
+    const insertStage = 'INSERT INTO stage (project_id, name) VALUES (?, ?);';
+    const insertVersion = 'INSERT INTO version (stage_id, project_id, revision, name) VALUES (?, ?, ?, ?);';
+    const projectPrivilege = 'SELECT * FROM `user_has_project` WHERE user_id=(?) and project_id=(?);';
+
+    var privilege = await pool.query(projectPrivilege, [req.body.userID, req.body.projectID]);
+    
+    if(privilege.length == 0) {
+      return res.status(500).json({message: 'Invalid User ID or Project ID'});
+    }
+
+    if(privilege[0].collaboration_id === 2 || privilege[0].collaboration_id === 3) {
+      var stage = await pool.query(insertStage, [req.body.projectID, req.body.stageName]);
+      await pool.query(insertVersion, [stage.insertId, req.body.projectID, 1, 'init']);
+      return res.status(200).json({message: "New Stage Create Successfully!"});
+    } else {
+      return res.status(500).json({message: 'Invalid Privilege'});
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message: "Unable to Create New Stage!"});
+  }
+})
+
 module.exports = router;

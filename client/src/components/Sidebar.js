@@ -3,18 +3,23 @@ import { Link } from 'react-router-dom'
 import { Nav, Spinner } from 'react-bootstrap'
 import NewStageModal from './NewStageModal'
 import { navItem } from '../css/Sidebar.module.css'
+import vdots from '../imgs/vdots.svg'
 
 function Sidebar(props) {
     const [stages, setStages] = useState([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
+    const getStages = () => {
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.id+'/stages')
         .then(res => res.json())
         .then(res => {
             setStages(res)
             setLoading(false)
         });
+    }
+
+    useEffect(() => {
+        getStages();
     }, []);
 
     const staticItems = [
@@ -53,7 +58,7 @@ function Sidebar(props) {
                     )
                 })}
                 <Nav.Item key="new-stage">
-                    <NewStageModal project_id={props.id} block/>
+                    <NewStageModal project_id={props.id} update={getStages} block/>
                 </Nav.Item>
             </Nav>
             }

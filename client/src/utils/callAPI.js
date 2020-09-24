@@ -1,11 +1,6 @@
 import auth from './auth'
 
 class CallAPI {
-
-  constructor() {
-
-  }
-
   login = (cb, email, password, error, sessionCB) => {
     console.log(email, password)
 
@@ -248,8 +243,6 @@ class CallAPI {
   }
 
   deleteProject = (cb, user_id, err) => {
-    console.log(typeof user_id)
-
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + user_id
 
     fetch(url)
@@ -259,6 +252,34 @@ class CallAPI {
           }
         })
         .catch((error) => err(error))
+  }
+
+  newStage = (cb, user_id, project_id, stage_name, error) => {
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+project_id+'/stage/new', {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        userID: user_id,
+        projectID: project_id,
+        stageName: stage_name
+      })
+    }).then(res => {
+      const status = res.status;
+      const data = res.json();
+      return Promise.all([status, data])
+    })
+    .then(([status, data]) => {
+      if(status !== 200) {
+        error(data)
+      }else{
+        cb(data)
+      }
+    })
+    .catch((err) => {
+      error(err)
+    })
   }
 }
 
