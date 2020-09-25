@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `stage` (
   stage_id INT NOT NULL AUTO_INCREMENT,
   project_id INT(11) NOT NULL,
   name VARCHAR(45) NULL,
+  description varchar(255) NULL,
   PRIMARY KEY (stage_id, project_id),
   INDEX fk_stages_project1_idx (project_id ASC),
   CONSTRAINT fk_stages_project

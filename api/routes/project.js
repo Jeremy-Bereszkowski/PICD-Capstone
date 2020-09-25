@@ -165,7 +165,7 @@ router.post('/new/:userID', async (req, res) => {
 
     const insertProjectQuery = 'INSERT INTO project (owner, title, description) values (?, ?, ?);';
     const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id, collaboration_id) VALUES (?, ?, ?);'
-    const insertStages = 'INSERT INTO stage (project_id, name) VALUES (?, "Design"), (?, "Simulation"), (?, "Layout"), (?, "Test");';
+    const insertStages = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Design", "Design Stage"), (?, "Simulation", "Simulation Stage"), (?, "Layout", "Layout Stage"), (?, "Test", "Test Stage");';
 
     var project = await pool.query(insertProjectQuery, [userID, req.body.title, req.body.description]);
     await pool.query(insertUserProjectQuery, [userID, project.insertId, 3])

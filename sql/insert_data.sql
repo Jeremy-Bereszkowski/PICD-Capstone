@@ -28,11 +28,11 @@ VALUES
 (2, 3, 'Project 2', 'Second Project'),
 (3, 4, 'Project 3', 'Third Project');
 
-INSERT INTO `stage` (stage_id, project_id, name)
+INSERT INTO `stage` (stage_id, project_id, name, description)
 VALUES
-(1, 1, 'Design'), (2, 1, 'Simulation'), (3, 1, 'Layout'), (4, 1, 'Test'),
-(5, 2, 'Design'), (6, 2, 'Simulation'), (7, 2, 'Layout'), (8, 2, 'Test'),
-(9, 3, 'Design'), (10, 3, 'Simulation'), (11, 3, 'Layout'), (12, 3, 'Test');
+(1, 1, 'Design', 'Design Stage'), (2, 1, 'Simulation', 'Simulation Stage'), (3, 1, 'Layout', 'Layout Stage'), (4, 1, 'Test', 'Test Stage'),
+(5, 2, 'Design', 'Design Stage'), (6, 2, 'Simulation', 'Simulation Stage'), (7, 2, 'Layout', 'Layout Stage'), (8, 2, 'Test', 'Test Stage'),
+(9, 3, 'Design', 'Design Stage'), (10, 3, 'Simulation', 'Simulation Stage'), (11, 3, 'Layout', 'Layout Stage'), (12, 3, 'Test', 'Test Stage');
 
 INSERT INTO `version` (stage_id, project_id, revision, name)
 VALUES

@@ -7,11 +7,10 @@ import '../../css/stage.css'
 
 function Stage(props) {
     const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
     const [versions, setVersions] = useState([]);
     const [selectedVersion, setSelectedVersion] = useState();
     const [update, setUpdate] = useState(false);
-
-
     
     /**
      * Submit new stage version to the api server.
@@ -60,7 +59,9 @@ function Stage(props) {
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.match.params.projectId+'/stage/'+props.match.params.stageId)
             .then(res => res.json())
             .then(res => {
+                console.log(res);
                 setName(res.name);
+                setDescription(res.description);
             });
     }, [props.match.params.projectId, props.match.params.stageId]);
 
@@ -75,8 +76,11 @@ function Stage(props) {
                 <div className="row">
                     <div className="col-md-6">
                         <h3>
-                            Stage: {name}
+                            {name}
                         </h3>
+                        <h5>
+                            {description}
+                        </h5>
                     </div>
                     <div className="col-md-6 text-right">
                         <div className="d-inline-block px-1 py-1">
