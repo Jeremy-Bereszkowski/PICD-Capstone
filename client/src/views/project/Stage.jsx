@@ -49,6 +49,7 @@ function Stage(props) {
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + props.match.params.projectId + '/' + props.match.params.stageId)
             .then(res => res.json())
             .then(res => {
+                console.log(res)
                 setVersions(res);
                 setSelectedVersion(res[0].version_id)
             });
@@ -56,10 +57,10 @@ function Stage(props) {
         /**
          * Get the stage details
          */
+        console.log(props.match.params.stageId)
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.match.params.projectId+'/stage/'+props.match.params.stageId)
             .then(res => res.json())
             .then(res => {
-                console.log(res);
                 setName(res.name);
                 setDescription(res.description);
             });

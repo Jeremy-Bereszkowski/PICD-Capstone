@@ -159,17 +159,32 @@ router.get('/:id/remove-user/:uid', async(req, res) => {
   }
 })
 
+/**
+ * Create new project
+ */
 router.post('/new/:userID', async (req, res) => {
   try {
     const userID = req.params.userID
 
     const insertProjectQuery = 'INSERT INTO project (owner, title, description) values (?, ?, ?);';
     const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id, collaboration_id) VALUES (?, ?, ?);'
-    const insertStages = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Design", "Design Stage"), (?, "Simulation", "Simulation Stage"), (?, "Layout", "Layout Stage"), (?, "Test", "Test Stage");';
+    const insertStages1 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Design", "Design Stage")';
+    const insertStages2 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Simulation", "Simulation Stage")';
+    const insertStages3 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Layout", "Layout Stage")';
+    const insertStages4 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Test", "Test Stage");';
+    const insertVersion = 'INSERT INTO version (stage_id, project_id, revision, name) VALUES (?, ?, 1, "init")';
 
     var project = await pool.query(insertProjectQuery, [userID, req.body.title, req.body.description]);
-    await pool.query(insertUserProjectQuery, [userID, project.insertId, 3])
-    await pool.query(insertStages, [project.insertId, project.insertId, project.insertId, project.insertId])
+    await pool.query(insertUserProjectQuery, [userID, project.insertId, 3]);
+    var stage1 = await pool.query(insertStages1, [project.insertId]);
+    var stage2 = await pool.query(insertStages2, [project.insertId]);
+    var stage3 = await pool.query(insertStages3, [project.insertId]);
+    var stage4 = await pool.query(insertStages4, [project.insertId]);
+    await pool.query(insertVersion, [stage1.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage2.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage3.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage4.insertId, project.insertId]);
+
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {
@@ -178,6 +193,9 @@ router.post('/new/:userID', async (req, res) => {
   }
 });
 
+/**
+ * Get project stage
+ */
 router.get('/:projectId/stage/:stageId', async(req, res) => {
   try {
     const getStage = 'SELECT * FROM stage WHERE stage_id=(?);';
