@@ -1,8 +1,30 @@
 import React from 'react'
 import { Navbar, Nav, NavDropdown, Dropdown } from 'react-bootstrap'
+import { useAuth0 } from "@auth0/auth0-react";
 import auth from '../utils/auth'
 
-function Header(props) {
+function Header() {
+    const { isAuthenticated } = useAuth0();
+
+    const HeaderItems = {
+        buttons: [
+            {title: 'Dashboard', type: "Link", clearance: "all", link: "/dashboard"},
+            {title: 'User', type: "menu", clearance: "all", menu: [
+                    {title: 'User', type: "header", clearance: "all"},
+                    {title: 'Settings', type: "Link", clearance: "all", link: "/user/settings"},
+                    {title: 'Administator', type: "header", clearance: "admin"},
+                    {title: 'Settings', type: "Link", clearance: "admin", link: "/admin/users"},
+                    {type: "divider", clearance: "all"},
+                    {title: 'Logout', type: "Logout", clearance: "all", link: "/", onClick: () => {auth.logout()}},
+                ],
+                icon: "user-icon"}
+        ],
+        title: {
+            name: process.env.REACT_APP_NAME,
+            link: "/dashboard"
+        }
+    };
+
     const headerButtons = (item, index) => {
         if(item.clearance.toLowerCase() === "all" || item.clearance.toLowerCase() === auth.getClearance().toLowerCase()) {
             if(item.type.toLowerCase() === "link") {
@@ -61,13 +83,14 @@ function Header(props) {
     return (
         <header>
             <Navbar bg="dark" variant="dark" expand="lg">
-                <Navbar.Brand href={props.items.title.link} className="col mr-0">{props.items.title.name}</Navbar.Brand>
+                <Navbar.Brand href={HeaderItems.title.link} className="col mr-0">{HeaderItems.title.name}</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="col mr-0 justify-content-end">
-                    <Nav>
-                        {props.items.buttons.map((item, index) => (
+                    <Nav>{
+                        isAuthenticated ?
+                        HeaderItems.buttons.map((item, index) => (
                             headerButtons(item, index)
-                        ))}
+                        )) : null }
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
