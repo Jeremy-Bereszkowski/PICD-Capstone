@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 
 class NewProjectForm extends Component {
     handleSubmit = (event) => {
-        var title = event.target.title.value /* !== '' ? event.target.title.value : this.state.title */
-        var description = event.target.description.value /* !== '' ? event.target.description.value : this.state.description */
-        var revision = event.target.revision.value /* !== '' ? event.target.revision.value : this.state.revision */
+        var title = event.target.title.value
+        var description = event.target.description.value
+        var revision = event.target.revision.value
 
         fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/new', {
             method: 'post',
