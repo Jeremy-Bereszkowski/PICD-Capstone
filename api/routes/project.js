@@ -214,4 +214,31 @@ router.post('/:projectId/stage/new', async(req, res) => {
   }
 })
 
+
+router.post('/stage/delete', async(req, res) => {
+  try {
+    const getStage = 'SELECT u.user_id, u.collaboration_id, s.project_id, s.stage_id FROM stage AS s ' +
+                     'JOIN user_has_project as u ' +
+                     'ON u.project_id = s.project_id ' +
+                     'WHERE s.stage_id=(?) AND u.user_id=(?)';
+    const deleteStage = 'DELETE FROM stage WHERE project_id=(?) AND stage_id=(?);';
+
+    var stage = await pool.query(getStage, [req.body.stageID, req.body.userID])
+
+    if (stage.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Unable to find Stage or Invalid Collaboration Privileges'}))
+    }
+
+    if(stage.collaboration_id < 2) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Collaboration Privileges'}))
+    }
+
+    await pool.query(deleteStage, [req.body.projectID, req.body.stageID])
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+
+  } catch (error){
+    res.status(500).json({message: "Unable to Delete Stage"})
+  }
+})
 module.exports = router;

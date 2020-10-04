@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav, Spinner } from 'react-bootstrap'
-import NewStageModal from './NewStageModal'
 import { navItem } from '../css/Sidebar.module.css'
-import vdots from '../imgs/vdots.svg'
 
 function Sidebar(props) {
     const [stages, setStages] = useState([])
@@ -57,9 +55,7 @@ function Sidebar(props) {
                         </Nav.Item>
                     )
                 })}
-                <Nav.Item key="new-stage">
-                    <NewStageModal project_id={props.id} update={getStages} block/>
-                </Nav.Item>
+                
             </Nav>
             }
         </div>

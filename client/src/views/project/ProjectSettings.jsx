@@ -4,6 +4,7 @@ import auth from '../../utils/auth'
 import callAPI from '../../utils/callAPI'
 import NewProjectCollabModal from '../../components/NewProjectCollabModal'
 import TransferOwnershipModal from '../../components/TransferOwnershipModal'
+import StageManager from '../../components/StageManager'
 
 class ProjectSettings extends Component {
     constructor(props) {
@@ -231,6 +232,8 @@ class ProjectSettings extends Component {
                             </div>
                         </div>
                     </div>
+                    <hr />
+                        <StageManager project_id={this.props.match.params.projectId} />
                     <hr />
                     {this.projectCollaborators()}
                     <div className="row">

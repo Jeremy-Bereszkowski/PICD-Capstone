@@ -281,6 +281,34 @@ class CallAPI {
       error(err)
     })
   }
+
+  deleteStage = (cb, user_id, project_id, stage_id, error) => {
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/stage/delete', {
+      method: 'post',
+      headers : {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        userID: user_id,
+        projectID: project_id,
+        stageID: stage_id
+      })
+    }).then(res => {
+      const status = res.status;
+      const data = res.json();
+      return Promise.all([status, data])
+    })
+    .then(([status, data]) => {
+      if(status !== 200) {
+        error(data)
+      }else{
+        cb(data)
+      }
+    })
+    .catch((err) => {
+      error(err)
+    })
+  }
 }
 
 function postFetch(cb, endpoint, body, error, errString, sessionCB) {
