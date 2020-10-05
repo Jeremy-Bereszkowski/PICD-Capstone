@@ -1,30 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Nav, Spinner } from 'react-bootstrap'
 import { navItem } from '../css/Sidebar.module.css'
 
-function Sidebar(props) {
-    const [stages, setStages] = useState([])
-    const [loading, setLoading] = useState(true)
-
-    const getStages = () => {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.id+'/stages')
-        .then(res => res.json())
-        .then(res => {
-            setStages(res)
-            setLoading(false)
-        });
-    }
-
-    useEffect(() => {
-        getStages();
-    }, []);
-
-    const staticItems = [
-        {title: 'Overview', key: 'overview', link: `/project/${props.id}`},
-        {title: 'Project Settings', key: 'project-settings', link: `/project/${props.id}/settings`},
-    ]
-
+function Sidebar({stages, staticItems, loading}) {
     return (
         <div className="bg-light">
             <Nav className="flex-column">

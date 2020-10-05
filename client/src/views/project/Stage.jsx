@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import Sidebar from '../../components/Sidebar'
+import { useParams } from 'react-router-dom'
 import UploadFile from '../../components/UploadFile'
 import File from '../../components/File'
 import NewVersionModal from '../../components/NewVersionModal'
 import '../../css/stage.css'
 
 function Stage(props) {
+    let { projectId, stageId } = useParams();
     const [name, setName] = useState("");
     const [versions, setVersions] = useState([]);
     const [selectedVersion, setSelectedVersion] = useState();
@@ -22,7 +23,7 @@ function Stage(props) {
         event.preventDefault()
         var newRevisionName = event.target.title.value
         
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/version/new/"+props.match.params.projectId+'/'+props.match.params.stageId, {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/version/new/"+projectId+'/'+stageId, {
             method: 'post',
             headers: {
                 'content-type': 'application/json'
@@ -31,7 +32,7 @@ function Stage(props) {
                 newRevisionName: newRevisionName
             })
         }).then((res) => {
-            fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + props.match.params.projectId + '/' + props.match.params.stageId)
+            fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + projectId + '/' + stageId)
                 .then(res => res.json())
                 .then(res => {
                     setVersions(res);
@@ -44,10 +45,11 @@ function Stage(props) {
      * Runs when stageId is updated.
      */
     useEffect(() => {
+        console.log('Props', props)
         /**
          * Get an array of all the versions of the current stage.
          */
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + props.match.params.projectId + '/' + props.match.params.stageId)
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + projectId + '/' + stageId)
             .then(res => res.json())
             .then(res => {
                 setVersions(res);
@@ -57,52 +59,49 @@ function Stage(props) {
         /**
          * Get the stage details
          */
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.match.params.projectId+'/stage/'+props.match.params.stageId)
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectId+'/stage/'+stageId)
             .then(res => res.json())
             .then(res => {
                 setName(res.name);
             });
-    }, [props.match.params.projectId, props.match.params.stageId]);
+    }, [projectId, stageId]);
 
     const handleUpdate = () => {
         setUpdate(prevUpdate => !prevUpdate);
     }
 
     return (
-        <div className="row justify-content-left content">
-            <Sidebar id={props.match.params.projectId} />
-            <div className="col">
-                <div className="row">
-                    <div className="col-md-6">
-                        <h3>
-                            Stage: {name}
-                        </h3>
-                    </div>
-                    <div className="col-md-6 text-right">
-                        <div className="d-inline-block px-1 py-1">
-                            <select className="custom-select" value={selectedVersion}
-                                onChange={(e) => {
-                                    setSelectedVersion(e.target.value);
-                                }}>
-                                {versions.map(
-                                    (version) => 
-                                        <option key={version.version_id} value={version.version_id}>{version.revision}: {version.name}</option>
-                                )}
-                            </select>
-                        </div>
-                        <NewVersionModal handleSubmit={submitNewVersion}/>
-                    </div>
+        <div className="col">
+            <div className="row">
+                <div className="col-md-6">
+                    <h3>
+                        Stage: {name}
+                    </h3>
                 </div>
-                <hr/>
-                {selectedVersion === null ? 
-                <div>
-                    <p>Loading...</p>
-                </div> :
-                <div>
-                    <UploadFile projectId={props.match.params.projectId} stageId={props.match.params.stageId} stageVersion={selectedVersion} uploadComplete={handleUpdate}/>
-                    <File projectId={props.match.params.projectId} stageId={props.match.params.stageId} stageVersion={selectedVersion} update={update}/>
-                </div> }   
+                <div className="col-md-6 text-right">
+                    <div className="d-inline-block px-1 py-1">
+                        <select className="custom-select" value={selectedVersion}
+                            onChange={(e) => {
+                                setSelectedVersion(e.target.value);
+                            }}>
+                            {versions.map(
+                                (version) => 
+                                    <option key={version.version_id} value={version.version_id}>{version.revision}: {version.name}</option>
+                            )}
+                        </select>
+                    </div>
+                    <NewVersionModal handleSubmit={submitNewVersion}/>
+                </div>
             </div>
+            <hr/>
+            {selectedVersion === null ? 
+            <div>
+                <p>Loading...</p>
+            </div> :
+            <div>
+                <UploadFile projectId={projectId} stageId={stageId} stageVersion={selectedVersion} uploadComplete={handleUpdate}/>
+                <File projectId={projectId} stageId={stageId} stageVersion={selectedVersion} update={update}/>
+            </div> }   
         </div>
     )
 }

@@ -162,6 +162,35 @@ class CallAPI {
     })
   }
 
+  updateProject = (cb, projectId, title, description, error) => {
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectId + '/update', {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        userID: auth.getUID,
+        projectId: projectId,
+        title: title,
+        description: description
+      })
+    }).then(res => {
+      const status = res.status;
+      const data = res.json();
+      return Promise.all([status, data])
+    })
+    .then(([status, data]) => {
+      if(status !== 200) {
+        error(data)
+      }else{
+        cb(data)
+      }
+    })
+    .catch((err) => {
+      error(err)
+    })
+  }
+
   addProjectUser = (cb, projectId, uid, collabId) => {
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectId + '/add-user/' + uid
 

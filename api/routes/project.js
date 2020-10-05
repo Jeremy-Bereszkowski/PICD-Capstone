@@ -85,9 +85,9 @@ router.post('/:id/update', async (req, res) => {
 
     await pool.query(updateProjectQuery, [req.body.title, req.body.description, req.params.id]);
 
-    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+    res.status(200).end(JSON.stringify({message: 'Succesful!'}));
   } catch (err) {
-    res.status(500).send('Connection error!');
+    res.status(500).end(JSON.dtringify({message: 'Connection error!'}));
   }
 });
 
