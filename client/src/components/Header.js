@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import auth from '../utils/auth'
 
 function Header() {
-    const { isAuthenticated } = useAuth0();
+    const { isAuthenticated, user } = useAuth0();
 
     const HeaderItems = {
         buttons: [
@@ -43,7 +43,7 @@ function Header() {
                 return (
                     <NavDropdown title={item.title} id="basic-nav-dropdown" drop="down" alignRight key={item.title + index}>
                         {item.menu.map((i, index) => {
-                            if(i.clearance.toLowerCase() === "all" || i.clearance.toLowerCase() === auth.getClearance().toLowerCase()) {
+                            if(i.clearance.toLowerCase() === "all" || i.clearance.toLowerCase() === auth.getClearance(user).toLowerCase()) {
                                 if(i.type.toLowerCase() === "link") {
                                     return (
                                         <NavDropdown.Item href={i.link} key={i.title + index}>

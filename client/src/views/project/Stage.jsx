@@ -4,6 +4,7 @@ import UploadFile from '../../components/UploadFile'
 import File from '../../components/File'
 import NewVersionModal from '../../components/NewVersionModal'
 import '../../css/stage.css'
+import {useAuth0} from "@auth0/auth0-react";
 
 function Stage(props) {
     const [name, setName] = useState("");

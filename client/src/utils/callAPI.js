@@ -26,6 +26,14 @@ class CallAPI {
     )
   }
 
+  loadDashboard = (cb, uid) => {
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/' + encrypt(uid) +'/')
+        .then((response) => { return response.json(); })
+        .then((data) => {
+          cb(data)
+        });
+  }
+
   getUserList = (cb) => {
     fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/')
         .then((response) => { return response.json(); })
@@ -63,18 +71,14 @@ class CallAPI {
         });
   }
 
-  newUser = (cb, fname, lname, clearance, email, pass, error) => {
+  newUser = (cb, email, error) => {
     fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/new', {
       method: 'post',
       headers: {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        fname: encrypt(fname),
-        lname: encrypt(lname),
-        clearance: clearance,
         email: encrypt(email),
-        password: encrypt(pass),
       })
     }).then((res) => {
       if (res.status === 200) {
@@ -152,16 +156,28 @@ class CallAPI {
     })
   }
 
-  newProject = (cb, body) => {
-    const uid = auth.getUID()
-    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/new/' + uid
+  getProject = (projectId, cb) => {
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/" + projectId)
+        .then(res => res.json())
+        .then(res => {
+          res.project.email = decrypt(res.project.email)
+
+          cb(res);
+        });
+  }
+
+  newProject = (cb, uid, title, description) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/new/' + encrypt(uid)
 
     fetch(url, {
       method: 'post',
       headers: {
         'content-type': 'application/json'
       },
-      body: body
+      body: JSON.stringify({
+        title: title,
+        description: description,
+      })
     }).then((res) => {
       cb(res)
     })
@@ -177,6 +193,27 @@ class CallAPI {
       },
       body: JSON.stringify({
         collabId: collabId
+      })
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json();
+      }
+    }).then(res => {
+      cb(res);
+    })
+  }
+
+  updateProject = (projectId, title, description, cb) => {
+    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/project/' + projectId + '/update'
+
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
       })
     }).then(res => {
       if (res.status === 200) {
