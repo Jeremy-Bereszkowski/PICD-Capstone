@@ -13,11 +13,7 @@ export default function TransferOwnershipModal({projectId, oldOwnerId, newOwnerI
         event.preventDefault();
 
         callAPI.transferProjectOwnership(res => {
-            console.log(res)
-
-            if (res.isSuccess === true) {
-                window.location.href = "/dashboard/";
-            }
+            window.location.href = "/dashboard/";
         }, projectId, newOwnerId, oldOwnerId);
 
         handleClose(event);

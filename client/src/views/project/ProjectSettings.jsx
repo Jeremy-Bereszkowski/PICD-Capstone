@@ -1,10 +1,9 @@
 import React, { useState, useEffect} from 'react'
-import Sidebar from '../../components/Sidebar'
-import auth from '../../utils/auth'
-import callAPI from '../../utils/callAPI'
-import NewProjectCollabModal from '../../components/NewProjectCollabModal'
-import TransferOwnershipModal from '../../components/TransferOwnershipModal'
 import { useAuth0 } from "@auth0/auth0-react";
+import TransferOwnershipModal from '../../components/TransferOwnershipModal'
+import NewProjectCollabModal from '../../components/NewProjectCollabModal'
+import Sidebar from '../../components/Sidebar'
+import callAPI from '../../utils/callAPI'
 
 /*class ProjectSettings extends Component {
     constructor(props) {
@@ -275,7 +274,7 @@ function ProjectSettings(props) {
         updated_at: "",
         owner: "",
     });
-    const [userList, setUserList] = useState([]);
+    const [userList, setUserList] = useState("");
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -305,6 +304,10 @@ function ProjectSettings(props) {
         if (project.email === user.name) {
             callAPI.getProjectUserList((data) => {
                 setUserList(data.projectUsers)
+
+                console.log(userList)
+                console.log(data)
+
                 setLoading(false)
             }, projectID)
         }
@@ -313,16 +316,11 @@ function ProjectSettings(props) {
     const removeUser = (event, uid) => {
         event.preventDefault()
 
-
-        /*if (project.owner === uid) {
-            //SET ERROR OR ALERT
-        } else {
+        if (project.owner !== uid) {
             callAPI.removeProjectUser((data) => {
-                console.log(typeof this.state.userList, this.state.userList)
-
-                window.location.href = "/project/"+this.props.match.params.projectId+"/settings";
-            }, this.state.project_id, uid)
-        }*/
+                window.location.href = "/project/"+project.project_id+"/settings";
+            }, project.project_id, uid)
+        }
     }
 
     const updateProject = (event) => {
@@ -332,20 +330,14 @@ function ProjectSettings(props) {
         var description = event.target.description.value
 
         callAPI.updateProject(project.project_id, title, description, (res) => {
-            console.log(res)
+            window.location.href = "/project/" + project.project_id + "/settings"
         })
     }
 
     const deleteProject = (projectID, e) => {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/dashboard/delete/' + projectID)
-            .then((response) => {
-                if (response.status === 200) {
-                    return response.json();
-                }
-            })
-            .then((data) => {
-                window.location.href = "/";
-            });
+        callAPI.deleteProject(projectID, (res) => {
+            window.location.href = "/dashboard";
+        })
     }
 
     const datetime = (datetime) => {
@@ -386,15 +378,15 @@ function ProjectSettings(props) {
                                         userList.map((usr) => {
                                             return (
                                                 <tr key={usr.user_id} className="pointer" >
-                                                    <td>{usr.fname} {user.lname}</td>
+                                                    <td>{usr.email}</td>
                                                     <td>{usr.privilege.toUpperCase()}</td>
                                                     {
-                                                        project.email === user.name ? null :
+                                                        project.email == usr.email ? null :
                                                             <td>
                                                                 <TransferOwnershipModal projectId={project.project_id} oldOwnerId={project.owner} newOwnerId={usr.user_id}/>
 
-                                                                {/*<button className="btn btn-warning btn-sm" onClick={(event) => handleSubmit(event, usr.user_id)}>*/}
-                                                                <button className="btn btn-warning btn-sm" >
+                                                                <button className="btn btn-warning btn-sm" onClick={(event) => removeUser(event, usr.user_id)}>
+                                                                {/*<button className="btn btn-warning btn-sm" >*/}
                                                                     Remove
                                                                 </button>
                                                             </td>
@@ -466,7 +458,7 @@ function ProjectSettings(props) {
                             <div className="form-group row mb-0">
                                 <div className="col-md-6 offset-md-2">
                                 <span>
-                                    <button className="btn btn-danger" onClick={() => getProjectData(project.project_id)}>
+                                    <button className="btn btn-danger" onClick={() => window.location.href = "/project/" + project.project_id + "/settings"}>
                                         Cancel
                                     </button>
                                 </span>
@@ -509,8 +501,7 @@ function ProjectSettings(props) {
                             <label htmlFor="revision" className="col-md-2 col-form-label text-md-right">Delete Project:</label>
 
                             <div className="col-md-6">
-                                {/*onClick={(e) => deleteProject(props.match.params.projectId, e)}*/}
-                                <button id='test' type="button"  className="btn btn-xs btn-danger">
+                                <button id='test' type="button"  className="btn btn-xs btn-danger" onClick={(e) => deleteProject(props.match.params.projectId, e)}>
                                     Delete
                                 </button>
                             </div>

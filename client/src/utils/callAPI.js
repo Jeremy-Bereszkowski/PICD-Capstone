@@ -56,17 +56,15 @@ class CallAPI {
   }
 
   getUser = (cb, userID) => {
-    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/admin/users/" + userID)
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/admin/users/" + encrypt(userID))
         .then(res => res.json())
         .then(res => {
 
           var user = {
             user_id: res.user.user_id,
-            fname: decrypt(res.user.fname),
-            lname: decrypt(res.user.lname),
-            clearance: res.user.clearance,
             email: decrypt(res.user.email)
           }
+
           cb(user)
         });
   }
@@ -139,21 +137,21 @@ class CallAPI {
         new_password: encrypt(new_password)
       })
     })
-    .then(res => {
-      const status = res.status;
-      const data = res.json();
-      return Promise.all([status, data])
-    })
-    .then(([status, data]) => {
-      if(status !== 200) {
-        error(data)
-      }else{
-        cb(data)
-      }
-    })
-    .catch((err) => {
-      error(err)
-    })
+        .then(res => {
+          const status = res.status;
+          const data = res.json();
+          return Promise.all([status, data])
+        })
+        .then(([status, data]) => {
+          if(status !== 200) {
+            error(data)
+          }else{
+            cb(data)
+          }
+        })
+        .catch((err) => {
+          error(err)
+        })
   }
 
   getProject = (projectId, cb) => {
@@ -276,15 +274,26 @@ class CallAPI {
         })
         .then((data) => {
           data.projectUsers.forEach(element => {
-            element.fname = decrypt(element.fname)
-            element.lname = decrypt(element.lname)
+            element.email = decrypt(element.email)
           });
 
           cb(data);
         })
   }
 
-  deleteProject = (cb, user_id, err) => {
+  deleteProject = (projectId, cb) => {
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/dashboard/delete/' + projectId)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          cb(data)
+        });
+  }
+
+  deleteProjectUser = (cb, user_id, err) => {
     console.log(typeof user_id)
 
     var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + user_id

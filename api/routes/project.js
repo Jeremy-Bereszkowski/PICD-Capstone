@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/users', async(req, res) => {
   try {
-    const getProjectsUsersQuery = 'SELECT user.user_id, user.fname, user.lname, collaboration.privilege ' +
+    const getProjectsUsersQuery = 'SELECT user.user_id, user.email, collaboration.privilege ' +
       'FROM user JOIN user_has_project ON user_has_project.user_id = user.user_id ' +
       'JOIN collaboration ON user_has_project.collaboration_id = collaboration.collaboration_id  ' +
       'WHERE user_has_project.project_id=(?);';

@@ -12,8 +12,8 @@ function Header() {
             {title: 'User', type: "menu", clearance: "all", menu: [
                     {title: 'User', type: "header", clearance: "all"},
                     {title: 'Settings', type: "Link", clearance: "all", link: "/user/settings"},
-                    {title: 'Administator', type: "header", clearance: "admin"},
-                    {title: 'Settings', type: "Link", clearance: "admin", link: "/admin/users"},
+                    /*{title: 'Administator', type: "header", clearance: "admin"},
+                    {title: 'Settings', type: "Link", clearance: "admin", link: "/admin/users"},*/
                     {type: "divider", clearance: "all"},
                     {title: 'Logout', type: "Logout", clearance: "all", link: "/", onClick: () => {auth.logout()}},
                 ],

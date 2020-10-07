@@ -51,10 +51,10 @@ class AdminUserEdit extends Component {
     )
   }
 
-  deleteProject = (event) => {
+  deleteProjectUser = (event) => {
     event.preventDefault()
     //console.log()
-    callAPI.deleteProject(() => {
+    callAPI.deleteProjectUser(() => {
       window.location.href = "/admin/users";
     },
       this.state.user_id,

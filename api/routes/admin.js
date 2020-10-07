@@ -37,8 +37,6 @@ createPool();
 
 const getAllUsers = 'SELECT '+
                       'user_id, '+
-                      'fname, '+
-                      'lname, '+
                       'clearance, '+/* 
                       'profile, '+ */
                       'email '+/*
@@ -71,7 +69,7 @@ router.get('/users/:id', async (req, res) => {
 
   try {
     //Get current acct_value of customer
-    const getUser = getAllUsers + ' WHERE user_id=(?);';
+    const getUser = 'SELECT * FROM user WHERE email=(?);';
 
     //Run query - fetch response
     var user = await pool.query(getUser, [id]);
