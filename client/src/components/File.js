@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import download from 'js-file-download';
 import FileHistoryModal from './FileHistoryModal';
+import {GetFile} from '../utils/api/index'
+import {useAuth0} from "@auth0/auth0-react";
 
 function File({ projectId, stageId, stageVersion, update }) {
+    const { getAccessTokenSilently } = useAuth0();
     const [files, setFiles] = useState([]);
 
     /**
@@ -18,15 +21,15 @@ function File({ projectId, stageId, stageVersion, update }) {
      */
     useEffect(() => {
         console.log("Updating")
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/media/' + projectId + '/' + stageId + '/' + stageVersion)
-            .then(res => res.json())
-            .then(files => {
-                console.log(files)
-                setFiles(files);
-            });
+        GetFile(projectId, stageId, stageVersion, getAccessTokenSilently)
+        .then(files => {
+            setFiles(files);
+        });
     }, [projectId, stageId, stageVersion, update])
 
-    const onIndividualDownloadHandler = (e, file_id, filename) => {
+    const onIndividualDownloadHandler = async (e, file_id, filename) => {
+        const token = await getAccessTokenSilently();
+
         e.stopPropagation();
         /**
          * Valid Response Types
