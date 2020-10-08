@@ -26,11 +26,18 @@ class CallAPI {
     )
   }
 
-  loadDashboard = (cb, uid) => {
-    fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/' + encrypt(uid) +'/')
+  loadDashboard = async (cb, uid, getAccessTokenSilently) => {
+    const token = await getAccessTokenSilently();
+
+    fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/' + encrypt(uid) +'/', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
         .then((response) => { return response.json(); })
         .then((data) => {
           cb(data)
+          return data
         });
   }
 
@@ -306,6 +313,54 @@ class CallAPI {
         })
         .catch((error) => err(error))
   }
+
+  encrypt = (toEncode) => {
+    const crypto = require('crypto'),
+        resizedIV = Buffer.allocUnsafe(16),
+        iv = crypto
+            .createHash("sha256")
+            .update(process.env.REACT_APP_IV_KEY)
+            .digest();
+
+    iv.copy(resizedIV);
+
+    const key = crypto
+        .createHash("sha256")
+        .update(process.env.REACT_APP_CIPHER)
+        .digest()
+
+    const cipher = crypto.createCipheriv("aes256", key, resizedIV)
+    const msg = []
+
+    msg.push(cipher.update(toEncode, "binary", "hex"));
+    msg.push(cipher.final("hex"));
+
+    return msg.join("")
+  }
+
+  decrypt = (toDecode) => {
+    const crypto = require('crypto'),
+        resizedIV = Buffer.allocUnsafe(16),
+        iv = crypto
+            .createHash("sha256")
+            .update(process.env.REACT_APP_IV_KEY)
+            .digest();
+
+    iv.copy(resizedIV);
+
+    const key = crypto
+        .createHash("sha256")
+        .update(process.env.REACT_APP_CIPHER)
+        .digest()
+
+    const decipher = crypto.createDecipheriv("aes256", key, resizedIV)
+    const msg = []
+
+    msg.push(decipher.update(toDecode, "hex", "binary"));
+    msg.push(decipher.final("binary"));
+
+    return msg.join("")
+  }
 }
 
 function postFetch(cb, endpoint, body, error, errString, sessionCB) {
@@ -329,7 +384,7 @@ function postFetch(cb, endpoint, body, error, errString, sessionCB) {
       .catch(err => error(err));
 }
 
-function encrypt(toEncode) {
+function encrypt (toEncode) {
   const crypto = require('crypto'),
       resizedIV = Buffer.allocUnsafe(16),
       iv = crypto

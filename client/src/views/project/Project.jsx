@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import {GetProject} from '../../utils/api/index'
+import {useAuth0} from "@auth0/auth0-react";
 
 // TODO: Add project owner and contributors
 // TODO: Updated at needs to be updated when something in the project updates
 const Project = (props) => {
     const projectID = props.match.params.projectId;
+
+    const { getAccessTokenSilently } = useAuth0();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("")
@@ -15,8 +19,7 @@ const Project = (props) => {
      * Get project details on mount
      */
     useEffect(() => {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectID)
-        .then(res => res.json())
+        GetProject(projectID, getAccessTokenSilently)
         .then(res => {
             setTitle(res.project.title);
             setDescription(res.project.description);

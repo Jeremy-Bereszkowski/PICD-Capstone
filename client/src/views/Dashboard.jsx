@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth0 }  from "@auth0/auth0-react";
-import callAPI from "../utils/callAPI";
+import {GetDashboard} from '../utils/api/index'
 import '../css/dashboard.css';
 
 function Dashboard(props) {
@@ -9,14 +9,15 @@ function Dashboard(props) {
     const [isLoading, setLoading] = useState(true);
     const [projects, setProjects] = useState([]);
 
-    const { user } = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         if (isLoading) {
-            callAPI.loadDashboard((projectList) => {
+            GetDashboard(user.name, getAccessTokenSilently)
+            .then((projectList) => {
                 setProjects(projectList)
                 setLoading(false);
-            }, user.name)
+            })
         }
     })
 
