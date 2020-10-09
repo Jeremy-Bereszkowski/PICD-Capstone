@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import {TransferOwnership} from '../utils/api/index'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import callAPI from '../utils/callAPI';
+import {useAuth0} from "@auth0/auth0-react";
 
 export default function TransferOwnershipModal({projectId, oldOwnerId, newOwnerId}) {
+    const {getAccessTokenSilently} = useAuth0();
+
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -12,9 +15,10 @@ export default function TransferOwnershipModal({projectId, oldOwnerId, newOwnerI
     const submit = (event) => {
         event.preventDefault();
 
-        callAPI.transferProjectOwnership(res => {
+        TransferOwnership(newOwnerId, oldOwnerId, projectId, getAccessTokenSilently)
+        .then((res) => {
             window.location.href = "/dashboard/";
-        }, projectId, newOwnerId, oldOwnerId);
+        });
 
         handleClose(event);
     }

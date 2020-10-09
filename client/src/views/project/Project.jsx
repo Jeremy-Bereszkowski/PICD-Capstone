@@ -50,7 +50,7 @@ const Project = (props) => {
             setCreatedAt(createdFormatted);
             setUpdatedAt(updatedFormatted);
         });
-    }, [projectID])
+    }, [projectID, getAccessTokenSilently])
 
     return (
         <div>

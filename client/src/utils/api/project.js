@@ -1,5 +1,3 @@
-import React from "react";
-
 const GetProject = async (projectId, getAccessTokenSilently) => {
     try {
         const token = await getAccessTokenSilently();

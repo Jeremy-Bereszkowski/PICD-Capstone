@@ -20,16 +20,13 @@ function File({ projectId, stageId, stageVersion, update }) {
      * This function is run every time one of the props are changed.
      */
     useEffect(() => {
-        console.log("Updating")
         GetFile(projectId, stageId, stageVersion, getAccessTokenSilently)
         .then(files => {
             setFiles(files);
         });
-    }, [projectId, stageId, stageVersion, update])
+    }, [projectId, stageId, stageVersion, update, getAccessTokenSilently])
 
     const onIndividualDownloadHandler = async (e, file_id, filename) => {
-        const token = await getAccessTokenSilently();
-
         e.stopPropagation();
         /**
          * Valid Response Types

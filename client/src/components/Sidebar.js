@@ -14,7 +14,7 @@ const Sidebar = (props) => {
             setStages(res)
             setLoading(false)
         });
-    }, [props.id])
+    }, [props.id, getAccessTokenSilently])
 
     const staticItems = [
         {title: 'Overview', link: `/project/${props.id}`},

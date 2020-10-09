@@ -1,4 +1,3 @@
-import React from "react";
 import callAPI from '../callAPI'
 
 const GetDashboard = async (uid, getAccessTokenSilently) => {

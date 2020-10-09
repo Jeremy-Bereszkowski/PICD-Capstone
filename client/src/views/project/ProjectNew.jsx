@@ -1,21 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {useAuth0} from "@auth0/auth0-react";
-import callAPI from '../../utils/callAPI'
+import {NewProject} from '../../utils/api/index'
 
 function ProjectNew(props) {
-    const {user} = useAuth0();
+    const {user, getAccessTokenSilently} = useAuth0();
 
     const createProject = (event) => {
         event.preventDefault()
 
-        var title = event.target.title.value
-        var description = event.target.description.value
+        const title = event.target.title.value
+        const description = event.target.description.value
 
-        callAPI.newProject((res) => {
+        NewProject(user.name, title, description, getAccessTokenSilently)
+        .then(() => {
             window.location.href = "/dashboard";
-        }, user.name, title, description)
+        })
     }
+
     return (
         <div className="container">
             <div className="row">

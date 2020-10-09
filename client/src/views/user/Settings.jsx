@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import callAPI from '../../utils/callAPI'
-import auth from '../../utils/auth'
 import {useAuth0} from "@auth0/auth0-react";
+import {GetUser} from "../../utils/api";
+import auth from '../../utils/auth'
 
 function Settings() {
-    const { user } = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
 
     const [uid, setUid] = useState("");
 
     useEffect(() => {
-        callAPI.getUser((user) => {
+        GetUser(user.email, getAccessTokenSilently)
+        .then((user) => {
             setUid(user.user_id);
-        }, user.email)
-    })
+        })
+    }, [user.email, getAccessTokenSilently, uid])
 
     return (
         <div className='container py-4'>

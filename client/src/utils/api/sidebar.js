@@ -1,6 +1,3 @@
-import React from "react";
-import callAPI from '../callAPI'
-
 const GetSidebar = async (projectId, getAccessTokenSilently) => {
     try {
         const token = await getAccessTokenSilently();

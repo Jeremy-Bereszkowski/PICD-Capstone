@@ -44,17 +44,17 @@ function Stage(props) {
             console.log(res)
             setVersions(res);
             setSelectedVersion(res[0].version_id)
+        }).then(() => {
+            /**
+             * Get the stage details
+             */
+            return GetStageDetails(props.match.params.projectId, props.match.params.stageId, getAccessTokenSilently)
         })
-
-        /**
-         * Get the stage details
-         */
-        GetStageDetails(props.match.params.projectId, props.match.params.stageId, getAccessTokenSilently)
         .then((res) => {
             setName(res.name);
             setDescription(res.description);
         })
-    }, [props.match.params.projectId, props.match.params.stageId]);
+    }, [props.match.params.projectId, props.match.params.stageId, getAccessTokenSilently]);
 
     const handleUpdate = () => {
         setUpdate(prevUpdate => !prevUpdate);
