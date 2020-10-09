@@ -1,85 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import auth from '../../utils/auth'
 
-import NewProjectCollabModal from '../../components/NewProjectCollabModal'
-import TransferOwnershipModal from '../../components/TransferOwnershipModal'
+import * as DateTime from '../../utils/dateTime'
+import useGlobal from '../../utils/project'
+
 import StageManager from '../../components/StageManager'
+import CollaboratorManager from '../../components/CollaboratorManager'
 
 function ProjectSettings({
-    title,
-    setTitle,
-    description,
-    setDescription,
-    stages,
-    refeshProjectDetails,
     updateProjectDetails,
-    owner,
-    userList,
-    created_at,
-    updated_at,
-    removeUser,
-    deleteProject,
     isLoading,
-    err
+    err,
+    ...props
 }) {
     let { projectId } = useParams();
+    const [gProject, gProjectAction] = useGlobal();
+    const [title, setTitle] = useState(gProject.title);
+    const [description, setDescription] = useState(gProject.description);
 
-    const projectCollaborators = () => {
-        return owner === auth.getUID() ? (
-            <div>
-                <div className="row">
-                    <label htmlFor="title" className="col-md-2 col-form-label text-md-right"></label>
-                    <div className="col-md-4">
-                        <h5>
-                            User List
-                        </h5>
-                    </div>
-                    <div className="col-md-4">
-                        <NewProjectCollabModal projectId={projectId}/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <div className="form-group row mb-0">
-                            <div className="col-md-6 offset-md-2">
-                                <table className="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Privilege</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {isLoading ? <tr><td colSpan="5" className="text-center"><strong>Loading...</strong></td></tr> :
-                                            userList.map((user) => {
-                                                return (
-                                                    <tr key={user.user_id} className="pointer" >
-                                                        <td>{user.fname} {user.lname}</td>
-                                                        <td>{user.privilege.toUpperCase()}</td>
-                                                        {
-                                                            owner === user.user_id ? null :
-                                                            <td className="text-right">
-                                                                <TransferOwnershipModal projectId={projectId} oldOwnerId={owner} newOwnerId={user.user_id}/>
+    useEffect(() => {
+        setTitle(gProject.title)
+        setDescription(gProject.description)
+    }, [gProject.title, gProject.description])
 
-                                                                <button className="btn btn-warning btn-sm" onClick={(event) => removeUser(event, user.user_id)}>
-                                                                    Remove
-                                                                </button>
-                                                            </td>
-                                                        }
-                                                    </tr>
-                                                )
-                                            })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr />
-            </div>
-        ) : null
+    const deleteProject = (projectID) => {
+        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + '/dashboard/delete/' + projectID)
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            }
+        })
+        .then((data) => {
+            window.location.href = "/";
+        });
     }
 
     return (
@@ -124,12 +77,16 @@ function ProjectSettings({
                     <div className="form-group row mb-0">
                         <div className="col-md-6 offset-md-2">
                             <span>
-                                <button className="btn btn-danger" onClick={() => refeshProjectDetails(projectId)}>
+                                <button className="btn btn-danger" onClick={() => {/** Insert functions here */}}>
                                     Cancel
                                 </button>
                             </span>
                             <span className="px-1">
-                                <button className="btn btn-primary" onClick={updateProjectDetails()}>
+                                <button className="btn btn-primary" onClick={() => {
+                                    gProjectAction.setTitle(title);
+                                    gProjectAction.setDescription(description);
+                                    updateProjectDetails()
+                                    }}>
                                     Update
                                 </button>
                             </span>
@@ -142,18 +99,19 @@ function ProjectSettings({
                 <div className="col">
                     <div className="form-group row">
                         <label htmlFor="created_at" className="col-md-2 text-md-right">Created At:</label>
-                        <span className="col-md-6">{created_at}</span>
+                        <span className="col-md-6">{DateTime.format(gProject.created_at)}</span>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="updated_at" className="col-md-2 text-md-right">Updated At:</label>
-                        <span className="col-md-6">{updated_at}</span>
+                        <span className="col-md-6">{DateTime.format(gProject.updated_at)}</span>
                     </div>
                 </div>
             </div>
             <hr />
-            <StageManager stages={stages} projectId={projectId} />
+            <StageManager stages={gProject.stages} projectId={projectId} />
             <hr />
-            {projectCollaborators()}
+            <CollaboratorManager {...props}/>
+            <hr />
             <div className="row">
                 <form className="col">
                     {err !== "" ?

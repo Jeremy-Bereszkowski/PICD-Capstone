@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import NewStageModal from './NewStageModal'
 import { Button, Spinner } from 'react-bootstrap'
-import callAPI from '../utils/callAPI'
-import auth from '../utils/auth'
 
 function StageManager({stages, getStages, deleteStage, loading}) {
     let { projectId } = useParams();

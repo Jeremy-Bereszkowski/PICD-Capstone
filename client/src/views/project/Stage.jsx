@@ -45,7 +45,6 @@ function Stage(props) {
      * Runs when stageId is updated.
      */
     useEffect(() => {
-        console.log('Props', props)
         /**
          * Get an array of all the versions of the current stage.
          */

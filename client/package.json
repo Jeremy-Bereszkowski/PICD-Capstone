@@ -23,7 +23,8 @@
     "react-select": "^3.1.0",
     "react-toastify": "^6.0.8",
     "reactstrap": "^8.5.1",
-    "semantic-ui-react": "^1.1.1"
+    "semantic-ui-react": "^1.1.1",
+    "use-global-hook": "^0.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

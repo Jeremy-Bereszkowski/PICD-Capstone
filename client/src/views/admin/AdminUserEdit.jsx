@@ -62,10 +62,6 @@ class AdminUserEdit extends Component {
         this.setState({ err: error.message })
       }
     )
-
-    var url = process.env.REACT_APP_API_SERVER_ADDRESS + '/admin/users/delete/' + this.state.user_id
-
-    //console.log(url)
   }
 
   handleFormChange = (event) => {

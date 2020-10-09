@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-function Description({title, description, updated_at, created_at, ...props}) {
+import * as DateTime from '../../utils/dateTime'
+import useGlobal from '../../utils/project'
+
+const Description = ({title, description, updated_at, created_at, ...props}) => {
+    const gProject = useGlobal()[0];
+
     return (
         <div className="col">
             <div className="row">
                 <div className="col-md-6">
                     <h3>
-                    {title}
+                    {gProject.title}
                     </h3>
                 </div>
             </div>
@@ -21,7 +26,7 @@ function Description({title, description, updated_at, created_at, ...props}) {
             </div>
             <div className="row">
                 <div className="col">
-                    <p>{description}</p>
+                    <p>{gProject.description}</p>
                 </div>
             </div>
             <hr/>
@@ -30,13 +35,13 @@ function Description({title, description, updated_at, created_at, ...props}) {
                     <div className="form-group row">
                         <label htmlFor="updatedAt" className="col-md-2 col-form-label text-md-right">Updated at: </label>
                         <div className="col-md-6 form-inline">
-                            {updated_at}
+                            {DateTime.format(gProject.updated_at)}
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="createdAt" className="col-md-2 col-form-label text-md-right">Created at: </label>
                         <div className="col-md-6 form-inline">
-                            {created_at}
+                            {DateTime.format(gProject.created_at)}
                         </div>
                     </div>
                     
