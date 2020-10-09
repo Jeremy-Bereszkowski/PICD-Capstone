@@ -37,8 +37,12 @@ function File({ projectId, stageId, stageVersion, update }) {
          * * stream
          * * text
          */
+        const token = await getAccessTokenSilently();
         const responseType = 'blob';
         axios({
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
             url: process.env.REACT_APP_API_SERVER_ADDRESS + '/media/download/file/' + file_id,
             method: 'GET',
             responseType: responseType,
@@ -48,7 +52,7 @@ function File({ projectId, stageId, stageVersion, update }) {
             });
     }
 
-    const onDownloadAllHandler = () => {
+    const onDownloadAllHandler = async () => {
         /**
          * Valid Response Types
          * * arraybuffer
@@ -58,9 +62,14 @@ function File({ projectId, stageId, stageVersion, update }) {
          * * stream
          * * text
          */
+        const token = await getAccessTokenSilently();
+
         const responseType = 'blob';
         console.log('Download all');
         axios({
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
             url: process.env.REACT_APP_API_SERVER_ADDRESS + '/media/download/stage/' + stageId + '/' + stageVersion,
             method: 'GET',
             responseType: responseType,

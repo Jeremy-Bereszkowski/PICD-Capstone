@@ -9,8 +9,8 @@ const PublicRoute = ({ component, ...args }) => {
     if (isAuthenticated) {
         NewUser(user.name, getAccessTokenSilently)
         .then(() => {
-            return <Redirect push to="/dashboard" />
         })
+            return <Redirect push to="/dashboard" />
     } else {
         return <Route
             component={component}
