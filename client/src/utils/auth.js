@@ -8,6 +8,8 @@ class Auth {
         }
       }
     }
+
+    return "USER"
   }
 
   getUID = (user) => {
