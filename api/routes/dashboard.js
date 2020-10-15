@@ -35,15 +35,21 @@ const createPool = async () => {
 };
 createPool();
 
-router.get('/:userID', async (req, res) => {
+router.get('/:userEmail', async (req, res) => {
   try {
-    const userID = req.params.userID
+    const userEmail = req.params.userEmail
+
+    const getUserIdQuery = 'SELECT user_id FROM user WHERE email = (?);'
+    const userId = await pool.query(getUserIdQuery, [userEmail]);
+
+
+    console.log(userId)
 
     //Get current acct_value of customer
-    const getProjectsQuery = 'SELECT * FROM project JOIN user_has_project on project.project_id = user_has_project.project_id where user_has_project.user_id = (?);';
+    const getProjectsQuery = 'SELECT * FROM project JOIN user_has_project on project.project_id = user_has_project.project_id WHERE user_has_project.user_id = (?);';
 
     //Run query - fetch response
-    var projectList = await pool.query(getProjectsQuery, [userID]);
+    var projectList = await pool.query(getProjectsQuery, [userId[0].user_id]);
 
     res.status(200).json(projectList);
   } catch (err) {

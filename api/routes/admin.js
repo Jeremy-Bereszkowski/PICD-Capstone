@@ -37,8 +37,6 @@ createPool();
 
 const getAllUsers = 'SELECT '+
                       'user_id, '+
-                      'fname, '+
-                      'lname, '+
                       'clearance, '+/* 
                       'profile, '+ */
                       'email '+/*
@@ -71,7 +69,7 @@ router.get('/users/:id', async (req, res) => {
 
   try {
     //Get current acct_value of customer
-    const getUser = getAllUsers + ' WHERE user_id=(?);';
+    const getUser = 'SELECT * FROM user WHERE email=(?);';
 
     //Run query - fetch response
     var user = await pool.query(getUser, [id]);
@@ -84,11 +82,11 @@ router.get('/users/:id', async (req, res) => {
 });
 
 router.post('/users/new', async (req, res) => {
-  console.log(req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password)
+  console.log(req.body.email)
   try {
-    const newUserQuery = 'INSERT INTO user (fname,lname,clearance_id,email,password) VALUES (?, ?, ?, ?, ?);';
+    const newUserQuery = 'INSERT INTO user (email) VALUES (?);';
 
-    await pool.query(newUserQuery, [req.body.fname, req.body.lname, req.body.clearance, req.body.email, req.body.password]);
+    await pool.query(newUserQuery, [req.body.email]);
 
     res.status(200).end(JSON.stringify({response: 'Successful!'}));
   } catch (err) {
@@ -132,13 +130,13 @@ router.post('/users/:userID/update/password', async (req, res) => {
 });
 
 router.get('/users/delete/:userID', async (req, res) => {
-  const userID = req.params.userID;
 
 /*   var integer = parseInt(userID, 10);
 
   console.log(typeof integer, integer)
  */
   try {
+    const userID = req.params.userID;
     //Get current acct_value of customer
     const deleteQuery = 'UPDATE user SET deleted=1 WHERE user_id='+userID+';';
 

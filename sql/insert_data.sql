@@ -1,10 +1,5 @@
 USE picd;
 
-INSERT INTO `clearance` (clearance_id, clearance)
-VALUES (1, 'user');
-
-INSERT INTO `clearance` (clearance_id, clearance)
-VALUES (2, 'admin');
 
 INSERT INTO `collaboration` (privilege)
 VALUES ('read');
@@ -15,24 +10,24 @@ VALUES ('write');
 INSERT INTO `collaboration` (privilege)
 VALUES ('admin'); 
 
-INSERT INTO `user` (user_id, fname, lname, clearance_id, email, password)
+INSERT INTO `user` (email)
 VALUES 
-(1, '30f01a870297f1aea190f3fccd1bb453', '6e9c4e78d78acc707b2048e705594b14', 1, '2bc33731776fa6f54ed7c489f621a00d', '808bf2f0e1c687b5b95eb29ba4a6e1b1'),
-(2, '90f0e281c7b7852e784a8ead9ef8f7cf', '6e9c4e78d78acc707b2048e705594b14', 1, 'b0f9d646cdf0e73731ce96d77fdf8e7b', '808bf2f0e1c687b5b95eb29ba4a6e1b1'),
-(3, '30f01a870297f1aea190f3fccd1bb453', '116ba6486a4c316a315ff80733a3aedc', 2, '14bd6bea0e013bf8535a7809c3542a71', '8b74293c9767b02f266acc20eb31629a'),
-(4, '90f0e281c7b7852e784a8ead9ef8f7cf', '116ba6486a4c316a315ff80733a3aedc', 2, '8715e94c14f0dd96cab2175d72eaf299', '8b74293c9767b02f266acc20eb31629a');
+('2bc33731776fa6f54ed7c489f621a00d'),
+('b0f9d646cdf0e73731ce96d77fdf8e7b'),
+('14bd6bea0e013bf8535a7809c3542a71'),
+('8715e94c14f0dd96cab2175d72eaf299');
 
-INSERT INTO `project` (project_id, owner, title, description)
+INSERT INTO `project` (owner, title, description)
 VALUES
-(1, 3, 'Project 1', 'First Project'),
-(2, 3, 'Project 2', 'Second Project'),
-(3, 4, 'Project 3', 'Third Project');
+(5, 'Project 1', 'First Project'),
+(5, 'Project 2', 'Second Project'),
+(5, 'Project 3', 'Third Project');
 
-INSERT INTO `stage` (stage_id, project_id, name, description)
+INSERT INTO `stage` (project_id, name, description)
 VALUES
-(1, 1, 'Design', 'Design Stage'), (2, 1, 'Simulation', 'Simulation Stage'), (3, 1, 'Layout', 'Layout Stage'), (4, 1, 'Test', 'Test Stage'),
-(5, 2, 'Design', 'Design Stage'), (6, 2, 'Simulation', 'Simulation Stage'), (7, 2, 'Layout', 'Layout Stage'), (8, 2, 'Test', 'Test Stage'),
-(9, 3, 'Design', 'Design Stage'), (10, 3, 'Simulation', 'Simulation Stage'), (11, 3, 'Layout', 'Layout Stage'), (12, 3, 'Test', 'Test Stage');
+(1, 'Design', 'Design Stage'), (1, 'Simulation', 'Simulation Stage'), (1, 'Layout', 'Layout Stage'), (1, 'Test', 'Test Stage'),
+(2, 'Design', 'Design Stage'), (2, 'Simulation', 'Simulation Stage'), (2, 'Layout', 'Layout Stage'), (2, 'Test', 'Test Stage'),
+(3, 'Design', 'Design Stage'), (3, 'Simulation', 'Simulation Stage'), (3, 'Layout', 'Layout Stage'), (3, 'Test', 'Test Stage');
 
 INSERT INTO `version` (stage_id, project_id, revision, name)
 VALUES
@@ -41,9 +36,12 @@ VALUES
 (9, 3, 1, 'init'), (10, 3, 1, 'init'), (11, 3, 1, 'init'), (12, 3, 1, 'init');
 
 INSERT INTO `user_has_project` (user_id, project_id, collaboration_id)
-VALUES
+VALUES (5, 1, 2), (5, 3, 2),
+      (5, 2, 2);
 (3, 1, 3), (1, 3, 2),
-(3, 2, 3), (4, 3, 3);
+(3, 2, 3), (4, 3, 3),
+(5, 1, 2), (5, 3, 2),
+(5, 2, 2), (5, 3, 2);
 
 INSERT INTO `user_has_project` (user_id, project_id, collaboration_id)
 VALUES

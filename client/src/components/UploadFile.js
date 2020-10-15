@@ -8,8 +8,11 @@ import uploadCloud from '../imgs/black_upload_cloud.svg';
 
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/UploadFile.css';
+import {useAuth0} from "@auth0/auth0-react";
 
 function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
+    const { getAccessTokenSilently } = useAuth0();
+
     const [files, setFiles] = useState([]);
     const [upload, setUpload] = useState(false); //used to indecate when the upload button has been pressed and the uploading is about to commense
 
@@ -95,6 +98,8 @@ function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
     const uploadFile = async () => {
         setUpload(true);
 
+        const token = await getAccessTokenSilently();
+
         await Promise.all(files.map(async (file) => {
             if(file.progress !== 100) {
                 const data = new FormData();
@@ -103,7 +108,10 @@ function UploadFile({projectId, stageId, stageVersion, uploadComplete}) {
                 data.append('project', projectId);
                 data.append('file', file.file);
                 await axios.post(process.env.REACT_APP_API_SERVER_ADDRESS+"/media/upload", data, {
-                    onUploadProgress: uploadProgress(file)
+                    onUploadProgress: uploadProgress(file),
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
                 })
                 .catch(err => {
                     toast.error(err)

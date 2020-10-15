@@ -1,74 +1,62 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
-import auth from '../utils/auth'
+import { useAuth0 }  from "@auth0/auth0-react";
+import {GetDashboard} from '../utils/api/index'
 import '../css/dashboard.css';
 
-class Dashboard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          projects: [],
-          isLoading: true
-        }
-    }
-    
-    callAPI() {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/dashboard/' + auth.getUID() +'/')
-        .then((response) => { return response.json(); })
-        .then((data) => {
-            console.log(data)
-            
-            this.setState({
-                projects: data,
-                isLoading: false
+function Dashboard(props) {
+
+    const [isLoading, setLoading] = useState(true);
+    const [projects, setProjects] = useState([]);
+
+    const { user, getAccessTokenSilently } = useAuth0();
+
+    useEffect(() => {
+        if (isLoading) {
+            GetDashboard(user.name, getAccessTokenSilently)
+            .then((projectList) => {
+                setProjects(projectList)
+                setLoading(false);
             })
-        });
-    }
-    
-    componentDidMount() {
-        this.callAPI();
+        }
+    })
+
+    const onClickHandler = (id) => {
+        props.history.push("/project/"+id)
     }
 
-    onClickHandler = (id) => {
-        this.props.history.push("/project/"+id)
-    }
-      
-    render() {
-
-        return (
-            <div className='container py-4'>
-                <div className="row justify-content-center">
+    return (
+        <div className='container py-4'>
+            <div className="row justify-content-center">
                     <span className="col text-left">
                         <h1 className='left'>Projects</h1>
                     </span>
-                    <span className="col text-right">
+                <span className="col text-right">
                         <Link to={`/project/new`}>
                             <button className="btn btn-success">New Project</button>
                         </Link>
                     </span>
-                </div>
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>TITLE</th>
-                            <th>DESCRIPTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.isLoading ? <tr><td colSpan="5" className="text-center"><strong>Loading...</strong></td></tr> :
-                        this.state.projects.map((project) => {
-                            return (
-                                <tr key={project.project_id} className="pointer" onClick={() => this.onClickHandler(project.project_id)}>
-                                    <td>{project.title}</td>
-                                    <td>{project.description}</td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
             </div>
-        )
-    }
+            <table className="table table-hover">
+                <thead>
+                <tr>
+                    <th>TITLE</th>
+                    <th>DESCRIPTION</th>
+                </tr>
+                </thead>
+                <tbody>
+                {isLoading ? <tr><td colSpan="5" className="text-center"><strong>Loading...</strong></td></tr> :
+                    projects.map((project) => {
+                        return (
+                            <tr key={project.project_id} className="pointer" onClick={() => onClickHandler(project.project_id)}>
+                                <td>{project.title}</td>
+                                <td>{project.description}</td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+        </div>
+    )
 }
-
 export default Dashboard;

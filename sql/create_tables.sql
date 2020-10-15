@@ -1,19 +1,6 @@
 USE picd;
 
 
-
--- -----------------------------------------------------
--- Table clearance
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `clearance`;
-
-CREATE TABLE IF NOT EXISTS `clearance` (
-  clearance_id INT(11) NOT NULL AUTO_INCREMENT,
-  clearance ENUM('user', 'admin') NOT NULL,
-  PRIMARY KEY (clearance_id)
-);
-
-
 -- -----------------------------------------------------
 -- Table clearance
 -- -----------------------------------------------------
@@ -32,23 +19,12 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE IF NOT EXISTS `user` (
   user_id INT(11) NOT NULL AUTO_INCREMENT,
-  fname CHAR(255) NOT NULL,
-  lname CHAR(255) NOT NULL,
-  clearance_id INT(11) NOT NULL,
-  profile CHAR(255) NOT NULL DEFAULT 'default.png',
   email CHAR(255) NOT NULL,
-  password CHAR(255) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
   deleted TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id),
-  UNIQUE INDEX email (email ASC),
-  INDEX fk_user_clearance1_idx (clearance_id ASC),
-  CONSTRAINT fk_user_clearance
-    FOREIGN KEY (clearance_id)
-    REFERENCES clearance (clearance_id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+  UNIQUE INDEX email (email ASC)
 );
 
 -- -----------------------------------------------------

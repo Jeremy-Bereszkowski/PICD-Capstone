@@ -3,9 +3,13 @@ import Sidebar from '../../components/Sidebar'
 import UploadFile from '../../components/UploadFile'
 import File from '../../components/File'
 import NewVersionModal from '../../components/NewVersionModal'
+import {GetStage, GetStageDetails, SubmitNewVersion} from '../../utils/api/index'
 import '../../css/stage.css'
+import {useAuth0} from "@auth0/auth0-react";
 
 function Stage(props) {
+    const { getAccessTokenSilently } = useAuth0();
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [versions, setVersions] = useState([]);
@@ -19,23 +23,12 @@ function Stage(props) {
      */
     const submitNewVersion = (event) => {
         event.preventDefault()
-        var newRevisionName = event.target.title.value
-        
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/version/new/"+props.match.params.projectId+'/'+props.match.params.stageId, {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                newRevisionName: newRevisionName
-            })
-        }).then((res) => {
-            fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + props.match.params.projectId + '/' + props.match.params.stageId)
-                .then(res => res.json())
-                .then(res => {
-                    setVersions(res);
-                    setSelectedVersion(res[0].version_id)
-            });
+        const newRevisionName = event.target.title.value
+
+        SubmitNewVersion(props.match.params.projectId, props.match.params.stageId, newRevisionName, getAccessTokenSilently)
+        .then(res => {
+            setVersions(res);
+            setSelectedVersion(res[0].version_id)
         })
     }
 
@@ -46,25 +39,22 @@ function Stage(props) {
         /**
          * Get an array of all the versions of the current stage.
          */
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS + "/project/version/" + props.match.params.projectId + '/' + props.match.params.stageId)
-            .then(res => res.json())
-            .then(res => {
-                console.log(res)
-                setVersions(res);
-                setSelectedVersion(res[0].version_id)
-            });
-
-        /**
-         * Get the stage details
-         */
-        console.log(props.match.params.stageId)
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.match.params.projectId+'/stage/'+props.match.params.stageId)
-            .then(res => res.json())
-            .then(res => {
-                setName(res.name);
-                setDescription(res.description);
-            });
-    }, [props.match.params.projectId, props.match.params.stageId]);
+        GetStage(props.match.params.projectId, props.match.params.stageId, getAccessTokenSilently)
+        .then((res) => {
+            console.log(res)
+            setVersions(res);
+            setSelectedVersion(res[0].version_id)
+        }).then(() => {
+            /**
+             * Get the stage details
+             */
+            return GetStageDetails(props.match.params.projectId, props.match.params.stageId, getAccessTokenSilently)
+        })
+        .then((res) => {
+            setName(res.name);
+            setDescription(res.description);
+        })
+    }, [props.match.params.projectId, props.match.params.stageId, getAccessTokenSilently]);
 
     const handleUpdate = () => {
         setUpdate(prevUpdate => !prevUpdate);
