@@ -42,7 +42,7 @@ function ProjectNew(props) {
                         <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Description: </label>
 
                         <div className="col-md-6">
-                            <textarea type="text" className="form-control" id="description" />
+                            <textarea type="text" className="form-control" id="description" required/>
                         </div>
                     </div>
 
