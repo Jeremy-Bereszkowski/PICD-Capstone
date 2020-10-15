@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -19,6 +21,18 @@ var cors = require("cors");
 
 var app = express();
 
+var jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://dev-m8u82c98.au.auth0.com/.well-known/jwks.json'
+  }),
+  audience: 'https://api.picdcapstone2020.dev',
+  issuer: 'https://dev-m8u82c98.au.auth0.com/',
+  algorithms: ['RS256']
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -29,6 +43,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), { dotfiles: 'allow' }));
+app.use(jwtCheck);
 
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
@@ -38,7 +53,6 @@ app.use('/admin', admin);
 app.use('/media/download', download);
 app.use('/media/upload', upload);
 app.use('/media', media);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

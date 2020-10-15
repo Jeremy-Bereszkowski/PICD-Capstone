@@ -2,23 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Nav, Spinner } from 'react-bootstrap'
 import { navItem } from '../css/Sidebar.module.css'
+import {GetStages} from '../utils/api/index'
+import {useAuth0} from "@auth0/auth0-react";
 
 function Sidebar(props) {
-    const [stages, setStages] = useState([])
-    const [loading, setLoading] = useState(true)
+    const { getAccessTokenSilently } = useAuth0();
+    const [stages, setStages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const getStages = () => {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.id+'/stages')
-        .then(res => res.json())
+    useEffect(() => {
+        GetStages(props.id, getAccessTokenSilently)
         .then(res => {
             setStages(res)
             setLoading(false)
         });
-    }
-
-    useEffect(() => {
-        getStages();
-    }, []);
+    }, [props.id, getAccessTokenSilently])
 
     const staticItems = [
         {title: 'Overview', key: 'overview', link: `/project/${props.id}`},

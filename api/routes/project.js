@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
   const id = req.params.id;
 
   try {
-    const getProjectQuery = 'select * from project where project_id=(?);';
+    const getProjectQuery = 'SELECT * FROM project join user on user.user_id = project.owner WHERE project_id=(?);';
 
     var project = await pool.query(getProjectQuery, [id]);
     // console.log(project);
@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/users', async(req, res) => {
   try {
-    const getProjectsUsersQuery = 'SELECT user.user_id, user.fname, user.lname, collaboration.privilege ' +
+    const getProjectsUsersQuery = 'SELECT user.user_id, user.email, collaboration.privilege ' +
       'FROM user JOIN user_has_project ON user_has_project.user_id = user.user_id ' +
       'JOIN collaboration ON user_has_project.collaboration_id = collaboration.collaboration_id  ' +
       'WHERE user_has_project.project_id=(?);';
@@ -159,17 +159,35 @@ router.get('/:id/remove-user/:uid', async(req, res) => {
   }
 })
 
+/**
+ * Create new project
+ */
 router.post('/new/:userID', async (req, res) => {
   try {
-    const userID = req.params.userID
+    const userEmail = req.params.userID
+
+    const getUserIdQuery = 'SELECT user_id FROM user WHERE email = (?);'
+    const userId = await pool.query(getUserIdQuery, [userEmail]);
 
     const insertProjectQuery = 'INSERT INTO project (owner, title, description) values (?, ?, ?);';
     const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id, collaboration_id) VALUES (?, ?, ?);'
-    const insertStages = 'INSERT INTO stage (project_id, name) VALUES (?, "Design"), (?, "Simulation"), (?, "Layout"), (?, "Test");';
+    const insertStages1 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Design", "Design Stage")';
+    const insertStages2 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Simulation", "Simulation Stage")';
+    const insertStages3 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Layout", "Layout Stage")';
+    const insertStages4 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Test", "Test Stage");';
+    const insertVersion = 'INSERT INTO version (stage_id, project_id, revision, name) VALUES (?, ?, 1, "init")';
 
-    var project = await pool.query(insertProjectQuery, [userID, req.body.title, req.body.description]);
-    await pool.query(insertUserProjectQuery, [userID, project.insertId, 3])
-    await pool.query(insertStages, [project.insertId, project.insertId, project.insertId, project.insertId])
+    var project = await pool.query(insertProjectQuery, [userId[0].user_id, req.body.title, req.body.description]);
+    await pool.query(insertUserProjectQuery, [userId[0].user_id, project.insertId, 3]);
+    var stage1 = await pool.query(insertStages1, [project.insertId]);
+    var stage2 = await pool.query(insertStages2, [project.insertId]);
+    var stage3 = await pool.query(insertStages3, [project.insertId]);
+    var stage4 = await pool.query(insertStages4, [project.insertId]);
+    await pool.query(insertVersion, [stage1.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage2.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage3.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage4.insertId, project.insertId]);
+
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {
@@ -178,6 +196,9 @@ router.post('/new/:userID', async (req, res) => {
   }
 });
 
+/**
+ * Get project stage
+ */
 router.get('/:projectId/stage/:stageId', async(req, res) => {
   try {
     const getStage = 'SELECT * FROM stage WHERE stage_id=(?);';
