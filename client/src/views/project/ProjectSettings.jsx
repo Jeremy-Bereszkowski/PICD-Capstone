@@ -176,14 +176,14 @@ function ProjectSettings(props) {
                                 <label htmlFor="title" className="col-md-2 col-form-label text-md-right">Project Title: </label>
 
                                 <div className="col-md-6">
-                                    <input type="text" name="title" className="form-control" id="title" placeholder={project.title}/>
+                                    <input type="text" name="title" className="form-control" id="title" placeholder={project.title} required/>
                                 </div>
                             </div>
                             <div className="form-group row">
                                 <label htmlFor="description" className="col-md-2 col-form-label text-md-right">Project Description: </label>
 
                                 <div className="col-md-6">
-                                    <textarea name="description" className="form-control" id="description"  placeholder={project.description}/>
+                                    <textarea name="description" className="form-control" id="description"  placeholder={project.description} required/>
                                 </div>
                             </div>
                             {error !== "" ?
