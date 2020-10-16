@@ -17,6 +17,7 @@ function StageManager({ projectId }) {
         .then((res) => {
             console.log("Res", res);
             getStages();
+            window.location.reload(true);
         })
     }
 
