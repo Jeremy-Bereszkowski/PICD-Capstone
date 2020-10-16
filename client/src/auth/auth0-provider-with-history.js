@@ -17,6 +17,7 @@ const Auth0ProviderWithHistory = ({ children }) => {
             redirectUri={window.location.origin}
             onRedirectCallback={onRedirectCallback}
             audience='https://api.picdcapstone2020.dev'
+
         >
             {children}
         </Auth0Provider>
