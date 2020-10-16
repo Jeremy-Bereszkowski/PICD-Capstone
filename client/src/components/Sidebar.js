@@ -1,69 +1,63 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { Nav, Spinner } from 'react-bootstrap'
+import { navItem } from '../css/Sidebar.module.css'
+import {GetStages} from '../utils/api/index'
+import {useAuth0} from "@auth0/auth0-react";
 
-class Sidebar extends Component {
+function Sidebar(props) {
+    const { getAccessTokenSilently } = useAuth0();
+    const [stages, setStages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-             stages: []
-        }
-    }
-    
-
-    getProjectData(projectID) {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+projectID+'/stages')
-        .then(res => res.json())
+    useEffect(() => {
+        GetStages(props.id, getAccessTokenSilently)
         .then(res => {
-            this.setState({
-                stages: res
-            });
+            setStages(res)
+            setLoading(false)
         });
-    }
+    }, [props.id, getAccessTokenSilently])
 
-    componentDidMount() {
-        this.getProjectData(this.props.id);
-    }
+    const staticItems = [
+        {title: 'Overview', key: 'overview', link: `/project/${props.id}`},
+        {title: 'Project Settings', key: 'project-settings', link: `/project/${props.id}/settings`},
+    ]
 
-    render() {
-        const staticItems = [
-            {title: 'Overview', link: `/project/${this.props.id}`},
-            {title: 'Settings', link: `/project/${this.props.id}/settings`},
-        ]
-
-        return (
-            <div className="col-md-2 d-sm-block bg-light text-nowrap sidenav">
-                <div className="sidebar-sticky">
-                    <ul className="nav flex-column">
-                        <li className="nav-item">
-                            <div className="nav-link">
-                                <Link to={staticItems[0].link}>
-                                    {staticItems[0].title}
-                                </Link>
-                            </div>
-                        </li>
-                        {this.state.stages.map((item, index) => (
-                            <li className="nav-item" key={item.stage_id}>
-                                <div className="nav-link">
-                                    <Link to={`/project/${this.props.id}/stage/${item.stage_id}`} key={item.stage_id}>
-                                        {item.name}
-                                    </Link>
-                                </div>
-                            </li>
-                        ))}
-                        <li className="nav-item">
-                            <div className="nav-link">
-                                <Link to={staticItems[1].link}>
-                                    {staticItems[1].title}
-                                </Link>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        )
-    }
+    return (
+        <div className="bg-light">
+            <Nav className="flex-column">
+                {staticItems.map(item => {
+                    return (
+                        <Nav.Item key={item.key} className={navItem}>
+                            <Link to={item.link} className="nav-link">
+                                {item.title}
+                            </Link>
+                        </Nav.Item>
+                    )
+                })}
+            </Nav>
+            <hr className="my-0"/>
+            {loading? 
+            <div className="d-flex justify-content-center">
+                <Spinner animation="border" variant="primary" role="status" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            </div> : 
+            <Nav className="flex-column">
+                {stages.map(item => {
+                    return (
+                        <Nav.Item key={item.stage_id} className={navItem}>
+                            <Link to={`/project/${item.project_id}/stage/${item.stage_id}`} className="nav-link">
+                                {item.name}
+                            </Link>
+                        </Nav.Item>
+                    )
+                })}
+                
+            </Nav>
+            }
+        </div>
+    )
 }
 
 export default Sidebar;

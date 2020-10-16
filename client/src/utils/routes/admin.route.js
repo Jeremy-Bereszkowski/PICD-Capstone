@@ -1,15 +1,16 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import auth from "./auth";
+import auth from "../auth";
 
 /**
- * Public Route only allows unauthorized users to access the route. If a user is
- * logged in they will be redirected to the authorized landing page (/dashboard).
+ * Protected Routes only allow authorized users to access the route. Any 
+ * unauthorized users will be redirected to the landing page (login page)
+ * 
  * 
  * @param {*} param0 
  */
 
-const PublicRoute = ({
+const ProtectedRoute = ({
   header: Header,
   component: Component,
   footer: Footer,
@@ -18,16 +19,16 @@ const PublicRoute = ({
   return (
     <>
       <Header/>
-      <main className="container-fluid">
+      <main>
         <Route
           {...rest}
           render={props => {
-            if (!auth.isAuthenticated()) {
+            if (auth.isAuthenticated() && auth.getClearance() === 'admin') {
               return <Component {...props} />;
             } else {
               return (
                 <Redirect to={{
-                    pathname: "/dashboard",
+                    pathname: "/",
                     state: {
                       from: props.location
                     }
@@ -43,4 +44,4 @@ const PublicRoute = ({
   );
 };
 
-export default PublicRoute
+export default ProtectedRoute

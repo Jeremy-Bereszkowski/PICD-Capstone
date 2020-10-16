@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
   const id = req.params.id;
 
   try {
-    const getProjectQuery = 'select * from project where project_id=(?);';
+    const getProjectQuery = 'SELECT * FROM project join user on user.user_id = project.owner WHERE project_id=(?);';
 
     var project = await pool.query(getProjectQuery, [id]);
     // console.log(project);
@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/users', async(req, res) => {
   try {
-    const getProjectsUsersQuery = 'SELECT user.user_id, user.fname, user.lname, collaboration.privilege ' +
+    const getProjectsUsersQuery = 'SELECT user.user_id, user.email, collaboration.privilege ' +
       'FROM user JOIN user_has_project ON user_has_project.user_id = user.user_id ' +
       'JOIN collaboration ON user_has_project.collaboration_id = collaboration.collaboration_id  ' +
       'WHERE user_has_project.project_id=(?);';
@@ -121,6 +121,29 @@ router.post('/:id/add-user/:uid', async(req, res) => {
 });
 
 /**
+ * Transfer project ownership
+ */
+router.post('/transfer', async(req, res) => {
+  try {
+    const newOwnerId = req.body.newOwnerId;
+    const oldOwnerId = req.body.oldOwnerId;
+    const projectId = req.body.projectId;
+
+    const updateProjectQuery = 'UPDATE project SET owner=(?) WHERE project_id=(?);';
+    const updateUserHasProjectQuery1 = 'UPDATE user_has_project SET collaboration_id=2 WHERE project_id=(?) AND user_id=(?);';
+    const updateUserHasProjectQuery2 = 'UPDATE user_has_project SET collaboration_id=3 WHERE project_id=(?) AND user_id=(?);';
+
+    await pool.query(updateProjectQuery, [newOwnerId, projectId]);
+    await pool.query(updateUserHasProjectQuery1, [projectId, oldOwnerId]);
+    await pool.query(updateUserHasProjectQuery2, [projectId, newOwnerId]);
+
+    res.status(200).json(JSON.stringify({isSuccess: true}));
+  } catch (err) {
+    res.status(500).send('Connection error!');
+  }
+});
+
+/**
  * Remove project collaborator
  * Cannot remove project owner
  */
@@ -136,17 +159,35 @@ router.get('/:id/remove-user/:uid', async(req, res) => {
   }
 })
 
+/**
+ * Create new project
+ */
 router.post('/new/:userID', async (req, res) => {
   try {
-    const userID = req.params.userID
+    const userEmail = req.params.userID
+
+    const getUserIdQuery = 'SELECT user_id FROM user WHERE email = (?);'
+    const userId = await pool.query(getUserIdQuery, [userEmail]);
 
     const insertProjectQuery = 'INSERT INTO project (owner, title, description) values (?, ?, ?);';
     const insertUserProjectQuery = 'INSERT INTO user_has_project (user_id, project_id, collaboration_id) VALUES (?, ?, ?);'
-    const insertStages = 'INSERT INTO stage (project_id, name) VALUES (?, "Design"), (?, "Simulation"), (?, "Layout"), (?, "Test");';
+    const insertStages1 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Design", "Design Stage")';
+    const insertStages2 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Simulation", "Simulation Stage")';
+    const insertStages3 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Layout", "Layout Stage")';
+    const insertStages4 = 'INSERT INTO stage (project_id, name, description) VALUES (?, "Test", "Test Stage");';
+    const insertVersion = 'INSERT INTO version (stage_id, project_id, revision, name) VALUES (?, ?, 1, "init")';
 
-    var project = await pool.query(insertProjectQuery, [userID, req.body.title, req.body.description]);
-    await pool.query(insertUserProjectQuery, [userID, project.insertId, 3])
-    await pool.query(insertStages, [project.insertId, project.insertId, project.insertId, project.insertId])
+    var project = await pool.query(insertProjectQuery, [userId[0].user_id, req.body.title, req.body.description]);
+    await pool.query(insertUserProjectQuery, [userId[0].user_id, project.insertId, 3]);
+    var stage1 = await pool.query(insertStages1, [project.insertId]);
+    var stage2 = await pool.query(insertStages2, [project.insertId]);
+    var stage3 = await pool.query(insertStages3, [project.insertId]);
+    var stage4 = await pool.query(insertStages4, [project.insertId]);
+    await pool.query(insertVersion, [stage1.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage2.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage3.insertId, project.insertId]);
+    await pool.query(insertVersion, [stage4.insertId, project.insertId]);
+
 
     res.status(200).end(JSON.stringify({response: 'Succesful!'}));
   } catch (err) {
@@ -155,6 +196,9 @@ router.post('/new/:userID', async (req, res) => {
   }
 });
 
+/**
+ * Get project stage
+ */
 router.get('/:projectId/stage/:stageId', async(req, res) => {
   try {
     const getStage = 'SELECT * FROM stage WHERE stage_id=(?);';
@@ -166,4 +210,75 @@ router.get('/:projectId/stage/:stageId', async(req, res) => {
   }
 });
 
+router.post('/:projectId/stage/new', async(req, res) => {
+  try {
+    const getUser = 'SELECT * FROM user WHERE email=(?);';
+    const insertStage = 'INSERT INTO stage (project_id, name) VALUES (?, ?);';
+    const insertVersion = 'INSERT INTO version (stage_id, project_id, revision, name) VALUES (?, ?, ?, ?);';
+    const projectPrivilege = 'SELECT * FROM `user_has_project` WHERE user_id=(?) and project_id=(?);';
+
+    console.log(res.body)
+
+    var user = await pool.query(getUser, [req.body.userName]);
+    
+    if(user.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Privileges'}))
+    }
+
+    var privilege = await pool.query(projectPrivilege, [user[0].user_id, req.body.projectID]);
+    
+    if(privilege.length == 0) {
+      return res.status(500).json({message: 'Invalid User ID or Project ID'});
+    }
+
+    if(privilege[0].collaboration_id === 2 || privilege[0].collaboration_id === 3) {
+      var stage = await pool.query(insertStage, [req.body.projectID, req.body.stageName]);
+      await pool.query(insertVersion, [stage.insertId, req.body.projectID, 1, 'init']);
+      return res.status(200).json({message: "New Stage Create Successfully!"});
+    } else {
+      return res.status(500).json({message: 'Invalid Privilege'});
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message: "Unable to Create New Stage!"});
+  }
+})
+
+
+router.post('/stage/delete', async(req, res) => {
+  try {
+    const getUser = 'SELECT * FROM user WHERE email=(?);';
+    const getStage = 'SELECT u.user_id, u.collaboration_id, s.project_id, s.stage_id FROM stage AS s ' +
+                     'JOIN user_has_project as u ' +
+                     'ON u.project_id = s.project_id ' +
+                     'WHERE s.stage_id=(?) AND u.user_id=(?)';
+    const deleteStage = 'DELETE FROM stage WHERE project_id=(?) AND stage_id=(?);';
+
+    
+
+    var user = await pool.query(getUser, [req.body.userName]);
+    
+    if(user.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Privileges'}))
+    }
+
+    var stage = await pool.query(getStage, [req.body.stageID, user[0].user_id])
+
+    if (stage.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Unable to find Stage or Invalid Collaboration Privileges'}))
+    }
+
+    if(stage.collaboration_id < 2) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Collaboration Privileges'}))
+    }
+
+    await pool.query(deleteStage, [req.body.projectID, req.body.stageID])
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+
+  } catch (error){
+    console.log(error)
+    res.status(500).json({message: "Unable to Delete Stage"})
+  }
+})
 module.exports = router;

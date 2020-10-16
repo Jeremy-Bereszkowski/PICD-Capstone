@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import {NewProjectCollab} from '../utils/api/index'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import callAPI from '../utils/callAPI';
-import auth from '../utils/auth';
+import {useAuth0} from "@auth0/auth0-react";
 
 export default function NewProjectCollabModal({projectId}) {
+    const {getAccessTokenSilently} = useAuth0();
+
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -16,14 +18,14 @@ export default function NewProjectCollabModal({projectId}) {
         var uid = event.target.newUid.value;
         var collabId = event.target.clearance.value;
 
-        callAPI.addProjectUser(res => {
-            console.log(res)
 
+        NewProjectCollab(projectId, uid, collabId, getAccessTokenSilently)
+        .then(res => {
             if (res.success === true) {
                 window.location.href = "/project/"+projectId+"/settings";
             }
 
-        }, projectId, uid, collabId);
+        })
 
         handleClose(event);
     }
