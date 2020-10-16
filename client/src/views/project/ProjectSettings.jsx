@@ -230,7 +230,7 @@ function ProjectSettings(props) {
                     </div>
                 </div>
                 <hr />
-                    <StageManager project_id={props.match.params.projectId} />
+                    <StageManager projectId={props.match.params.projectId} />
                 <hr />
                 {projectCollaborators()}
                 <div className="row">

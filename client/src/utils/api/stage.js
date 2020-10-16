@@ -1,3 +1,5 @@
+import callAPI from '../callAPI'
+
 /**
  * Get an array of all the versions of the current stage.
  * 
@@ -112,20 +114,20 @@ const SubmitNewVersion = async (projectId, stageId, newRevisionName, getAccessTo
  * @param {*} userId 
  * @param {*} getAccessTokenSilently 
  */
-const NewStage = async (projectId, stageName, userId, getAccessTokenSilently) => {
+const NewStage = async (projectId, stageName, userName, getAccessTokenSilently) => {
     try {
         const token = await getAccessTokenSilently();
 
-        return await fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+project_id+'/stage/new', {
+        return await fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/'+projectId+'/stage/new', {
             method: 'post',
             headers: {
-                'content-type': 'appliction/json',
-                Authentication: `Bearer ${token}`
+                'content-type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 projectID: projectId,
                 stageName: stageName,
-                userID: userId
+                userName: callAPI.encrypt(userName)
             })
         })
         .then((response) => { return response.json(); })
@@ -143,22 +145,22 @@ const NewStage = async (projectId, stageName, userId, getAccessTokenSilently) =>
  * 
  * @param {*} projectId 
  * @param {*} stageId 
- * @param {*} userId 
+ * @param {*} userName 
  */
-const DeleteStage = async (projectId, stageId, userId) => {
+const DeleteStage = async (projectId, stageId, userName, getAccessTokenSilently) => {
     try {
         const token = await getAccessTokenSilently();
-
+        console.log(projectId, stageId, userName)
         return await fetch(process.env.REACT_APP_API_SERVER_ADDRESS+'/project/stage/delete', {
             method: 'post',
             headers: {
-                'content-type': 'appliction/json',
-                Authentication: `Bearer ${token}`
+                'content-type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 projectID: projectId,
                 stageID: stageId,
-                userID: userId
+                userName: callAPI.encrypt(userName)
             })
         })
         .then((response) => { return response.json(); })

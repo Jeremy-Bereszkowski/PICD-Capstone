@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Button} from 'react-bootstrap'
-import callAPI from '../utils/callAPI'
-import auth from '../utils/auth'
+import {useAuth0} from "@auth0/auth0-react"
+import { NewStage } from '../utils/api/index'
 
-const NewStageModal = ({ project_id, block, update }) => {
+const NewStageModal = ({ projectId, block, update }) => {
     const [show, setShow] = useState(false);
     const [stageName, setStageName] = useState("");
     const [disable, setDisable] = useState(true);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
+    const {user, getAccessTokenSilently } = useAuth0();
 
     const handleClose = () => {
         setStageName("");
@@ -34,24 +35,10 @@ const NewStageModal = ({ project_id, block, update }) => {
     const createNewStage = (e) => {
         e.preventDefault();
         if(!disable){
-            callAPI.newStage((res) => {
-                if(res.message) {
-                    setMessage(res.message);
-                } else {
-                    setMessage("Updated Successfully!");
-                }
-                setMessageType("alert-success");
-                update();
-                handleClose();
-            }, auth.getUID(), project_id, stageName,
-            (error) => {
-                if(error.message) {
-                    setMessage(error.message);
-                } else {
-                    setMessage("Update Failed!");
-                }
-                setMessageType("alert-danger");
-            })
+            NewStage(projectId, stageName, user.name, getAccessTokenSilently)
+            .then(res => console.log(res))
+            .then(() => update())
+            .then(() => handleClose())
         }
     }
 

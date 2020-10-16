@@ -1,44 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import NewStageModal from './NewStageModal'
 import { Button, Spinner } from 'react-bootstrap'
-import callAPI from '../utils/callAPI'
-import auth from '../utils/auth'
+import {useAuth0} from "@auth0/auth0-react";
+import { DeleteStage, GetStages } from '../utils/api/index'
 
-function StageManager(props) {
+function StageManager({ projectId }) {
     const [stages, setStages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
+    const {user, getAccessTokenSilently } = useAuth0();
+
+    const deleteStage = (stageId) => {
+        console.log(projectId, stageId, user)
+        DeleteStage(projectId, stageId, user.name, getAccessTokenSilently)
+        .then((res) => {
+            console.log("Res", res);
+            getStages();
+        })
+    }
 
     const getStages = () => {
-        fetch(process.env.REACT_APP_API_SERVER_ADDRESS+"/project/"+props.project_id+'/stages')
-        .then(res => res.json())
+        GetStages(projectId, getAccessTokenSilently)
         .then(res => {
             setStages(res)
             setLoading(false)
-        });
+        })
     }
 
-    const deleteStage = (stage_id) => {
-        callAPI.deleteStage((res) => {
-            if(res.message) {
-                setMessage(res.message);
-                console.log(res.message)
-            } else {
-                setMessage("Deleted Successfully!");
-            }
-            setMessageType("alert-success");
-            getStages();
-        }, auth.getUID(), props.project_id, stage_id,
-        (error) => {
-            if(error.message) {
-                setMessage(error.message);
-                console.log(error.message)
-            } else {
-                setMessage("Update Failed!");
-            }
-            setMessageType("alert-danger");
-        })
+    const update = () => {
+        window.location.reload(true);
     }
 
     useEffect(() => {
@@ -71,7 +62,7 @@ function StageManager(props) {
                         </tr>}
                     </tbody>
                 </table>
-                <NewStageModal project_id={props.project_id} update={getStages}/>
+                <NewStageModal projectId={projectId} update={update}/>
             </div>
         </div>
     )
