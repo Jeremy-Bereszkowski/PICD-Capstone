@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import {GetSidebar} from '../utils/api/index'
+import { Nav, Spinner } from 'react-bootstrap'
+import { navItem } from '../css/Sidebar.module.css'
+import {GetStages} from '../utils/api/index'
 import {useAuth0} from "@auth0/auth0-react";
 
-const Sidebar = (props) => {
+function Sidebar(props) {
     const { getAccessTokenSilently } = useAuth0();
-    const [isLoading, setLoading] = useState(true);
     const [stages, setStages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        GetSidebar(props.id, getAccessTokenSilently)
+        GetStages(props.id, getAccessTokenSilently)
         .then(res => {
             setStages(res)
             setLoading(false)
@@ -17,40 +19,43 @@ const Sidebar = (props) => {
     }, [props.id, getAccessTokenSilently])
 
     const staticItems = [
-        {title: 'Overview', link: `/project/${props.id}`},
-        {title: 'Settings', link: `/project/${props.id}/settings`},
+        {title: 'Overview', key: 'overview', link: `/project/${props.id}`},
+        {title: 'Project Settings', key: 'project-settings', link: `/project/${props.id}/settings`},
     ]
 
     return (
-        <div className="col-md-2 d-sm-block bg-light text-nowrap sidenav">
-            <div className="sidebar-sticky">
-                <ul className="nav flex-column">
-                    <li className="nav-item">
-                        <div className="nav-link">
-                            <Link to={staticItems[0].link}>
-                                {staticItems[0].title}
+        <div className="bg-light">
+            <Nav className="flex-column">
+                {staticItems.map(item => {
+                    return (
+                        <Nav.Item key={item.key} className={navItem}>
+                            <Link to={item.link} className="nav-link">
+                                {item.title}
                             </Link>
-                        </div>
-                    </li>
-                    {isLoading ? <tr><td colSpan="5" className="text-center"><strong>Loading...</strong></td></tr> :
-                        stages.map((item, index) => (
-                        <li className="nav-item" key={item.stage_id}>
-                            <div className="nav-link">
-                                <Link to={`/project/${props.id}/stage/${item.stage_id}`} key={item.stage_id}>
-                                    {item.name}
-                                </Link>
-                            </div>
-                        </li>
-                    ))}
-                    <li className="nav-item">
-                        <div className="nav-link">
-                            <Link to={staticItems[1].link}>
-                                {staticItems[1].title}
+                        </Nav.Item>
+                    )
+                })}
+            </Nav>
+            <hr className="my-0"/>
+            {loading? 
+            <div className="d-flex justify-content-center">
+                <Spinner animation="border" variant="primary" role="status" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            </div> : 
+            <Nav className="flex-column">
+                {stages.map(item => {
+                    return (
+                        <Nav.Item key={item.stage_id} className={navItem}>
+                            <Link to={`/project/${item.project_id}/stage/${item.stage_id}`} className="nav-link">
+                                {item.name}
                             </Link>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+                        </Nav.Item>
+                    )
+                })}
+                
+            </Nav>
+            }
         </div>
     )
 }

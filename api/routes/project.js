@@ -210,4 +210,75 @@ router.get('/:projectId/stage/:stageId', async(req, res) => {
   }
 });
 
+router.post('/:projectId/stage/new', async(req, res) => {
+  try {
+    const getUser = 'SELECT * FROM user WHERE email=(?);';
+    const insertStage = 'INSERT INTO stage (project_id, name) VALUES (?, ?);';
+    const insertVersion = 'INSERT INTO version (stage_id, project_id, revision, name) VALUES (?, ?, ?, ?);';
+    const projectPrivilege = 'SELECT * FROM `user_has_project` WHERE user_id=(?) and project_id=(?);';
+
+    console.log(res.body)
+
+    var user = await pool.query(getUser, [req.body.userName]);
+    
+    if(user.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Privileges'}))
+    }
+
+    var privilege = await pool.query(projectPrivilege, [user[0].user_id, req.body.projectID]);
+    
+    if(privilege.length == 0) {
+      return res.status(500).json({message: 'Invalid User ID or Project ID'});
+    }
+
+    if(privilege[0].collaboration_id === 2 || privilege[0].collaboration_id === 3) {
+      var stage = await pool.query(insertStage, [req.body.projectID, req.body.stageName]);
+      await pool.query(insertVersion, [stage.insertId, req.body.projectID, 1, 'init']);
+      return res.status(200).json({message: "New Stage Create Successfully!"});
+    } else {
+      return res.status(500).json({message: 'Invalid Privilege'});
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message: "Unable to Create New Stage!"});
+  }
+})
+
+
+router.post('/stage/delete', async(req, res) => {
+  try {
+    const getUser = 'SELECT * FROM user WHERE email=(?);';
+    const getStage = 'SELECT u.user_id, u.collaboration_id, s.project_id, s.stage_id FROM stage AS s ' +
+                     'JOIN user_has_project as u ' +
+                     'ON u.project_id = s.project_id ' +
+                     'WHERE s.stage_id=(?) AND u.user_id=(?)';
+    const deleteStage = 'DELETE FROM stage WHERE project_id=(?) AND stage_id=(?);';
+
+    
+
+    var user = await pool.query(getUser, [req.body.userName]);
+    
+    if(user.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Privileges'}))
+    }
+
+    var stage = await pool.query(getStage, [req.body.stageID, user[0].user_id])
+
+    if (stage.length === 0) {
+      return res.status(500).end(JSON.stringify({message: 'Unable to find Stage or Invalid Collaboration Privileges'}))
+    }
+
+    if(stage.collaboration_id < 2) {
+      return res.status(500).end(JSON.stringify({message: 'Invalid Collaboration Privileges'}))
+    }
+
+    await pool.query(deleteStage, [req.body.projectID, req.body.stageID])
+
+    res.status(200).end(JSON.stringify({response: 'Succesful!'}));
+
+  } catch (error){
+    console.log(error)
+    res.status(500).json({message: "Unable to Delete Stage"})
+  }
+})
 module.exports = router;

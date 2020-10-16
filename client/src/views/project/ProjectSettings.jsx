@@ -2,6 +2,7 @@ import React, { useState, useEffect} from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import {GetProjectSettings, GetProjectUserList, RemoveProjectUser, UpdateProject, DeleteProject} from '../../utils/api/index'
 import TransferOwnershipModal from '../../components/TransferOwnershipModal'
+import StageManager from '../../components/StageManager'
 import NewProjectCollabModal from '../../components/NewProjectCollabModal'
 import Sidebar from '../../components/Sidebar'
 
@@ -228,6 +229,8 @@ function ProjectSettings(props) {
                         </div>
                     </div>
                 </div>
+                <hr />
+                    <StageManager projectId={props.match.params.projectId} />
                 <hr />
                 {projectCollaborators()}
                 <div className="row">
